@@ -104,21 +104,15 @@ namespace StegoCrypto
             // Convert IV to string of 1s and 0s.
             Task<StringBuilder> OZs = PrependIVOntoFileAsStringBuilder(IV, file);
 
-            // Declare a bitmap for encoding the image. Make it the same width and height as the original.
-            //this.encodedImage = new Bitmap(this.rawBitmap.Width, this.rawBitmap.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            // By setting the new encodedImage to being the same as the rawImage, non-encoded pixels do not need to be set again.
             this.encodedImage = this.rawBitmap;
 
-            // Consider completely different approach using UnlockBits https://docs.microsoft.com/en-us/dotnet/api/system.drawing.bitmap.lockbits?view=netframework-4.7.2
-            //  using (var g = Graphics.FromImage(this.encodedImage))
-            //  { }
-
-            //======
             // Declare a counter.
-           int counter = 0;
-           int h = this.rawBitmap.Height;
-           int w = this.rawBitmap.Width;
+            int counter = 0;
+            int h = this.rawBitmap.Height;
+            int w = this.rawBitmap.Width;
            
-           OnesAndZeros = await OZs;
+            OnesAndZeros = await OZs;
             pwForm.progress.Maximum = h;
             pwForm.Show();
             pwForm.Refresh();
@@ -171,20 +165,17 @@ namespace StegoCrypto
                     pixelColor.G - (pixelColor.G % 2),
                     pixelColor.B - (pixelColor.B % 2));
 
-            // Now, in the new bitmap image, set the pixel value to be the same as the original pixelColor, plus
-            // a bit from our long string of bytes, for each color channel.
+            // Assign each bit from OnesAndZeros to each color channel.
             if (counter + 3 < OnesAndZeros.Length)
             {
                 // Encode Nibble to Pixel
                 // Next, declare a newR, newG, and newB consisting of the sanitized value, plus a bit from the byteString.
-                
                 newA = sanitizedColor.A + int.Parse(OnesAndZeros[counter].ToString());
                 newR = sanitizedColor.R + int.Parse(OnesAndZeros[counter + 1].ToString());
                 newG = sanitizedColor.G + int.Parse(OnesAndZeros[counter + 2].ToString());
                 newB = sanitizedColor.B + int.Parse(OnesAndZeros[counter + 3].ToString());
 
                 return Color.FromArgb(newA, newR, newG, newB);
-                //this.encodedImage.SetPixel(column, row, Color.FromArgb(newA, newR, newG, newB));
             }
             else
             {
@@ -193,6 +184,7 @@ namespace StegoCrypto
             }
         }
 
+        // Asyncronus method for prepending IV onto File as Stringbuilder
         private async Task<StringBuilder> PrependIVOntoFileAsStringBuilder(byte[] IV, byte[] file)
         {
             OnesAndZeros = new StringBuilder();
@@ -211,6 +203,7 @@ namespace StegoCrypto
             return OnesAndZeros;
         }
 
+        // Method for prepending IV onto File as Stringbuilder
         private StringBuilder SBPrependIVOntoFileAsStringBuilder(byte[] IV, byte[] file)
         {
             OnesAndZeros = new StringBuilder();
