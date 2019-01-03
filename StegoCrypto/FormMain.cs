@@ -247,6 +247,7 @@ namespace StegoCrypto
                 buttonRetrieveFile.Enabled = true;
             }
         }
+
         private void buttonGenerateFractal_Click(object sender, EventArgs e)
         {
             CallFractalMaker();
@@ -359,5 +360,10 @@ namespace StegoCrypto
             CallFractalMaker();
         }
 
+        private void helpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Help h = new Help();
+            h.Show();
+        }
     }
 }

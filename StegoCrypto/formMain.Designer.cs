@@ -45,6 +45,8 @@
             this.radioButtonRetrieveFile = new System.Windows.Forms.RadioButton();
             this.radioButtonHideFile = new System.Windows.Forms.RadioButton();
             this.groupBoxHide = new System.Windows.Forms.GroupBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.buttonGenerateFractal = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -63,8 +65,6 @@
             this.buttonOpenImage = new System.Windows.Forms.Button();
             this.openFileDialogSourceFile = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.buttonGenerateFractal = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.groupBoxAppMode.SuspendLayout();
             this.groupBoxHide.SuspendLayout();
@@ -187,6 +187,7 @@
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(58, 27);
             this.helpToolStripMenuItem.Text = "Help";
+            this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem_Click);
             // 
             // groupBoxAppMode
             // 
@@ -243,6 +244,29 @@
             this.groupBoxHide.TabIndex = 3;
             this.groupBoxHide.TabStop = false;
             this.groupBoxHide.Text = "Hide File";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(107, 192);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(23, 20);
+            this.label3.TabIndex = 10;
+            this.label3.Text = "or";
+            // 
+            // buttonGenerateFractal
+            // 
+            this.buttonGenerateFractal.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.buttonGenerateFractal.Enabled = false;
+            this.buttonGenerateFractal.FlatAppearance.BorderColor = System.Drawing.SystemColors.ButtonShadow;
+            this.buttonGenerateFractal.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonGenerateFractal.Location = new System.Drawing.Point(136, 162);
+            this.buttonGenerateFractal.Name = "buttonGenerateFractal";
+            this.buttonGenerateFractal.Size = new System.Drawing.Size(91, 87);
+            this.buttonGenerateFractal.TabIndex = 9;
+            this.buttonGenerateFractal.Text = "Generate fractal";
+            this.buttonGenerateFractal.UseVisualStyleBackColor = false;
+            this.buttonGenerateFractal.Click += new System.EventHandler(this.buttonGenerateFractal_Click);
             // 
             // label2
             // 
@@ -429,29 +453,6 @@
             // openFileDialogSourceFile
             // 
             this.openFileDialogSourceFile.FileName = "openFileDialog1";
-            // 
-            // buttonGenerateFractal
-            // 
-            this.buttonGenerateFractal.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.buttonGenerateFractal.Enabled = false;
-            this.buttonGenerateFractal.FlatAppearance.BorderColor = System.Drawing.SystemColors.ButtonShadow;
-            this.buttonGenerateFractal.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonGenerateFractal.Location = new System.Drawing.Point(136, 162);
-            this.buttonGenerateFractal.Name = "buttonGenerateFractal";
-            this.buttonGenerateFractal.Size = new System.Drawing.Size(91, 87);
-            this.buttonGenerateFractal.TabIndex = 9;
-            this.buttonGenerateFractal.Text = "Generate fractal";
-            this.buttonGenerateFractal.UseVisualStyleBackColor = false;
-            this.buttonGenerateFractal.Click += new System.EventHandler(this.buttonGenerateFractal_Click);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(107, 192);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(23, 20);
-            this.label3.TabIndex = 10;
-            this.label3.Text = "or";
             // 
             // FormMain
             // 
