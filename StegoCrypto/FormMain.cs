@@ -189,7 +189,7 @@ namespace StegoCrypto
             // Ensure that fractal's encodable bytes are divisible by 128.
             int pixelsNeeded = estimatedBytes * 2;
             //int pixelsNeededToNearest128 = roundUp(pixelsNeeded, 128);
-            int SquareSize = (int)Math.Sqrt(pixelsNeeded) + 1;
+            int SquareSize = (int)Math.Sqrt(pixelsNeeded) + 16;
             //int SquareToNearest128 = roundUp((int)SquareSize, 128);
 
             GenerateFractal gf = new GenerateFractal(this, SquareSize);
