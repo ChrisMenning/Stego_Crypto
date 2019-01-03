@@ -38,6 +38,7 @@ namespace StegoCrypto
             this.estimatedStorageCap = labelStorageCapacity;
         }
 
+        // The Properties
         public byte[] EncryptionKey
         {
             get
@@ -195,6 +196,8 @@ namespace StegoCrypto
             gf.ShowDialog();
             buttonHideFile.Enabled = true;
         }
+
+        // The buttons
         private void btnOpenFile_Click(object sender, EventArgs e)
         {
             OpenFileToHide();
