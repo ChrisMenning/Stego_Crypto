@@ -34,8 +34,6 @@ namespace StegoCrypto
             Bitmap bmp = new Bitmap(this.rawBitmap);
             using (var g = Graphics.FromImage(this.rawBitmap))
             {
-    
-    
                 // Lock the bitmap's bits.  
                 Rectangle rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
                 System.Drawing.Imaging.BitmapData bmpData =
@@ -62,14 +60,17 @@ namespace StegoCrypto
                 int bit;
                 byte encoded;
                 // DO MODIFICATION
-                for (int counter = 0; counter < argbValues.Length; counter ++)
+                for (int counter = 0; counter < argbValues.Length; counter++)
                 {
                     // Sanitize the byte, clearing out it's Least Significant Bit.
                     if (counter < OnesAndZeros.Length)
                     {
+                        //Console.WriteLine("Original byte: " + argbValues[counter]);
                         sanitized = argbValues[counter] - (argbValues[counter] % 2);
+                        //Console.WriteLine("Sanitized byte: " + sanitized);
                         bit = int.Parse(OnesAndZeros[counter].ToString());
                         encoded = (byte)(sanitized + bit);
+                        //Console.WriteLine("encoded byte: " + encoded);
                         argbValues[counter] = encoded;
                     }
                     pwForm.progress.Value = counter;
@@ -81,7 +82,6 @@ namespace StegoCrypto
                 {
                     Console.WriteLine("LSB: " + (argbValues[i] % 2));
                 }
-    
     
                 // Copy the ARGB values back to the bitmap
                 System.Runtime.InteropServices.Marshal.Copy(argbValues, 0, ptr, bytes);
@@ -100,7 +100,6 @@ namespace StegoCrypto
         public async Task<Bitmap> EncodedBitmap(byte[] file, byte[] IV)
         {
             PleaseWait pwForm = new PleaseWait();
-
 
             // Convert IV to string of 1s and 0s.
             Task<StringBuilder> OZs = PrependIVOntoFileAsStringBuilder(IV, file);
@@ -214,8 +213,6 @@ namespace StegoCrypto
 
         private StringBuilder SBPrependIVOntoFileAsStringBuilder(byte[] IV, byte[] file)
         {
-            int totalLength = IV.Length + file.Length;
-            BitArray BA = new BitArray(totalLength);
             OnesAndZeros = new StringBuilder();
 
             foreach (byte b in IV)

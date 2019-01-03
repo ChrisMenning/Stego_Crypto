@@ -216,9 +216,8 @@ namespace StegoCrypto
             // MessageBox.Show("Attempting to stuff " + bytes.Length + " bytes into " + (originalImage.Width * originalImage.Height) / 2 + " bytes of space.");
             if (bytes.Length > (originalImage.Width * originalImage.Height)/2)
             {
-                MessageBox.Show("WARNING: It looks like the message is too long to fit in the image.");
+                MessageBox.Show("WARNING: It looks like the file is too large to fit in the image.");
             }
-
 
             Bitmap bmp = await bmEnc.EncodedBitmap(bytes, aes.InitializationVector);
 
