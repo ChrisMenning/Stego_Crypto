@@ -1,0 +1,763 @@
+<?xml version="1.0" encoding="UTF-8"?>
+                      <Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+                       xmlns:x="urn:schemas-microsoft-com:office:excel"
+                       xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+                       xmlns:html="http://www.w3.org/TR/REC-html40">
+                      <Styles>
+                        <Style ss:ID="s17">
+                          <NumberFormat ss:Format="m/d/yy"/>
+                          <Font ss:FontName="Verdana"/>
+                        </Style>
+                        <Style ss:ID="s18">
+                          <NumberFormat ss:Format="m/d/yy"/>
+                          <Font ss:FontName="Verdana" ss:Bold="1"/>
+                        </Style>
+                        <Style ss:ID="s19">
+                          <NumberFormat ss:Format="m/yy"/>
+                          <Font ss:FontName="Verdana"/>
+                        </Style>
+                        <Style ss:ID="s20">
+                          <NumberFormat ss:Format="m/yy"/>
+                          <Font ss:FontName="Verdana" ss:Bold="1"/>
+                        </Style>
+                        <Style ss:ID="s21">
+                          <NumberFormat ss:Format="m/d/yy h:mm AM/PM"/>
+                          <Font ss:FontName="Verdana"/>
+                        </Style>
+                        <Style ss:ID="s22">
+                          <NumberFormat ss:Format="m/d/yy h:mm AM/PM"/>
+                          <Font ss:FontName="Verdana" ss:Bold="1"/>
+                        </Style>
+                        <Style ss:ID="s23">
+                         <Alignment ss:Horizontal="Right" ss:Vertical="Bottom"/>
+                         <Font ss:FontName="Verdana"/>
+                        </Style>
+                        <Style ss:ID="s24">
+                         <Alignment ss:Horizontal="Right" ss:Vertical="Bottom"/>
+                         <Font ss:FontName="Verdana" ss:Bold="1"/>
+                        </Style>
+                        <Style ss:ID="s25">
+                         <Alignment ss:Horizontal="Left" ss:Vertical="Bottom"/>
+                         <Font ss:FontName="Verdana"/>
+                        </Style>
+                        <Style ss:ID="s26">
+                         <Alignment ss:Horizontal="Left" ss:Vertical="Bottom"/>
+                         <Font ss:FontName="Verdana" ss:Bold="1"/>
+                        </Style>
+                        <Style ss:ID="s27">
+                         <NumberFormat ss:Format="0"/>
+                         <Alignment ss:Horizontal="Right" ss:Vertical="Bottom"/>
+                         <Font ss:FontName="Verdana"/>
+                        </Style>
+                        <Style ss:ID="s28">
+                         <NumberFormat ss:Format="0"/>
+                         <Alignment ss:Horizontal="Right" ss:Vertical="Bottom"/>
+                         <Font ss:FontName="Verdana" ss:Bold="1"/>
+                        </Style>
+                        <Style ss:ID="s29">
+                         <NumberFormat ss:Format="_(&quot;$&quot;* #,##0.00_);_(&quot;$&quot;* (#,##0.00);_(&quot;$&quot;* &quot;-&quot;??_);_(@_)"/>
+                         <Alignment ss:Horizontal="Right" ss:Vertical="Bottom"/>
+                         <Font ss:FontName="Verdana"/>
+                        </Style>
+                        <Style ss:ID="s30">
+                         <NumberFormat ss:Format="_(&quot;$&quot;* #,##0.00_);_(&quot;$&quot;* (#,##0.00);_(&quot;$&quot;* &quot;-&quot;??_);_(@_)"/>
+                         <Alignment ss:Horizontal="Right" ss:Vertical="Bottom"/>
+                         <Font ss:FontName="Verdana" ss:Bold="1"/>
+                        </Style>
+                        <Style ss:ID="s31">
+                         <NumberFormat ss:Format="Percent"/>
+                         <Alignment ss:Horizontal="Right" ss:Vertical="Bottom"/>
+                         <Font ss:FontName="Verdana"/>
+                        </Style>
+                        <Style ss:ID="s32">
+                         <NumberFormat ss:Format="Percent"/>
+                         <Alignment ss:Horizontal="Right" ss:Vertical="Bottom"/>
+                         <Font ss:FontName="Verdana" ss:Bold="1"/>
+                        </Style>
+                        <Style ss:ID="s33">
+                         <NumberFormat ss:Format="YYYY-mm-dd"/>
+                         <Alignment ss:Horizontal="Left" ss:Vertical="Bottom"/>
+                        </Style>
+                        <Style ss:ID="s34">
+                         <Alignment ss:Horizontal="Left" ss:Vertical="Bottom"/>
+                         <Font ss:FontName="Verdana" ss:Bold="1"/>
+                        </Style>
+                        <Style ss:ID="s35">
+                         <Alignment ss:Horizontal="Left" ss:Vertical="Bottom"/>
+                         <Font ss:FontName="Verdana"/>
+                        </Style>
+                        <Style ss:ID="s36">
+                         <Alignment ss:Horizontal="Left" ss:Vertical="Top" ss:WrapText="1"/>
+                         <Font ss:FontName="Verdana"/>
+                        </Style>
+                      </Styles>
+<Worksheet ss:Name="SDK">
+<Table>
+<Column ss:Index="1" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="2" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="3" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="4" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="5" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="6" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="7" ss:AutoFitWidth="0" ss:Width="150"/>
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Meets all Oculus mobile SDK and engine version requirements</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s26"><Data ss:Type="String">ID</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">Enforcement</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">Criterion</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">Steps To Test</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">Expected Result</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">Actual Result</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">More Info</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.SDK.1</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">The app meets all graphics and performance guidelines running on supported mobile VR devices.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.SDK.2</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">You must use Oculus Mobile SDK version 1.0 or later, but version 1.5 or greater is recommended.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">1. In Android Studio, navigate to View > Tool Windows > Logcat.
+2. Launch your app and observe the log.
+ 
+This is also checked immediately after you upload each build, and the upload will fail if the test fails.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">App uses Oculus Mobile SDK 1.0 or greater.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">We advise using the latest SDK, which is available here: https://developer.oculus.com/downloads/package/oculus-mobile-sdk/</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.SDK.3</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Unity apps must be built with a supported version</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Under the Unity menu, click "About Unity..."
+ 
+This is also checked immediately after you upload each build, and the upload will fail if the test fails.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">App is using a supported version of Unity.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">https://developer.oculus.com/distribute/latest/concepts/publish-mobile-req-compatibility/#unity</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.SDK.4</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Unreal Engine apps must be built with a supported distribution</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">This is checked immediately after you upload each build, and the upload will fail if the test fails.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">App is using a supported version of Unreal Engine.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">https://developer.oculus.com/distribute/latest/concepts/publish-mobile-req-compatibility/#unity</Data></Cell>
+</Row>
+</Table>
+</Worksheet>
+
+<Worksheet ss:Name="Packaging">
+<Table>
+<Column ss:Index="1" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="2" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="3" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="4" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="5" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="6" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="7" ss:AutoFitWidth="0" ss:Width="150"/>
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Meets all Android application packaging requirements:</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s26"><Data ss:Type="String">ID</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">Enforcement</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">Criterion</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">Steps To Test</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">Expected Result</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">Actual Result</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">More Info</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Android.1</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">The application manifest must conform to the release manifest requirements.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Open the manifest for your app and compare to the requirements listed in the More Info column.
+ 
+This is also checked immediately after you upload each build, and the upload will fail if the test fails.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">The manifest meets all requirements.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">https://developer.oculus.com/distribute/latest/concepts/publish-mobile-manifest/</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Android.2</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">The application must be signed with your unique digital certificate. All subsequent versions of your app must also be signed with the same certificate. </Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">This is checked immediately after you upload each build, and the upload will fail if the test fails. 
+ 
+To test manually:
+1. Ensure you have the Android SDK installed
+2. Open a command prompt and type "apksigner verify app.apk"</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Command runs without error or other output.
+
+Note that it isn't possible to verify that you've used the same signature until you upload a subsequent build, in which case the upload will fail.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">See  Application Signing  (https://developer.oculus.com/distribute/latest/concepts/publish-mobile-app-signing).</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Go.1</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Apps for Oculus Go must not require Android features that aren't supported on Go.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">This is checked immediately after you upload a build to the STORE channel, and the results will display within minutes on http://dashboard.oculus.com under Manage Build > Specs.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Test passes without error and you are able to select the Oculus Go checkbox.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Apps can't require Google Mobile Services, camera access, HMD touchpad, etc.  See Mobile SDK Getting Started: https://developer.oculus.com/documentation/mobilesdk/latest/concepts/book-intro/ </Data></Cell>
+</Row>
+</Table>
+</Worksheet>
+
+<Worksheet ss:Name="Performance">
+<Table>
+<Column ss:Index="1" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="2" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="3" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="4" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="5" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="6" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="7" ss:AutoFitWidth="0" ss:Width="150"/>
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Meets all graphics and performance requirements:</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s26"><Data ss:Type="String">ID</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">Enforcement</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">Criterion</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">Steps To Test</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">Expected Result</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">Actual Result</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">More Info</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Performance.1</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">The app displays graphics in the headset at 60 frames per second.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">1. Use the app for the length of the content or 45 minutes, whichever is shorter
+2. Launch the OVR Metrics tool and select the log file for your app
+3. Observe the FPS graph</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Application should not experience extended periods of framerate below 60 FPS. Exceptions include when there's a black screen or during loading scenes.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">How to use the OVR Metrics tool: https://developer.oculus.com/documentation/mobilesdk/latest/concepts/mobile-ovrmetricstool/
+
+For information on performance debugging and best practices, see  Squeezing Performance out of your Unity Gear VR Game Part 1  (https://developer.oculus.com/blog/squeezing-performance-out-of-your-unity-gear-vr-game) and  Part 2  (https://developer.oculus.com/blog/squeezing-performance-out-of-your-unity-gear-vr-game-continued).</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Performance.2</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">The app displays graphics without judder.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">1. Play through several levels of the application
+ 2. Observe the graphics throughout for choppiness or smearing</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Application should not experience extended periods of framerate below the target framerate.  On Gear, the target framerate is 60 FPS. On Oculus Go, the target may be either 60 or 72 FPS. Exceptions include when there's a black screen or during loading scenes.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Asynchronous Timewarp can help with minor rotational judder, but your application still needs to be at 60 FPS most of the time.</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Performance.3</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">The app must run for 45 minutes with typical usage without entering thermal throttling Power Save mode.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Use the app for length of the content or 45 minutes, whichever is shorter</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">User does not get a prompt from the Oculus app that says performance will be degraded or your experience will close because of thermal issues.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">See  Power Management  (https://developer.oculus.com/documentation/mobilesdk/latest/concepts/mobile-power-overview/).</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Performance.4</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">The app renders without convergence errors or unusual distortion.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">1. Play through several levels of the application
+ 2. Observe if the graphics are consistent for both eyes</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Objects should render normally without distortion, stretching when moving your head, or feeling like they're being rendered too close to your face</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">See  Binocular Vision, Stereoscopic Imaging and Depth Cues  (https://developer.oculus.com/design/latest/concepts/bp_app_imaging/).</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Performance.5</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">The app renders without visible z-fighting or depth conflict artifacts</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">1. Play through several levels of the application
+ 2. Observe that there are no major graphical issues</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Objects should render normally.  Examples of failure include objects appearing to flicker back and forth, colliding because they think they're at the same depth</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Performance.6</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">The app must either display head-tracked graphics in the headset within 4 seconds of launch or provide a loading indicator in VR</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">1. Launch the title
+ 2. Count the number of seconds it takes to display something and respond to head tracking</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">App begins accepting input, responds to head tracking, and displays graphics within 4 seconds of app startup.    </Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+</Row>
+</Table>
+</Worksheet>
+
+<Worksheet ss:Name="Functional">
+<Table>
+<Column ss:Index="1" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="2" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="3" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="4" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="5" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="6" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="7" ss:AutoFitWidth="0" ss:Width="150"/>
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Meets all functional requirements:</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s26"><Data ss:Type="String">ID</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">Enforcement</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">Criterion</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">Steps To Test</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">Expected Result</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">Actual Result</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">More Info</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Functional.1</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">The app runs and installs without crashing, freezing, or entering extended unresponsive states.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">1. Launch the title
+2. Play through content for at least 45 minutes, or the length of the content if less than 45 minutes</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">App installs and runs without crashing or freezing.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Functional.2</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">The app must not lose the user's data</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">1. Launch the title
+2. Play through part of the content
+3. Quit and restart the app</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">All user saves/settings/downloads/content created within the app persist throughout use of the application</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Functional.3</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">The app must not leave the user stuck at any point in the experience.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">1. Launch the title
+2. Play through content for at least 45 minutes</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">User must be able to play through the entire title without being unable to progress or requiring unobtainable information. </Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">For example, if you require a login, we must have instructions and be able to successfully create an account — the instructions must be discoverable in VR, but account creation could happen in 2D. Game levels must not have broken logic that prevents progressing to the next level.</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Functional.4</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">If your app requires Internet connectivity for its core functionality, notify users without an active Internet connection that one is required.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">1. Put your device in airplane mode
+2. Launch the app</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">If app requires a connection to the Internet, an error message is displayed.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Functional.5</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">The app must continue to download content if the user removes the headset or removes the device from headset.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">1. Launch app and start a download
+2. Remove the phone from the headset</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Download Manager notification is visible.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Functional.6</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">The app must reset the user’s orientation if the user removes the headset and puts it back on.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">1. Launch the app 
+2. Note the direction you're facing from inside the headset
+3. Remove the headset, turn your entire body 90 degrees, put the headset back on
+4. Note the direction you're facing</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">You should still be facing the same direction as before you took the headset off.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Functional.7</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">The app must reset the user’s orientation if the user selects **Reorient** in the Universal Menu.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">1. Launch the app 
+2. Observe the forward facing direction 
+3. Turn your body 180 degrees
+4. Hold the back button > select Reorient > click Reorient</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Verify that the app has reoriented to the forward facing direction in your current position.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Functional.8</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Single player apps should pause when the user removes the headset or opens the Universal Menu.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">1. Launch the app
+2. Remove the headset</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">App should pause or react within 20 seconds. </Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">The exact timing is dependent on the operating system and this test is considered passed as long as the experience eventually pauses. Not required for multiplayer/realtime games.</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Functional.9</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">The app should not submit frames or accept input when the user removes the headset or opens the Universal Menu.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">1. Launch the title
+ 2. Press the Oculus Home Button
+ 3. Observe: This should launch Oculus Home and bring up the Universal Menu</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Performance shouldn't drop, and moving the controllers shouldn't cause interaction within the app (you can usually hear it rather than see it)</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Functional.10</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Recommended</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Headlocked menus and UI elements are generally uncomfortable for the user and should be avoided.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">1. Play through several levels of the application
+ 2. Observe any elements that stay in front of your face no matter which way you look</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Nothing should be headlocked</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">This design pattern should be avoided for menus and status information, but may be appropriate for elements like gun reticles or cockpits.</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Functional.11</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Apk filesize must be less than 1gb, but can come with an expansion file up to 4gb.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">1. Check the filesize of the apk and obb files</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">The apk file must be under 1gb, and the obb file must be under 4gb.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">https://developer.oculus.com/blog/tech-note-expansion-file-support-for-gear-vr-beta/</Data></Cell>
+</Row>
+</Table>
+</Worksheet>
+
+<Worksheet ss:Name="Security">
+<Table>
+<Column ss:Index="1" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="2" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="3" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="4" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="5" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="6" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="7" ss:AutoFitWidth="0" ss:Width="150"/>
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Meets all security requirements:</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s26"><Data ss:Type="String">ID</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">Enforcement</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">Criterion</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">Steps To Test</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">Expected Result</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">Actual Result</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">More Info</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Security.1</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">The app must perform an Oculus Platform entitlement check within 10 seconds of launch and exit the app if the check fails.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">1. On your device, ensure developer mode is enabled and log in to Oculus Home with a user who doesn't have an entitlement to the app (either via release channel, keys, or store purchase)
+        2. In a terminal window, install the app with the command "adb install path-to-apk"
+        3. Launch the app from the Oculus Home library </Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">App should either exit, display an error message, or go into a limited functionality mode.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">https://developer.oculus.com/blog/unity-engine-entitlement-checks-for-gear-vr-and-rift/</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Security.2</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">The app must request the minimum number of permissions required to function.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">1. Look at permissions requested in the android manifest.  From a command line, you can also run "aapt dump badging"
+and search the output for for "uses-permission."
+2. Verify that all permissions are utilized by the application</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">There must be a rationale behind every permission your app requests in the app manifest.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">The review team will be paying especially close attention to the list of permissions that Google considers "dangerous," which includes camera, location, microphone, reading and writing external storage, and others.  https://developer.oculus.com/distribute/latest/concepts/publish-mobile-req-security/#nodangerouspermissions</Data></Cell>
+</Row>
+</Table>
+</Worksheet>
+
+<Worksheet ss:Name="Input">
+<Table>
+<Column ss:Index="1" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="2" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="3" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="4" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="5" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="6" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="7" ss:AutoFitWidth="0" ss:Width="150"/>
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Meets all user interaction requirements:</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s26"><Data ss:Type="String">ID</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">Enforcement</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">Criterion</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">Steps To Test</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">Expected Result</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">Actual Result</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">More Info</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Input.1</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">If the app cannot be used without an external input device (e.g. gamepad or 3DOF controller), and no input device is detected when the app starts up, the app must warn the user to connect the necessary device.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">1. Disconnect the controller, 
+2. Launch the title</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">An error message is displayed saying that the app requires a controller</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Note that the Oculus Go controller notification is handled by the system and doesn't require a specific app-level message.</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Input.2</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">The app must open the Universal Menu if the user long-presses the back button.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">1. Press and hold the back button</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Verify that the Universal Menu opens</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Input.3</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">When the user presses the back button, the app must either go back one level in your UI or display a menu with an option to quit the app.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">1. Launch the title
+2. If applicable, select a menu item to begin the experience
+3. Press the back button
+4. Observe the display
+5. Press the back button again</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">The first time the back button is pressed, the UI either goes back to the previous level or displays a menu with an option to exit the current scene (like go back to your main menu).  If no menu is displayed, pressing the back button multiple times should eventually show the Oculus quit menu.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">The purpose of this requirement is to ensure that there is always an escape route from an application, even on older Gear headsets that do not have a Home button.  As long as the back button presents the standard Oculus quit dialog, exiting instead of going back a UI level is fine.</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Input.4</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">If the app supports both Gear VR touchpad and Gear VR Controller input, the app must let users switch between them at-will.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">1. Interact with the app using touchpad
+2. Verify that the app responds to the touchpad
+3. Interact with the app with a controller
+4. Verify that the app responds to the controller
+5. Interact with the app using touchpad again
+6. Verify that the app responds to the touchpad</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">The app responds to both input devices automatically, without the user having to change any settings.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Applies only to Gear VR.</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Input.5</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">The app must use the built-in volume control UI when the user presses the volume buttons.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">1. Launch the app
+2. Press the volume button</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Volume changes and UI appears</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Input.6</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">The app must detect if the 3DOF controller is set to left-handed or right-handed, and it must function equally well when used with either configuration.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">
+1. Launch the app
+2. Verify that its orientation matches current handedness
+3. In the Oculus Home app, select Settings > See All > Controller > select the other handedness.
+4. Return to the app and observe if handedness changed within app</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Controller appears to be held in the correct hand.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Input.7</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">The app should detect what device it's running on and use the correct controller graphics and terminology.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">1. Launch the app 2. Play through the title and observe any references to the device name and controller.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Controller model, terminology and interactions are appropriate for the detected device. </Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">For example, Oculus Go apps shouldn't mention interactions like swiping the headset touchpad.  Generic controller models are also acceptable.  Note that apps published before this requirement went into effect in April 2018 are exempt.</Data></Cell>
+</Row>
+</Table>
+</Worksheet>
+
+<Worksheet ss:Name="Asset">
+<Table>
+<Column ss:Index="1" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="2" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="3" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="4" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="5" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="6" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="7" ss:AutoFitWidth="0" ss:Width="150"/>
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Meets all store asset requirements</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s26"><Data ss:Type="String">ID</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">Enforcement</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">Criterion</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">Steps To Test</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">Expected Result</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">Actual Result</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">More Info</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Asset.1</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Logo must be on a transparent background.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">1. Open logo art in an image editing program
+2. Check background for transparency</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Background is transparent</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">An ideal logo fills the cover image frame, leaving the 20% at top and bottom and 10% on the sides.  More information is available here: https://static.oculus.com/documents/oculus-store-art-guidelines.pdf</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Asset.2</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Store cover art images must have a clear logo without extraneous text, taglines, or banners.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">1. View the cover art images</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Cover art consists of only the logo on a well-designed background.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">https://static.oculus.com/documents/oculus-store-art-guidelines.pdf</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Asset.3</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Store cover art must not include text in the top or bottom 20% of the image.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">1. View the cover art images</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Top and bottom of the cover images don't include text, badges, or other busy patterns that would make an overlay illegible.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">https://static.oculus.com/documents/oculus-store-art-guidelines.pdf</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Asset.4</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Hero art must include the branding of the app centered in the image.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">1. View the hero art image</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">App branding/logo must be centered vertically and horizontally.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">https://static.oculus.com/documents/oculus-store-art-guidelines.pdf</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Asset.5</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Screenshots must be representative of the app and don't contain any additional logos, text, or iconography.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">1. View screenshot</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Image is an unembellished screenshot of the app experience.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">https://static.oculus.com/documents/oculus-store-art-guidelines.pdf</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Asset.6</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">App description, screenshots, and videos must not include HMDs, controllers, or logos for other VR platforms.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">1. View the images and description</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">App metadata doesn't include any other VR hardware or software platforms other than Oculus and Samsung.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Limited mention of other VR platforms is acceptable if app supports cross platform play.</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Asset.7</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Trailer must not be longer than 2 minutes.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">1. Watch the trailer video
+2. Observe the length</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Video is less than 2 minutes long.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">https://static.oculus.com/documents/oculus-store-art-guidelines.pdf</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Asset.8</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Artwork asset text should not use a font smaller than 24 pt. </Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">1. Open original art assets in an image editing program
+2. Check the font size</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">1. Open original art assets in an image editing program 2. Check the font size</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">https://static.oculus.com/documents/oculus-store-art-guidelines.pdf</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">VRC.Mobile.Asset.9</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Required</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">If app is supported on both Gear VR and Oculus Go, any references in the app description and trailer should mention both devices.</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">1. Read the description</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">If the description mentions a device, both Oculus Go and Gear VR are included.  Example: Download my great app on Oculus Go and Gear VR!</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Apps published before April 2018 are exempt from this requirement.</Data></Cell>
+</Row>
+</Table>
+</Worksheet>
+
+<Worksheet ss:Name="Version">
+<Table>
+<Column ss:Index="1" ss:AutoFitWidth="0" ss:Width="150"/>
+<Column ss:Index="2" ss:AutoFitWidth="0" ss:Width="150"/>
+<Row>
+<Cell ss:StyleID="s26"><Data ss:Type="String">Version</Data></Cell>
+<Cell ss:StyleID="s26"><Data ss:Type="String">Internal</Data></Cell>
+</Row>
+
+<Row>
+<Cell ss:StyleID="s36"><Data ss:Type="String">Mobile.1</Data></Cell>
+<Cell ss:StyleID="s36"><Data ss:Type="String">TW9iaWxlLjEuMTcuMC4yMDE4</Data></Cell>
+</Row>
+</Table>
+</Worksheet>
+</Workbook>
