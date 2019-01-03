@@ -1,11 +1,4 @@
- _____ _                   _____                  _        
-/  ___| |                 /  __ \                | |       
-\ `--.| |_ ___  __ _  ___ | /  \/_ __ _   _ _ __ | |_ ___  
- `--. \ __/ _ \/ _` |/ _ \| |   | '__| | | | '_ \| __/ _ \ 
-/\__/ / ||  __/ (_| | (_) | \__/\ |  | |_| | |_) | || (_) |
-\____/ \__\___|\__, |\___/ \____/_|   \__, | .__/ \__\___/ 
-                __/ |                  __/ | |             
-               |___/                  |___/|_|             
+test
 
 Originally inspired by the "Image Steganography with AES Encryption" project created in my Team Software Dev class at NWTC,
 StegoCrypto has been rebuilt from the ground up to support not just ASCII, but any binary file type. Where the original
