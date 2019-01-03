@@ -6,3 +6,5 @@ manager for deriving an encryption key. Additionally, the new fractal maker leav
 uses the Julia Set, with more randomization than in prior versions.
 
 For practicality, it is recommended that this tool not be used on files much greater in size than about 1 MB.
+
+:)

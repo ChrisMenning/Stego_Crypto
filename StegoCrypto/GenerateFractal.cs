@@ -16,7 +16,12 @@ namespace StegoCrypto
         private FormMain mainForm;
         private int squareSize;
         private Bitmap newFractal;
-        //Color[] colors;
+        private double realC;
+        private double imaginaryC;
+        private int zoomLevel;
+
+        public double RealC { get => realC; set => realC = value; }
+        public double ImaginaryC { get => imaginaryC; set => imaginaryC = value; }
 
         public GenerateFractal(FormMain mainForm, int squareSize)
         {
@@ -24,36 +29,48 @@ namespace StegoCrypto
             this.mainForm = mainForm;
             this.squareSize = squareSize;
             progressBar1.Maximum = squareSize;
+            this.zoomLevel = 1;
         }
 
         private void buttonGenerate_Click(object sender, EventArgs e)
         {
+            ValidateC();
             newFractal = JuliaSet();
             pictureBox1.Image = newFractal;
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             buttonAccept.Enabled = true;
         }
 
-    //    private void MakeColorSet(int maxIterations)
-    //    {
-    //        int cubeRoot = 8;
-    //        Console.WriteLine("Cubic root of fractal iterations: " + cubeRoot);
-    //        colors = new Color[maxIterations];
-    //
-    //        int index = 1;
-    //        for (int r = 1; r <= cubeRoot; r++)
-    //        {
-    //            for (int g = 1; g <= cubeRoot; g++)
-    //            {
-    //                for (int b = 1; b <= cubeRoot; b++)
-    //                {
-    //                    colors[index] = Color.FromArgb(255, (r * 32) - 1, (g * 32) - 1, Math.Abs((index / 2) - 1));
-    //                    index++;
-    //                }
-    //            }
-    //        }
-    //        Console.WriteLine("CREATED " + index + "colors.");
-    //    }
+        private void ValidateC()
+        {
+            try
+            {
+                double rC = 0;
+                double.TryParse(textBoxC.Text, out rC);
+                RealC = rC;
+            }
+            catch
+            {
+                MessageBox.Show("Real C must be a decimal.");
+                textBoxC.Text = "-0.7";
+                RealC = -0.7;
+            }
+
+            try
+            {
+                double imC = 0;
+                double.TryParse(textBoxCim.Text, out imC);
+                ImaginaryC = imC;
+            }
+            catch
+            {
+                MessageBox.Show("Imaginary C must be a decimal.");
+                textBoxCim.Text = "0.27015";
+                ImaginaryC = 0.27015;
+            }
+
+            Console.WriteLine("C: " + RealC + " ImC: " + ImaginaryC);
+        }
 
         private Bitmap JuliaSet()
         {
@@ -70,16 +87,17 @@ namespace StegoCrypto
             //each iteration, it calculates: new = old*old + c, where c is a constant and old starts at current pixel
             double cRe, cIm;           //real and imaginary part of the constant c, determinate shape of the Julia Set
             double newRe, newIm, oldRe, oldIm;   //real and imaginary parts of new and old
-            double zoom = rand.Next(1, 300), moveX = rand.NextDouble() * (0.1 - -0.1) + -0.1, moveY = rand.NextDouble() * (0.1 - -0.1) + -0.1; //you can change these to zoom and change position
-            //double zoom = 1, moveX = 0, moveY = 0; //you can change these to zoom and change position
+            //double zoom = rand.Next(1, 300), moveX = rand.NextDouble() * (0.1 - -0.1) + -0.1, moveY = rand.NextDouble() * (0.1 - -0.1) + -0.1; //you can change these to zoom and change position
+            double zoom = zoomLevel, moveX = 0, moveY = 0; //you can change these to zoom and change position
             Color color; //the RGB color value for the pixel
             int maxIterations = 512; //after how much iterations the function should stop
 
             //pick some values for the constant c, this determines the shape of the Julia Set
-            cRe = -0.7;
-            cIm = 0.27015;
-            // cRe = rand.Next(-1, 1) / 10;
-            // cIm = rand.Next(-1, 1) / 10;
+        //    cRe = -0.7;
+        //    cIm = 0.27015;
+           
+            cIm = ImaginaryC;
+            cRe = RealC;
 
             //loop through every pixel
             for (int y = 0; y < squareSize; y++)
@@ -152,6 +170,26 @@ namespace StegoCrypto
         private void buttonCancel_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void textBoxZoom_TextChanged(object sender, EventArgs e)
+        {
+            zoomLevel = 0;
+            try {
+                int.TryParse(textBoxZoom.Text, out zoomLevel);
+            }
+            catch {
+                MessageBox.Show("Zoom level must be an integer.");
+            }
+
+            if (zoomLevel < 1)
+            {
+                textBoxZoom.Text = "1";
+            }
+            else if (zoomLevel > 512)
+            {
+                textBoxZoom.Text = "512";
+            }
         }
     }
     
