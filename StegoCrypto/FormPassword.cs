@@ -20,6 +20,7 @@ namespace StegoCrypto
             InitializeComponent();
             this.mainform = mainform;
             this.StartPosition = FormStartPosition.CenterScreen;
+            this.AcceptButton = buttonOK;
         }
 
         public PasswordHandler PwHandler

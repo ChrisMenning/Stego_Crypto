@@ -30,6 +30,7 @@ namespace StegoCrypto
             this.squareSize = squareSize;
             progressBar1.Maximum = squareSize;
             this.zoomLevel = 1;
+            this.AcceptButton = buttonAccept;
         }
 
         private void buttonGenerate_Click(object sender, EventArgs e)
