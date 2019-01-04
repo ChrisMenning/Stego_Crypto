@@ -113,6 +113,7 @@ namespace StegoCrypto
                 buttonSelectRawImage.Enabled = true;
                 imageToEncodeToolStripMenuItem.Enabled = true;
                 generateFractalToolStripMenuItem.Enabled = true;
+
                 byte[] sourceFile = File.ReadAllBytes(openFileDialogSourceFile.FileName);
                 fi = new FileInformation(openFileDialogSourceFile.SafeFileName, sourceFile);
 
@@ -161,10 +162,12 @@ namespace StegoCrypto
                     ImageTooSmall its = new ImageTooSmall(this, (int)SquareSize);
                     its.ShowDialog();
                     buttonHideFile.Enabled = true;
+                    hideFileInImageToolStripMenuItem.Enabled = true;
                 }
                 else
                 {
                     buttonHideFile.Enabled = true;
+                    hideFileInImageToolStripMenuItem.Enabled = true;
                 }
             }
         }
@@ -195,26 +198,16 @@ namespace StegoCrypto
             GenerateFractal gf = new GenerateFractal(this, SquareSize);
             gf.ShowDialog();
             buttonHideFile.Enabled = true;
+            hideFileInImageToolStripMenuItem.Enabled = true;
         }
 
-        // The buttons
-        private void btnOpenFile_Click(object sender, EventArgs e)
-        {
-            OpenFileToHide();
-        }
-
-        private void buttonSelectRawImage_Click(object sender, EventArgs e)
-        {
-            SelectImageForHiding();
-        }
-
-        private async void buttonHideFile_Click(object sender, EventArgs e)
+        private void HideFile()
         {
             aes = new AESencrypter(fi.InfoHeader, fi.FileContents, this);
             BitmapEncoder bmEnc = new BitmapEncoder(new Bitmap(originalImage));
             byte[] bytes = aes.EncryptBytes();
             // MessageBox.Show("Attempting to stuff " + bytes.Length + " bytes into " + (originalImage.Width * originalImage.Height) / 2 + " bytes of space.");
-            if (bytes.Length > (originalImage.Width * originalImage.Height)/2)
+            if (bytes.Length > (originalImage.Width * originalImage.Height) / 2)
             {
                 MessageBox.Show("WARNING: It looks like the file is too large to fit in the image.");
             }
@@ -230,7 +223,7 @@ namespace StegoCrypto
             }
         }
 
-        private void buttonOpenImage_Click(object sender, EventArgs e)
+        private void OpenImageToDecode()
         {
             if (openFileDialogSourceFile.ShowDialog() == DialogResult.OK)
             {
@@ -239,12 +232,34 @@ namespace StegoCrypto
                 pictureBoxEncodedImage.SizeMode = PictureBoxSizeMode.Zoom;
 
                 encImg = (Bitmap)encodedImage;
-                
+
                 fp = new FormPassword(this);
                 fp.ShowDialog();
 
                 buttonRetrieveFile.Enabled = true;
+                retrieveFileFromImageToolStripMenuItem.Enabled = true;
             }
+        }
+
+        // The buttons
+        private void btnOpenFile_Click(object sender, EventArgs e)
+        {
+            OpenFileToHide();
+        }
+
+        private void buttonSelectRawImage_Click(object sender, EventArgs e)
+        {
+            SelectImageForHiding();
+        }
+
+        private void buttonHideFile_Click(object sender, EventArgs e)
+        {
+            HideFile();
+        }
+
+        private void buttonOpenImage_Click(object sender, EventArgs e)
+        {
+            OpenImageToDecode();
         }
 
         private void buttonGenerateFractal_Click(object sender, EventArgs e)
@@ -252,7 +267,12 @@ namespace StegoCrypto
             CallFractalMaker();
         }
 
-        private async void buttonRetrieveFile_Click(object sender, EventArgs e)
+        private void buttonRetrieveFile_Click(object sender, EventArgs e)
+        {
+            RetrieveFile();
+        }
+
+        private async void RetrieveFile()
         {
             encryptionKey = fp.PwHandler.EncryptionKey;
 
@@ -363,6 +383,44 @@ namespace StegoCrypto
         {
             Help h = new Help();
             h.Show();
+        }
+
+        private void clearAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            encryptionKey = new byte[0];
+            fi = null;
+            originalImage = null;
+            decodedBytes = null;
+            encImg = null;
+            picBoxOrig.Image = null;
+            pictureBoxEncodedImage.Image = null;
+            EstimatedStorageCap.Text = "";
+            labelFileInfo.Text = "";
+            labelFileInfo2.Text = "";
+
+            buttonSelectRawImage.Enabled = false;
+            buttonGenerateFractal.Enabled = false;
+            buttonHideFile.Enabled = false;
+            buttonRetrieveFile.Enabled = false;
+            hideFileInImageToolStripMenuItem.Enabled = false;
+            retrieveFileFromImageToolStripMenuItem.Enabled = false;
+            imageToEncodeToolStripMenuItem.Enabled = false;
+            generateFractalToolStripMenuItem.Enabled = false;
+        }
+
+        private void hideFileInImageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            HideFile();
+        }
+
+        private void retrieveFileFromImageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RetrieveFile();
+        }
+
+        private void imageToDecodeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenImageToDecode();
         }
     }
 }
