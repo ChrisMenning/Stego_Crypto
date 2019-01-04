@@ -15,7 +15,7 @@ namespace StegoCrypto
         private Bitmap encodedImage;
         private Color pixelColor;
         private Color sanitizedColor;
-        StringBuilder OnesAndZeros;
+        private BitArray OnesAndZeros;
         private static Mutex mut = new Mutex();
         int newA;
         int newR;
@@ -28,81 +28,79 @@ namespace StegoCrypto
         }
 
         // Encode bits using lock and unlock. (This is still slow, and inaccurate.)
-        public Bitmap EncodedBitMapUsingLocking(byte[] IV, byte[]file)
-        {
-            // Create a new bitmap.
-            Bitmap bmp = new Bitmap(this.rawBitmap);
-            using (var g = Graphics.FromImage(this.rawBitmap))
-            {
-                // Lock the bitmap's bits.  
-                Rectangle rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
-                System.Drawing.Imaging.BitmapData bmpData =
-                    bmp.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite,
-                    System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-    
-                // Get the address of the first line.
-                IntPtr ptr = bmpData.Scan0;
-    
-                // Declare an array to hold the bytes of the bitmap.
-                int bytes = Math.Abs(bmpData.Stride) * bmp.Height;
-                byte[] argbValues = new byte[bytes];
-    
-                // Copy the RGB values into the array.
-                System.Runtime.InteropServices.Marshal.Copy(ptr, argbValues, 0, bytes);
-                
-                PleaseWait pwForm = new PleaseWait();
-                pwForm.progress.Maximum = argbValues.Length;
-                pwForm.Show();
-                pwForm.Refresh();
-    
-                OnesAndZeros = SBPrependIVOntoFileAsStringBuilder(IV, file);
-                int sanitized;
-                int bit;
-                byte encoded;
-                // DO MODIFICATION
-                for (int counter = 0; counter < argbValues.Length; counter++)
-                {
-                    // Sanitize the byte, clearing out it's Least Significant Bit.
-                    if (counter < OnesAndZeros.Length)
-                    {
-                        //Console.WriteLine("Original byte: " + argbValues[counter]);
-                        sanitized = argbValues[counter] - (argbValues[counter] % 2);
-                        //Console.WriteLine("Sanitized byte: " + sanitized);
-                        bit = int.Parse(OnesAndZeros[counter].ToString());
-                        encoded = (byte)(sanitized + bit);
-                        //Console.WriteLine("encoded byte: " + encoded);
-                        argbValues[counter] = encoded;
-                    }
-                    pwForm.progress.Value = counter;
-                }
-                pwForm.Close();
-    
-                Console.WriteLine("Bytes from first two pixels: ");
-                for (int i = 0; i < 8; i++)
-                {
-                    Console.WriteLine("LSB: " + (argbValues[i] % 2));
-                }
-    
-                // Copy the ARGB values back to the bitmap
-                System.Runtime.InteropServices.Marshal.Copy(argbValues, 0, ptr, bytes);
-    
-                // Unlock the bits.
-                bmp.UnlockBits(bmpData);
-    
-                // Draw the modified image.
-                g.DrawImage(bmp, 0, 0);
-            }
-    
-            return bmp;
-        }
+    //    public Bitmap EncodedBitMapUsingLocking(byte[] IV, byte[]file)
+    //    {
+    //        // Create a new bitmap.
+    //        Bitmap bmp = new Bitmap(this.rawBitmap);
+    //        using (var g = Graphics.FromImage(this.rawBitmap))
+    //        {
+    //            // Lock the bitmap's bits.  
+    //            Rectangle rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
+    //            System.Drawing.Imaging.BitmapData bmpData =
+    //                bmp.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite,
+    //                System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+    //
+    //            // Get the address of the first line.
+    //            IntPtr ptr = bmpData.Scan0;
+    //
+    //            // Declare an array to hold the bytes of the bitmap.
+    //            int bytes = Math.Abs(bmpData.Stride) * bmp.Height;
+    //            byte[] argbValues = new byte[bytes];
+    //
+    //            // Copy the RGB values into the array.
+    //            System.Runtime.InteropServices.Marshal.Copy(ptr, argbValues, 0, bytes);
+    //            
+    //            PleaseWait pwForm = new PleaseWait();
+    //            pwForm.progress.Maximum = argbValues.Length;
+    //            pwForm.Show();
+    //            pwForm.Refresh();
+    //
+    //            OnesAndZeros = SBPrependIVOntoFileAsStringBuilder(IV, file);
+    //            int sanitized;
+    //            int bit;
+    //            byte encoded;
+    //            // DO MODIFICATION
+    //            for (int counter = 0; counter < argbValues.Length; counter++)
+    //            {
+    //                // Sanitize the byte, clearing out it's Least Significant Bit.
+    //                if (counter < OnesAndZeros.Length)
+    //                {
+    //                    //Console.WriteLine("Original byte: " + argbValues[counter]);
+    //                    sanitized = argbValues[counter] - (argbValues[counter] % 2);
+    //                    //Console.WriteLine("Sanitized byte: " + sanitized);
+    //                    bit = int.Parse(OnesAndZeros[counter].ToString());
+    //                    encoded = (byte)(sanitized + bit);
+    //                    //Console.WriteLine("encoded byte: " + encoded);
+    //                    argbValues[counter] = encoded;
+    //                }
+    //                pwForm.progress.Value = counter;
+    //            }
+    //            pwForm.Close();
+    //
+    //            Console.WriteLine("Bytes from first two pixels: ");
+    //            for (int i = 0; i < 8; i++)
+    //            {
+    //                Console.WriteLine("LSB: " + (argbValues[i] % 2));
+    //            }
+    //
+    //            // Copy the ARGB values back to the bitmap
+    //            System.Runtime.InteropServices.Marshal.Copy(argbValues, 0, ptr, bytes);
+    //
+    //            // Unlock the bits.
+    //            bmp.UnlockBits(bmpData);
+    //
+    //            // Draw the modified image.
+    //            g.DrawImage(bmp, 0, 0);
+    //        }
+    //
+    //        return bmp;
+    //    }
 
         // 
         public async Task<Bitmap> EncodedBitmap(byte[] file, byte[] IV)
         {
             PleaseWait pwForm = new PleaseWait();
 
-            // Convert IV to string of 1s and 0s.
-            Task<StringBuilder> OZs = PrependIVOntoFileAsStringBuilder(IV, file);
 
             // By setting the new encodedImage to being the same as the rawImage, non-encoded pixels do not need to be set again.
             this.encodedImage = this.rawBitmap;
@@ -111,8 +109,10 @@ namespace StegoCrypto
             int counter = 0;
             int h = this.rawBitmap.Height;
             int w = this.rawBitmap.Width;
-           
-            OnesAndZeros = await OZs;
+
+            // Convert IV to string of 1s and 0s.
+
+            OnesAndZeros = GetOnesAndZeros(IV, file);
             pwForm.progress.Maximum = h;
             pwForm.Show();
             pwForm.Refresh();
@@ -170,10 +170,10 @@ namespace StegoCrypto
             {
                 // Encode Nibble to Pixel
                 // Next, declare a newR, newG, and newB consisting of the sanitized value, plus a bit from the byteString.
-                newA = sanitizedColor.A + int.Parse(OnesAndZeros[counter].ToString());
-                newR = sanitizedColor.R + int.Parse(OnesAndZeros[counter + 1].ToString());
-                newG = sanitizedColor.G + int.Parse(OnesAndZeros[counter + 2].ToString());
-                newB = sanitizedColor.B + int.Parse(OnesAndZeros[counter + 3].ToString());
+                newA = sanitizedColor.A + ToInt(OnesAndZeros[counter]);
+                newR = sanitizedColor.R + ToInt(OnesAndZeros[counter + 1]);
+                newG = sanitizedColor.G + ToInt(OnesAndZeros[counter + 2]);
+                newB = sanitizedColor.B + ToInt(OnesAndZeros[counter + 3]);
 
                 return Color.FromArgb(newA, newR, newG, newB);
             }
@@ -185,44 +185,81 @@ namespace StegoCrypto
         }
 
         // Asyncronus method for prepending IV onto File as Stringbuilder
-        private async Task<StringBuilder> PrependIVOntoFileAsStringBuilder(byte[] IV, byte[] file)
+        private BitArray GetOnesAndZeros(byte[] IV, byte[] file)
         {
-            OnesAndZeros = new StringBuilder();
-
+            List<byte> bothTogether = new List<byte>();
+            
             foreach (byte b in IV)
             {
-                OnesAndZeros.Append(Convert.ToString(b, 2).PadLeft(8, '0'));
+                bothTogether.Add(Reverse(b));
             }
 
-            // Convert byte[] to string of 1s and 0s and add on to list..
             foreach (byte b in file)
             {
-                OnesAndZeros.Append(Convert.ToString(b, 2).PadLeft(8, '0'));
+                bothTogether.Add(Reverse(b));
             }
+            OnesAndZeros = new BitArray(bothTogether.ToArray());
+
+            Console.WriteLine("Ones and zeros is " + OnesAndZeros.Length /8 + " bytes long.");
+
+            // test that IV is encoded correctly.
+            string newByte = "";
+            for (int j = 0; j < 8; j++)
+            {
+                newByte += ToInt(OnesAndZeros[j]).ToString();
+            }
+            Console.WriteLine("OnesAndZeros IV byte: " + newByte);
 
             return OnesAndZeros;
         }
 
         // Method for prepending IV onto File as Stringbuilder
-        private StringBuilder SBPrependIVOntoFileAsStringBuilder(byte[] IV, byte[] file)
+        //    private StringBuilder SBPrependIVOntoFileAsStringBuilder(byte[] IV, byte[] file)
+        //    {
+        //        OnesAndZeros = new StringBuilder();
+        //
+        //        foreach (byte b in IV)
+        //        {
+        //            OnesAndZeros.Append(Convert.ToString(b, 2).PadLeft(8, '0'));
+        //        }
+        //
+        //        // Convert byte[] to string of 1s and 0s and add on to list..
+        //        foreach (byte b in file)
+        //        {
+        //            OnesAndZeros.Append(Convert.ToString(b, 2).PadLeft(8, '0'));
+        //        }
+        //
+        //        return OnesAndZeros;
+        //    }
+
+        public int ToInt(bool value)
         {
-            OnesAndZeros = new StringBuilder();
-
-            foreach (byte b in IV)
-            {
-                OnesAndZeros.Append(Convert.ToString(b, 2).PadLeft(8, '0'));
-            }
-
-            // Convert byte[] to string of 1s and 0s and add on to list..
-            foreach (byte b in file)
-            {
-                OnesAndZeros.Append(Convert.ToString(b, 2).PadLeft(8, '0'));
-            }
-
-            return OnesAndZeros;
+            if (value == true)
+                return 1;
+            else
+                return 0;
         }
 
-       
+        // Reverses bits in a byte https://softwarejuancarlos.com/2013/05/05/byte_bits_reverse/
+        public static byte Reverse(byte inByte)
+        {
+            byte result = 0x00;
 
+            for (byte mask = 0x80; Convert.ToInt32(mask) > 0; mask >>= 1)
+            {
+                // shift right current result
+                result = (byte)(result >> 1);
+
+                // tempbyte = 1 if there is a 1 in the current position
+                var tempbyte = (byte)(inByte & mask);
+                if (tempbyte != 0x00)
+                {
+                    // Insert a 1 in the left
+                    result = (byte)(result | 0x80);
+                }
+            }
+
+            return (result);
+        }
     }
 }
