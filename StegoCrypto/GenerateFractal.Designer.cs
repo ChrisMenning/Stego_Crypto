@@ -39,6 +39,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxZoom = new System.Windows.Forms.TextBox();
             this.labelZoom = new System.Windows.Forms.Label();
+            this.comboBoxPreset = new System.Windows.Forms.ComboBox();
+            this.labelPreset = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -100,7 +102,7 @@
             // textBoxC
             // 
             this.textBoxC.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxC.Location = new System.Drawing.Point(585, 38);
+            this.textBoxC.Location = new System.Drawing.Point(585, 97);
             this.textBoxC.Name = "textBoxC";
             this.textBoxC.Size = new System.Drawing.Size(100, 22);
             this.textBoxC.TabIndex = 5;
@@ -109,7 +111,7 @@
             // textBoxCim
             // 
             this.textBoxCim.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxCim.Location = new System.Drawing.Point(585, 66);
+            this.textBoxCim.Location = new System.Drawing.Point(585, 125);
             this.textBoxCim.Name = "textBoxCim";
             this.textBoxCim.Size = new System.Drawing.Size(100, 22);
             this.textBoxCim.TabIndex = 6;
@@ -119,7 +121,7 @@
             // 
             this.labelReal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelReal.AutoSize = true;
-            this.labelReal.Location = new System.Drawing.Point(496, 41);
+            this.labelReal.Location = new System.Drawing.Point(496, 100);
             this.labelReal.Name = "labelReal";
             this.labelReal.Size = new System.Drawing.Size(50, 17);
             this.labelReal.TabIndex = 7;
@@ -129,7 +131,7 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(496, 69);
+            this.label1.Location = new System.Drawing.Point(496, 128);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(82, 17);
             this.label1.TabIndex = 8;
@@ -137,7 +139,7 @@
             // 
             // textBoxZoom
             // 
-            this.textBoxZoom.Location = new System.Drawing.Point(585, 95);
+            this.textBoxZoom.Location = new System.Drawing.Point(585, 38);
             this.textBoxZoom.Name = "textBoxZoom";
             this.textBoxZoom.Size = new System.Drawing.Size(100, 22);
             this.textBoxZoom.TabIndex = 9;
@@ -147,17 +149,46 @@
             // labelZoom
             // 
             this.labelZoom.AutoSize = true;
-            this.labelZoom.Location = new System.Drawing.Point(499, 99);
+            this.labelZoom.Location = new System.Drawing.Point(496, 41);
             this.labelZoom.Name = "labelZoom";
             this.labelZoom.Size = new System.Drawing.Size(82, 17);
             this.labelZoom.TabIndex = 10;
             this.labelZoom.Text = "Zoom Level";
+            // 
+            // comboBoxPreset
+            // 
+            this.comboBoxPreset.FormattingEnabled = true;
+            this.comboBoxPreset.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "Custom"});
+            this.comboBoxPreset.Location = new System.Drawing.Point(585, 67);
+            this.comboBoxPreset.Name = "comboBoxPreset";
+            this.comboBoxPreset.Size = new System.Drawing.Size(100, 24);
+            this.comboBoxPreset.TabIndex = 11;
+            this.comboBoxPreset.Text = "1";
+            this.comboBoxPreset.SelectedIndexChanged += new System.EventHandler(this.comboBoxPreset_SelectedIndexChanged);
+            // 
+            // labelPreset
+            // 
+            this.labelPreset.AutoSize = true;
+            this.labelPreset.Location = new System.Drawing.Point(497, 70);
+            this.labelPreset.Name = "labelPreset";
+            this.labelPreset.Size = new System.Drawing.Size(49, 17);
+            this.labelPreset.TabIndex = 12;
+            this.labelPreset.Text = "Preset";
             // 
             // GenerateFractal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(708, 572);
+            this.Controls.Add(this.labelPreset);
+            this.Controls.Add(this.comboBoxPreset);
             this.Controls.Add(this.labelZoom);
             this.Controls.Add(this.textBoxZoom);
             this.Controls.Add(this.label1);
@@ -190,5 +221,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBoxZoom;
         private System.Windows.Forms.Label labelZoom;
+        private System.Windows.Forms.ComboBox comboBoxPreset;
+        private System.Windows.Forms.Label labelPreset;
     }
 }
