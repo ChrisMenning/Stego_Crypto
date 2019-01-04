@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -9,17 +10,17 @@ namespace StegoCrypto
 {
     public class BitmapDecoder
     {
-        private StringBuilder binaryFromImage;
+        private List<bool> binaryFromImage;
 
         // Constructor
         public BitmapDecoder()
         {
-            binaryFromImage = new StringBuilder();
         }
 
         // Bytes from Image
-        public async Task<byte[]> BytesFromImage(Bitmap encoded)
+        public byte[] BytesFromImage(Bitmap encoded)
         {
+            binaryFromImage = new List<bool>();
             byte[] bytes;
 
             PleaseWait pwForm = new PleaseWait();
@@ -36,7 +37,7 @@ namespace StegoCrypto
                 {
                     // Pull the last bit out of each color channel and concatenate them onto the ones and zeros.
                     Color pixelColor = encoded.GetPixel(column, row);
-                    await GetLastBitOfEachColorChannel(pixelColor);
+                    GetLastBitOfEachColorChannel(pixelColor);
 
                     testCounter++;
                 }
@@ -44,41 +45,54 @@ namespace StegoCrypto
                 pwForm.Refresh();
             }
             Console.WriteLine("Checked " + testCounter + " pixels, which should be able to store " + testCounter * 4 + " bits, or " + testCounter / 2 + " bytes.");
-            Console.WriteLine("Finished looping through pixels. Found " + binaryFromImage.Length + " bits");
+            Console.WriteLine("Finished looping through pixels. Found " + binaryFromImage.Count + " bits");
 
             // Convert string of 1s and 0s to byte[].
-            Task<byte[]> bytesFromBinaryString = BytesFromBinaryString();
-            bytes = await bytesFromBinaryString;
+            BitArray ba = new BitArray(binaryFromImage.ToArray());
+            bytes = ToByteArray(ba);
 
             pwForm.Close();
             return bytes;
         }
 
-        private async Task<bool> GetLastBitOfEachColorChannel(Color color)
+        private void GetLastBitOfEachColorChannel(Color color)
         {
             Color pixelColor = color;
-            this.binaryFromImage.Append(pixelColor.A % 2);
-            this.binaryFromImage.Append(pixelColor.R % 2);
-            this.binaryFromImage.Append(pixelColor.G % 2);
-            this.binaryFromImage.Append(pixelColor.B % 2);
-
-            return true;
+            this.binaryFromImage.Add(ToBool(pixelColor.A % 2));
+            this.binaryFromImage.Add(ToBool(pixelColor.R % 2));
+            this.binaryFromImage.Add(ToBool(pixelColor.G % 2));
+            this.binaryFromImage.Add(ToBool(pixelColor.B % 2));
         }
 
-        public async Task<byte[]> BytesFromBinaryString( )
+        public bool ToBool(int value)
         {
-            // Very large files run out of memory on this next line.
-            string binary = binaryFromImage.ToString();
+            if (value == 1)
+                return true;
+            else
+                return false;
+        }
 
-            byte[] bytes;
-            int numOfBytes = binaryFromImage.Length / 8;
-            bytes = new byte[numOfBytes];
+        // Method for converting BitArray to Byte[] by David Brown: http://geekswithblogs.net/dbrown/archive/2009/04/05/convert-a-bitarray-to-byte-in-c.aspx
+        public byte[] ToByteArray(BitArray bits)
+        {
+            int numBytes = bits.Count / 8;
+            if (bits.Count % 8 != 0) numBytes++;
 
-            for (int i = 0; i < numOfBytes; ++i)
+            byte[] bytes = new byte[numBytes];
+            int byteIndex = 0, bitIndex = 0;
+
+            for (int i = 0; i < bits.Count; i++)
             {
-                bytes[i] = Convert.ToByte(binary.Substring(8 * i, 8), 2);
+                if (bits[i])
+                    bytes[byteIndex] |= (byte)(1 << (7 - bitIndex));
+
+                bitIndex++;
+                if (bitIndex == 8)
+                {
+                    bitIndex = 0;
+                    byteIndex++;
+                }
             }
-            Console.WriteLine("Converted bits to " + bytes.Count() + " bytes.");
 
             return bytes;
         }

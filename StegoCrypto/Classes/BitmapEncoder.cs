@@ -12,12 +12,11 @@ namespace StegoCrypto
     public class BitmapEncoder
     {
         // the private fields.
-        private Bitmap rawBitmap;
+        private readonly Bitmap rawBitmap;
         private Bitmap encodedImage;
         private Color pixelColor;
         private Color sanitizedColor;
         private BitArray OnesAndZeros;
-        private static Mutex mut = new Mutex();
         private int newA;
         private int newR;
         private int newG;
@@ -131,18 +130,8 @@ namespace StegoCrypto
             {
                 bothTogether.Add(Reverse(b));
             }
+
             OnesAndZeros = new BitArray(bothTogether.ToArray());
-
-            Console.WriteLine("Ones and zeros is " + OnesAndZeros.Length /8 + " bytes long.");
-
-            // test that IV is encoded correctly.
-            string newByte = "";
-            for (int j = 0; j < 8; j++)
-            {
-                newByte += ToInt(OnesAndZeros[j]).ToString();
-            }
-            Console.WriteLine("OnesAndZeros IV byte: " + newByte);
-
             return OnesAndZeros;
         }
 

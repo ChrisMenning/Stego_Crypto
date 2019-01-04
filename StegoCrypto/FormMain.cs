@@ -252,13 +252,12 @@ namespace StegoCrypto
             CallFractalMaker();
         }
 
-        private async void buttonRetrieveFile_Click(object sender, EventArgs e)
+        private void buttonRetrieveFile_Click(object sender, EventArgs e)
         {
             encryptionKey = fp.PwHandler.EncryptionKey;
 
             BitmapDecoder dec = new BitmapDecoder();
-            Task<byte[]> decodedBytesTask = dec.BytesFromImage(encImg);
-            decodedBytes = await decodedBytesTask;
+            decodedBytes = dec.BytesFromImage(encImg);
 
             Console.WriteLine("Retrieved " + decodedBytes.Count() + " bytes from image.");
 
