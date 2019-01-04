@@ -18,7 +18,7 @@ namespace StegoCrypto
         }
 
         // Bytes from Image
-        public async Task<byte[]> BytesFromImage(Bitmap encoded)
+        public byte[] BytesFromImage(Bitmap encoded)
         {
             binaryFromImage = new List<bool>();
             byte[] bytes;
