@@ -77,8 +77,8 @@ namespace StegoCrypto
             buttonGenerate.Enabled = false;
             Random rand = new Random();
 
-            int randomChannel = rand.Next(0, 3);
-            int[] colors = new int[3];
+           //int randomChannel = rand.Next(0, 3);
+           //int[] colors = new int[3];
 
             Bitmap bmp = new Bitmap(squareSize, squareSize);
             progressBar1.Maximum = (squareSize * squareSize) / 2;
@@ -122,33 +122,7 @@ namespace StegoCrypto
                         if ((newRe * newRe + newIm * newIm) > 4) break;
                     }
 
-                    // make brightness black if maxIterations reached
-
-                    for (int j = 0; j < 3; j++)
-                    {
-                        colors[j] = i % 255;
-                    }
-
-
-                    if (i < maxIterations)
-                    {
-                        colors[randomChannel] = 255 - (i % 255);
-                    }
-                    else
-                    {
-                        colors[randomChannel] = 0;
-                    }
-
-                    color = Color.FromArgb(250, colors[0], colors[1], colors[2]);
-
-                    //  if (i < maxIterations)
-                    //  {
-                    //      color = colors[i];
-                    //  }
-                    //  else
-                    //      color = colors[0];
-
-                    //draw the pixel
+                    color = HsvToRgb(i % maxIterations, 1, i % maxIterations);
                     bmp.SetPixel(x, y, color);
                 }
                 progressBar1.Increment(y);
@@ -189,6 +163,147 @@ namespace StegoCrypto
             else if (zoomLevel > 512)
             {
                 textBoxZoom.Text = "512";
+            }
+        }
+
+        // HSV to RGB by Patrik Svensson https://stackoverflow.com/questions/1335426/is-there-a-built-in-c-net-system-api-for-hsv-to-rgb
+        private Color HsvToRgb(double h, double S, double V)
+        {
+            double H = h;
+            while (H < 0) { H += 360; };
+            while (H >= 360) { H -= 360; };
+            double R, G, B;
+            if (V <= 0)
+            { R = G = B = 0; }
+            else if (S <= 0)
+            {
+                R = G = B = V;
+            }
+            else
+            {
+                double hf = H / 60.0;
+                int i = (int)Math.Floor(hf);
+                double f = hf - i;
+                double pv = V * (1 - S);
+                double qv = V * (1 - S * f);
+                double tv = V * (1 - S * (1 - f));
+                switch (i)
+                {
+
+                    // Red is the dominant color
+
+                    case 0:
+                        R = V;
+                        G = tv;
+                        B = pv;
+                        break;
+
+                    // Green is the dominant color
+
+                    case 1:
+                        R = qv;
+                        G = V;
+                        B = pv;
+                        break;
+                    case 2:
+                        R = pv;
+                        G = V;
+                        B = tv;
+                        break;
+
+                    // Blue is the dominant color
+
+                    case 3:
+                        R = pv;
+                        G = qv;
+                        B = V;
+                        break;
+                    case 4:
+                        R = tv;
+                        G = pv;
+                        B = V;
+                        break;
+
+                    // Red is the dominant color
+
+                    case 5:
+                        R = V;
+                        G = pv;
+                        B = qv;
+                        break;
+
+                    // Just in case we overshoot on our math by a little, we put these here. Since its a switch it won't slow us down at all to put these here.
+
+                    case 6:
+                        R = V;
+                        G = tv;
+                        B = pv;
+                        break;
+                    case -1:
+                        R = V;
+                        G = pv;
+                        B = qv;
+                        break;
+
+                    // The color is not defined, we should throw an error.
+
+                    default:
+                        //LFATAL("i Value error in Pixel conversion, Value is %d", i);
+                        R = G = B = V; // Just pretend its black/white
+                        break;
+                }
+            }
+            int r = Clamp((int)(R * 255.0));
+            int g = Clamp((int)(G * 255.0));
+            int b = Clamp((int)(B * 255.0));
+
+            return Color.FromArgb(255, r, g, b);
+        }
+
+        /// <summary>
+        /// Clamp a value to 0-255
+        /// </summary>
+        int Clamp(int i)
+        {
+            if (i < 0) return 0;
+            if (i > 255) return 255;
+            return i;
+        }
+
+        private void comboBoxPreset_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (comboBoxPreset.SelectedItem)
+            {
+                case "1":
+                    textBoxC.Text = "-0.7";
+                    textBoxCim.Text = "0.27015";
+                    break;
+                case "2":
+                    textBoxC.Text = "-0.8";
+                    textBoxCim.Text = "0.156";
+                    break;
+                case "3":
+                    textBoxC.Text = "-0.7885";
+                    textBoxCim.Text = "0.1385";
+                    break;
+                case "4":
+                    textBoxC.Text = "-0.70176";
+                    textBoxCim.Text = "0.265";
+                    break;
+                case "5":
+                    textBoxC.Text = "0.285";
+                    textBoxCim.Text = "0.0132";
+                    break;
+                case "6":
+                    textBoxC.Text = "-0.391";
+                    textBoxCim.Text = "-0.59";
+                    break;
+                case "Custom":
+                    break;
+                default:
+                    textBoxC.Text = "-0.7";
+                    textBoxCim.Text = "0.27015";
+                    break;
             }
         }
     }
