@@ -272,13 +272,12 @@ namespace StegoCrypto
             RetrieveFile();
         }
 
-        private async void RetrieveFile()
+        private void RetrieveFile()
         {
             encryptionKey = fp.PwHandler.EncryptionKey;
 
             BitmapDecoder dec = new BitmapDecoder();
-            Task<byte[]> decodedBytesTask = dec.BytesFromImage(encImg);
-            decodedBytes = await decodedBytesTask;
+            decodedBytes = dec.BytesFromImage(encImg);
 
             Console.WriteLine("Retrieved " + decodedBytes.Count() + " bytes from image.");
 
