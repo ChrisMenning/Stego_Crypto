@@ -11,22 +11,25 @@ namespace StegoCrypto
 {
     public class BitmapEncoder
     {
+        // the private fields.
         private Bitmap rawBitmap;
         private Bitmap encodedImage;
         private Color pixelColor;
         private Color sanitizedColor;
         private BitArray OnesAndZeros;
         private static Mutex mut = new Mutex();
-        int newA;
-        int newR;
-        int newG;
-        int newB;
+        private int newA;
+        private int newR;
+        private int newG;
+        private int newB;
 
+        // The constructor
         public BitmapEncoder(Bitmap rawBitmap)
         {
             this.rawBitmap = rawBitmap;
         }
 
+        // The main method that returns an encoded bitmap.
         public Bitmap EncodedBitmap(byte[] file, byte[] IV)
         {
             PleaseWait pwForm = new PleaseWait();
@@ -39,9 +42,10 @@ namespace StegoCrypto
             int h = this.rawBitmap.Height;
             int w = this.rawBitmap.Width;
 
-            // Convert IV to string of 1s and 0s.
-
+            // Prepend IV onto file and convert them both to a BitArray.
             OnesAndZeros = GetOnesAndZeros(IV, file);
+
+            // Update the progress bar.
             pwForm.progress.Maximum = h;
             pwForm.Show();
             pwForm.Refresh();
