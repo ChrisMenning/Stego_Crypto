@@ -130,6 +130,9 @@ namespace StegoCrypto
         // This method adapted from https://lodev.org/cgtutor/juliamandelbrot.html
         private async Task<Bitmap> JuliaSet()
         {
+            progressBar1.Maximum = (squareSize * squareSize) / 2;
+            progressBar1.Show();
+
             buttonGenerate.Enabled = false;
             Bitmap bmp = new Bitmap(squareSize, squareSize);
 
@@ -146,15 +149,10 @@ namespace StegoCrypto
             int bytes = Math.Abs(bmpData.Stride) * bmp.Height;
             byte[] rgbValues = new byte[bytes];
 
-            progressBar1.Maximum = (squareSize * squareSize) / 2;
-            progressBar1.Show();
-
             //each iteration, it calculates: new = old*old + c, where c is a constant and old starts at current pixel
             double cRe, cIm;           //real and imaginary part of the constant c, determinate shape of the Julia Set
             double newRe, newIm, oldRe, oldIm;   //real and imaginary parts of new and old
-            //double zoom = rand.Next(1, 300), moveX = rand.NextDouble() * (0.1 - -0.1) + -0.1, moveY = rand.NextDouble() * (0.1 - -0.1) + -0.1; //you can change these to zoom and change position
             double zoom = zoomLevel, moveX = xOffset, moveY = yOffset; //you can change these to zoom and change position
-            Color color; //the RGB color value for the pixel
             int maxIterations = 512; //after how much iterations the function should stop
 
             //pick some values for the constant c, this determines the shape of the Julia Set           
@@ -195,6 +193,7 @@ namespace StegoCrypto
 
                     counter += 4;
                 }
+
                 this.Invoke(delegateRefresh);
                 progressBar1.Increment(y);
             }
@@ -205,15 +204,11 @@ namespace StegoCrypto
                 Console.WriteLine("Color byte: " + rgbValues[i]);
             }
 
-
             // Copy the RGB values back to the bitmap
             System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
+
             // Unlock the bits.
             bmp.UnlockBits(bmpData);
-            Console.WriteLine("first pixel's bytes are: " + bmp.GetPixel(0, 0).A + ", "
-                                                + bmp.GetPixel(0, 0).R + ", "
-                                                + bmp.GetPixel(0, 0).G + ", "
-                                                + bmp.GetPixel(0, 0).B);
 
             buttonGenerate.Enabled = true;
             return bmp;

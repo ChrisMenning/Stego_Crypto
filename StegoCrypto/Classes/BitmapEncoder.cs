@@ -94,7 +94,6 @@ namespace StegoCrypto
                 }
             }
 
-            //Console.WriteLine("Finished stuffing " + OnesAndZeros.Length / 8 + " bytes, including 16 bit IV." );
             pwForm.Close();
 
             if (OnesAndZeros.Length / 8 > (w * h / 2))
