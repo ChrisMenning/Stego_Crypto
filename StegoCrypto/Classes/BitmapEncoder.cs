@@ -75,14 +75,15 @@ namespace StegoCrypto
                     for (int column = 0; column < w; column++)
                     {
                         {
-                            Color c = MakeNewPixel(column, row, counter);
+                            if (counter + 3 < OnesAndZeros.Length)
+                            {
+                                rgbValues[counter] = (byte)((rgbValues[counter] - (rgbValues[counter] % 2)) + ToInt(OnesAndZeros[counter + 3]));
+                                rgbValues[counter + 1] = (byte)((rgbValues[counter + 1] - (rgbValues[counter + 1] % 2)) + ToInt(OnesAndZeros[counter + 2]));
+                                rgbValues[counter + 2] = (byte)((rgbValues[counter + 2] - (rgbValues[counter + 2] % 2)) + ToInt(OnesAndZeros[counter + 1]));
+                                rgbValues[counter + 3] = (byte)((rgbValues[counter + 3] - (rgbValues[counter + 3] % 2)) + ToInt(OnesAndZeros[counter]));
 
-                            rgbValues[counter] = c.B;
-                            rgbValues[counter + 1] = c.G;
-                            rgbValues[counter + 2] = c.R;
-                            rgbValues[counter + 3] = c.A;
-
-                            counter += 4;
+                                counter += 4;
+                            }
                         }
                     }
                     pwForm.progress.Invoke(pwForm.myDelegate);
@@ -105,42 +106,6 @@ namespace StegoCrypto
             // Unlock the bits.
             this.encodedImage.UnlockBits(bmpData);
             return this.encodedImage;
-        }
-
-        private Color MakeNewPixel(int col, int r, int count)
-        {
-            int row = r;
-            int column  = col;
-            int counter = count;
-
-            // Sanitize the original pixel
-            // Get the precise color value of the pixel at this row and this column.
-            pixelColor = this.rawBitmap.GetPixel(column, row);
-
-            // Now create a copy of the pixelColor, but with the Least Significant Bit of each color cleared out.
-            sanitizedColor = Color.FromArgb(
-                    pixelColor.A - (pixelColor.A % 2),
-                    pixelColor.R - (pixelColor.R % 2),
-                    pixelColor.G - (pixelColor.G % 2),
-                    pixelColor.B - (pixelColor.B % 2));
-
-            // Assign each bit from OnesAndZeros to each color channel.
-            if (counter + 3 < OnesAndZeros.Length)
-            {
-                // Encode Nibble to Pixel
-                // Next, declare a newR, newG, and newB consisting of the sanitized value, plus a bit from the byteString.
-                newA = sanitizedColor.A + ToInt(OnesAndZeros[counter]);
-                newR = sanitizedColor.R + ToInt(OnesAndZeros[counter + 1]);
-                newG = sanitizedColor.G + ToInt(OnesAndZeros[counter + 2]);
-                newB = sanitizedColor.B + ToInt(OnesAndZeros[counter + 3]);
-
-                return Color.FromArgb(newA, newR, newG, newB);
-            }
-            else
-            {
-                // Otherwise give the image a pixel equal to the sanitized pixel value.
-                return pixelColor;
-            }
         }
 
         // Prepend IV onto File as BitArray
