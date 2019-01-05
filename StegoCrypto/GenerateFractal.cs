@@ -14,6 +14,10 @@ namespace StegoCrypto
     {
         public delegate void RefreshBar();
         public RefreshBar delegateRefresh;
+
+        public delegate void MakeJuliaSet();
+        public MakeJuliaSet delegateJulia;
+
         private FormMain mainForm;
         private int squareSize;
         private Bitmap newFractal;
@@ -35,9 +39,15 @@ namespace StegoCrypto
             this.zoomLevel = 1;
             this.AcceptButton = buttonAccept;
             delegateRefresh = new RefreshBar(progressBar1.Refresh);
+            delegateJulia = new MakeJuliaSet(MakeJuliaSetMethod);
         }
 
-        private async void buttonGenerate_Click(object sender, EventArgs e)
+        private void buttonGenerate_Click(object sender, EventArgs e)
+        {
+            this.Invoke(delegateJulia);
+        }
+
+        private async void MakeJuliaSetMethod()
         {
             ValidateOffsets();
             ValidateC();
