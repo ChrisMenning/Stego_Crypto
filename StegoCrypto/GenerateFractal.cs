@@ -12,13 +12,14 @@ namespace StegoCrypto
 {
     public partial class GenerateFractal : Form
     {
-        // This code adapted from https://lodev.org/cgtutor/juliamandelbrot.html
         private FormMain mainForm;
         private int squareSize;
         private Bitmap newFractal;
         private double realC;
         private double imaginaryC;
-        private int zoomLevel;
+        private double zoomLevel;
+        private double xOffset;
+        private double yOffset;
 
         public double RealC { get { return realC; } set { realC = value; } } 
         public double ImaginaryC { get { return imaginaryC; } set { imaginaryC = value; } }
@@ -35,11 +36,54 @@ namespace StegoCrypto
 
         private void buttonGenerate_Click(object sender, EventArgs e)
         {
+            ValidateOffsets();
             ValidateC();
             newFractal = JuliaSet();
             pictureBox1.Image = newFractal;
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             buttonAccept.Enabled = true;
+        }
+
+        private void ValidateOffsets()
+        {
+            try
+            {
+                double.TryParse(textBoxXOffset.Text, out xOffset);
+
+                if (xOffset > 1)
+                {
+                    xOffset = 1;
+                }
+                else if (xOffset < -1)
+                {
+                    xOffset = -1;
+                }
+                textBoxXOffset.Text = xOffset.ToString();
+            }
+            catch
+            {
+                MessageBox.Show("Offset value must be a valid decimal.");
+            }
+
+            try
+            {
+                double.TryParse(textBoxYOffset.Text, out yOffset);
+
+                if (yOffset > 1)
+                {
+                    yOffset = 1;
+                }
+                else if (yOffset < -1)
+                {
+                    yOffset = -1;
+                }
+                textBoxYOffset.Text = yOffset.ToString();
+            }
+            catch
+            {
+                MessageBox.Show("Offset value must be a valid decimal.");
+            }
+
         }
 
         private void ValidateC()
@@ -73,6 +117,7 @@ namespace StegoCrypto
             Console.WriteLine("C: " + RealC + " ImC: " + ImaginaryC);
         }
 
+        // This method adapted from https://lodev.org/cgtutor/juliamandelbrot.html
         private Bitmap JuliaSet()
         {
             buttonGenerate.Enabled = false;
@@ -89,14 +134,11 @@ namespace StegoCrypto
             double cRe, cIm;           //real and imaginary part of the constant c, determinate shape of the Julia Set
             double newRe, newIm, oldRe, oldIm;   //real and imaginary parts of new and old
             //double zoom = rand.Next(1, 300), moveX = rand.NextDouble() * (0.1 - -0.1) + -0.1, moveY = rand.NextDouble() * (0.1 - -0.1) + -0.1; //you can change these to zoom and change position
-            double zoom = zoomLevel, moveX = 0, moveY = 0; //you can change these to zoom and change position
+            double zoom = zoomLevel, moveX = xOffset, moveY = yOffset; //you can change these to zoom and change position
             Color color; //the RGB color value for the pixel
             int maxIterations = 512; //after how much iterations the function should stop
 
-            //pick some values for the constant c, this determines the shape of the Julia Set
-        //    cRe = -0.7;
-        //    cIm = 0.27015;
-           
+            //pick some values for the constant c, this determines the shape of the Julia Set           
             cIm = ImaginaryC;
             cRe = RealC;
 
@@ -122,8 +164,9 @@ namespace StegoCrypto
                         //if the point is outside the circle with radius 2: stop
                         if ((newRe * newRe + newIm * newIm) > 4) break;
                     }
-
-                    color = HsvToRgb(i % maxIterations, 1, i % maxIterations);
+                    //Console.WriteLine("hue: " + i % 360); 
+                    double val = i % maxIterations;
+                    color = HsvToRgb(val, 1, val);
                     bmp.SetPixel(x, y, color);
                 }
                 progressBar1.Increment(y);
@@ -151,7 +194,7 @@ namespace StegoCrypto
         {
             zoomLevel = 0;
             try {
-                int.TryParse(textBoxZoom.Text, out zoomLevel);
+                double.TryParse(textBoxZoom.Text, out zoomLevel);
             }
             catch {
                 MessageBox.Show("Zoom level must be an integer.");
@@ -307,6 +350,15 @@ namespace StegoCrypto
                     textBoxCim.Text = "0.27015";
                     break;
             }
+        }
+
+        private void textBoxXOffset_TextChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void textBoxYOffset_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
     
