@@ -147,7 +147,7 @@ namespace StegoCrypto
 
             // Declare an array to hold the bytes of the bitmap.
             int bytes = Math.Abs(bmpData.Stride) * bmp.Height;
-            byte[] rgbValues = new byte[bytes];
+            byte[] argbValues = new byte[bytes];
 
             //each iteration, it calculates: new = old*old + c, where c is a constant and old starts at current pixel
             double cRe, cIm;           //real and imaginary part of the constant c, determinate shape of the Julia Set
@@ -186,10 +186,10 @@ namespace StegoCrypto
                     int r, g, b;
                     HsvToRgb(val, 1, val, out r, out g, out b);
                     // Note: For some reason, the byte order needs to be reversed here.
-                    rgbValues[counter + 3] = 255;
-                    rgbValues[counter + 2] = (byte)r;
-                    rgbValues[counter + 1] = (byte)g;
-                    rgbValues[counter + 0] = (byte)b;
+                    argbValues[counter + 3] = 255;
+                    argbValues[counter + 2] = (byte)r;
+                    argbValues[counter + 1] = (byte)g;
+                    argbValues[counter + 0] = (byte)b;
 
                     counter += 4;
                 }
@@ -201,11 +201,11 @@ namespace StegoCrypto
 
             for (int i = 0; i < 16; i++)
             {
-                Console.WriteLine("Color byte: " + rgbValues[i]);
+                Console.WriteLine("Color byte: " + argbValues[i]);
             }
 
             // Copy the RGB values back to the bitmap
-            System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
+            System.Runtime.InteropServices.Marshal.Copy(argbValues, 0, ptr, bytes);
 
             // Unlock the bits.
             bmp.UnlockBits(bmpData);

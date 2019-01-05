@@ -12,8 +12,7 @@ namespace StegoCrypto
     public class BitmapEncoder
     {
         // the private fields.
-        private readonly Bitmap rawBitmap;
-        private Bitmap encodedImage;
+        private readonly Bitmap theBitmap;
         private Color pixelColor;
         private Color sanitizedColor;
         private BitArray OnesAndZeros;
@@ -25,7 +24,7 @@ namespace StegoCrypto
         // The constructor
         public BitmapEncoder(Bitmap rawBitmap)
         {
-            this.rawBitmap = rawBitmap;
+            this.theBitmap = rawBitmap;
         }
 
         // The main method that returns an encoded bitmap.
@@ -33,20 +32,17 @@ namespace StegoCrypto
         {
             PleaseWait pwForm = new PleaseWait();
 
-            // By setting the new encodedImage to being the same as the rawImage, non-encoded pixels do not need to be set again.
-            this.encodedImage = new Bitmap(this.rawBitmap);
-
             // Lock the bitmap's bits.  
-            Rectangle rect = new Rectangle(0, 0, this.encodedImage.Width, this.encodedImage.Height);
+            Rectangle rect = new Rectangle(0, 0, this.theBitmap.Width, this.theBitmap.Height);
             System.Drawing.Imaging.BitmapData bmpData =
-                this.encodedImage.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite,
-                this.encodedImage.PixelFormat);
+                this.theBitmap.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite,
+                this.theBitmap.PixelFormat);
 
             // Get the address of the first line.
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap.
-            int bytes = Math.Abs(bmpData.Stride) * this.encodedImage.Height;
+            int bytes = Math.Abs(bmpData.Stride) * this.theBitmap.Height;
             byte[] rgbValues = new byte[bytes];
 
             // Copy the RGB values into the array.
@@ -54,8 +50,8 @@ namespace StegoCrypto
 
             // Declare a counter.
             int counter = 0;
-            int h = this.rawBitmap.Height;
-            int w = this.rawBitmap.Width;
+            int h = this.theBitmap.Height;
+            int w = this.theBitmap.Width;
 
             // Prepend IV onto file and convert them both to a BitArray.
             OnesAndZeros = GetOnesAndZeros(IV, file);
@@ -104,8 +100,8 @@ namespace StegoCrypto
             System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
 
             // Unlock the bits.
-            this.encodedImage.UnlockBits(bmpData);
-            return this.encodedImage;
+            this.theBitmap.UnlockBits(bmpData);
+            return this.theBitmap;
         }
 
         // Prepend IV onto File as BitArray
