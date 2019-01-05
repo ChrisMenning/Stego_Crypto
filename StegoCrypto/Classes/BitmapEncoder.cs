@@ -29,7 +29,7 @@ namespace StegoCrypto
         }
 
         // The main method that returns an encoded bitmap.
-        public Bitmap EncodedBitmap(byte[] file, byte[] IV)
+        public async Task<Bitmap> EncodedBitmap(byte[] file, byte[] IV)
         {
             PleaseWait pwForm = new PleaseWait();
 
@@ -64,6 +64,7 @@ namespace StegoCrypto
                             counter += 4;
                         }
                     }
+                    pwForm.progress.Invoke(pwForm.myDelegate);
                     pwForm.progress.Value = row;
                 }
                 else
@@ -72,7 +73,7 @@ namespace StegoCrypto
                 }
             }
 
-            Console.WriteLine("Finished stuffing " + OnesAndZeros.Length / 8 + " bytes, including 16 bit IV." );
+            //Console.WriteLine("Finished stuffing " + OnesAndZeros.Length / 8 + " bytes, including 16 bit IV." );
             pwForm.Close();
 
             if (OnesAndZeros.Length / 8 > (w * h / 2))

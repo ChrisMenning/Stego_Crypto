@@ -201,7 +201,7 @@ namespace StegoCrypto
             hideFileInImageToolStripMenuItem.Enabled = true;
         }
 
-        private void HideFile()
+        private async void HideFile()
         {
             aes = new AESencrypter(fi.InfoHeader, fi.FileContents, this);
             BitmapEncoder bmEnc = new BitmapEncoder(new Bitmap(originalImage));
@@ -211,8 +211,8 @@ namespace StegoCrypto
             {
                 MessageBox.Show("WARNING: It looks like the file is too large to fit in the image.");
             }
-
-            Bitmap bmp = bmEnc.EncodedBitmap(bytes, aes.InitializationVector);
+            Task<Bitmap> b = bmEnc.EncodedBitmap(bytes, aes.InitializationVector);
+            Bitmap bmp = await b;
 
             openFileDialogSourceFile.Filter = "PNG files (*.png | *.png;";
 

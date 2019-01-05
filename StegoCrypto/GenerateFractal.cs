@@ -12,6 +12,8 @@ namespace StegoCrypto
 {
     public partial class GenerateFractal : Form
     {
+        public delegate void RefreshBar();
+        public RefreshBar delegateRefresh;
         private FormMain mainForm;
         private int squareSize;
         private Bitmap newFractal;
@@ -32,13 +34,15 @@ namespace StegoCrypto
             progressBar1.Maximum = squareSize;
             this.zoomLevel = 1;
             this.AcceptButton = buttonAccept;
+            delegateRefresh = new RefreshBar(progressBar1.Refresh);
         }
 
-        private void buttonGenerate_Click(object sender, EventArgs e)
+        private async void buttonGenerate_Click(object sender, EventArgs e)
         {
             ValidateOffsets();
             ValidateC();
-            newFractal = JuliaSet();
+            Task<Bitmap> js = JuliaSet();
+            newFractal = await js;
             pictureBox1.Image = newFractal;
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             buttonAccept.Enabled = true;
@@ -118,7 +122,7 @@ namespace StegoCrypto
         }
 
         // This method adapted from https://lodev.org/cgtutor/juliamandelbrot.html
-        private Bitmap JuliaSet()
+        private async Task<Bitmap> JuliaSet()
         {
             buttonGenerate.Enabled = false;
             Random rand = new Random();
@@ -166,9 +170,11 @@ namespace StegoCrypto
                     }
                     //Console.WriteLine("hue: " + i % 360); 
                     double val = i % maxIterations;
+                    
                     color = HsvToRgb(val, 1, val);
                     bmp.SetPixel(x, y, color);
                 }
+                this.Invoke(delegateRefresh);
                 progressBar1.Increment(y);
             }
             progressBar1.Value = 0;
