@@ -20,8 +20,8 @@ namespace StegoCrypto
         private double imaginaryC;
         private int zoomLevel;
 
-        public double RealC { get => realC; set => realC = value; }
-        public double ImaginaryC { get => imaginaryC; set => imaginaryC = value; }
+        public double RealC { get { return realC; } set { realC = value; } } 
+        public double ImaginaryC { get { return imaginaryC; } set { imaginaryC = value; } }
 
         public GenerateFractal(FormMain mainForm, int squareSize)
         {
@@ -273,7 +273,8 @@ namespace StegoCrypto
 
         private void comboBoxPreset_SelectedIndexChanged(object sender, EventArgs e)
         {
-            switch (comboBoxPreset.SelectedItem)
+            string selection = comboBoxPreset.SelectedItem.ToString();
+            switch (selection)
             {
                 case "1":
                     textBoxC.Text = "-0.7";
