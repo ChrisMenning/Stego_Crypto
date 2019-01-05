@@ -168,9 +168,8 @@ namespace StegoCrypto
                         //if the point is outside the circle with radius 2: stop
                         if ((newRe * newRe + newIm * newIm) > 4) break;
                     }
-                    //Console.WriteLine("hue: " + i % 360); 
+
                     double val = i % maxIterations;
-                    
                     color = HsvToRgb(val, 1, val);
                     bmp.SetPixel(x, y, color);
                 }
@@ -216,7 +215,7 @@ namespace StegoCrypto
             }
         }
 
-        // HSV to RGB by Patrik Svensson https://stackoverflow.com/questions/1335426/is-there-a-built-in-c-net-system-api-for-hsv-to-rgb
+        // HSV to RGB by Chris Hulbert http://www.splinter.com.au/converting-hsv-to-rgb-colour-using-c/
         private Color HsvToRgb(double h, double S, double V)
         {
             double H = h;
