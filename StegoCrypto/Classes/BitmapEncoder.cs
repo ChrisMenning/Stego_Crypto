@@ -29,12 +29,28 @@ namespace StegoCrypto
         }
 
         // The main method that returns an encoded bitmap.
-        public async Task<Bitmap> EncodedBitmap(byte[] file, byte[] IV)
+        public Bitmap EncodedBitmap(byte[] file, byte[] IV)
         {
             PleaseWait pwForm = new PleaseWait();
 
             // By setting the new encodedImage to being the same as the rawImage, non-encoded pixels do not need to be set again.
-            this.encodedImage = this.rawBitmap;
+            this.encodedImage = new Bitmap(this.rawBitmap);
+
+            // Lock the bitmap's bits.  
+            Rectangle rect = new Rectangle(0, 0, this.encodedImage.Width, this.encodedImage.Height);
+            System.Drawing.Imaging.BitmapData bmpData =
+                this.encodedImage.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite,
+                this.encodedImage.PixelFormat);
+
+            // Get the address of the first line.
+            IntPtr ptr = bmpData.Scan0;
+
+            // Declare an array to hold the bytes of the bitmap.
+            int bytes = Math.Abs(bmpData.Stride) * this.encodedImage.Height;
+            byte[] rgbValues = new byte[bytes];
+
+            // Copy the RGB values into the array.
+            System.Runtime.InteropServices.Marshal.Copy(ptr, rgbValues, 0, bytes);
 
             // Declare a counter.
             int counter = 0;
@@ -60,7 +76,12 @@ namespace StegoCrypto
                     {
                         {
                             Color c = MakeNewPixel(column, row, counter);
-                            this.encodedImage.SetPixel(column, row, c);
+
+                            rgbValues[counter] = c.B;
+                            rgbValues[counter + 1] = c.G;
+                            rgbValues[counter + 2] = c.R;
+                            rgbValues[counter + 3] = c.A;
+
                             counter += 4;
                         }
                     }
@@ -78,6 +99,12 @@ namespace StegoCrypto
 
             if (OnesAndZeros.Length / 8 > (w * h / 2))
                 Console.WriteLine("******************************* \n MESSAGE TRUNCATED WHILE WRITING TO BITMAP!!!");
+
+            // Copy the RGB values back to the bitmap
+            System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
+
+            // Unlock the bits.
+            this.encodedImage.UnlockBits(bmpData);
             return this.encodedImage;
         }
 

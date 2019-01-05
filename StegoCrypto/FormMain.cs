@@ -211,8 +211,7 @@ namespace StegoCrypto
             {
                 MessageBox.Show("WARNING: It looks like the file is too large to fit in the image.");
             }
-            Task<Bitmap> b = bmEnc.EncodedBitmap(bytes, aes.InitializationVector);
-            Bitmap bmp = await b;
+            Bitmap bmp = bmEnc.EncodedBitmap(bytes, aes.InitializationVector);
 
             openFileDialogSourceFile.Filter = "PNG files (*.png | *.png;";
 
