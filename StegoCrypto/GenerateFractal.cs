@@ -15,9 +15,6 @@ namespace StegoCrypto
         public delegate void RefreshBar();
         public RefreshBar delegateRefresh;
 
-        public delegate void MakeJuliaSet();
-        public MakeJuliaSet delegateJulia;
-
         private FormMain mainForm;
         private int squareSize;
         private Bitmap newFractal;
@@ -39,15 +36,14 @@ namespace StegoCrypto
             this.zoomLevel = 1;
             this.AcceptButton = buttonAccept;
             delegateRefresh = new RefreshBar(progressBar1.Refresh);
-            delegateJulia = new MakeJuliaSet(MakeJuliaSetMethod);
         }
 
         private void buttonGenerate_Click(object sender, EventArgs e)
         {
-            this.Invoke(delegateJulia);
+            MakeJuliaSet();
         }
 
-        private async void MakeJuliaSetMethod()
+        private async void MakeJuliaSet()
         {
             ValidateOffsets();
             ValidateC();
@@ -135,12 +131,21 @@ namespace StegoCrypto
         private async Task<Bitmap> JuliaSet()
         {
             buttonGenerate.Enabled = false;
-            Random rand = new Random();
-
-           //int randomChannel = rand.Next(0, 3);
-           //int[] colors = new int[3];
-
             Bitmap bmp = new Bitmap(squareSize, squareSize);
+
+            // Lock the bitmap's bits.  
+            Rectangle rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
+            System.Drawing.Imaging.BitmapData bmpData =
+                bmp.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite,
+                bmp.PixelFormat);
+
+            // Get the address of the first line.
+            IntPtr ptr = bmpData.Scan0;
+
+            // Declare an array to hold the bytes of the bitmap.
+            int bytes = Math.Abs(bmpData.Stride) * bmp.Height;
+            byte[] rgbValues = new byte[bytes];
+
             progressBar1.Maximum = (squareSize * squareSize) / 2;
             progressBar1.Show();
 
@@ -155,7 +160,7 @@ namespace StegoCrypto
             //pick some values for the constant c, this determines the shape of the Julia Set           
             cIm = ImaginaryC;
             cRe = RealC;
-
+            int counter = 0;
             //loop through every pixel
             for (int y = 0; y < squareSize; y++)
             {
@@ -180,13 +185,36 @@ namespace StegoCrypto
                     }
 
                     double val = i % maxIterations;
-                    color = HsvToRgb(val, 1, val);
-                    bmp.SetPixel(x, y, color);
+                    int r, g, b;
+                    HsvToRgb(val, 1, val, out r, out g, out b);
+                    // Note: For some reason, the byte order needs to be reversed here.
+                    rgbValues[counter + 3] = 255;
+                    rgbValues[counter + 2] = (byte)r;
+                    rgbValues[counter + 1] = (byte)g;
+                    rgbValues[counter + 0] = (byte)b;
+
+                    counter += 4;
                 }
                 this.Invoke(delegateRefresh);
                 progressBar1.Increment(y);
             }
             progressBar1.Value = 0;
+
+            for (int i = 0; i < 16; i++)
+            {
+                Console.WriteLine("Color byte: " + rgbValues[i]);
+            }
+
+
+            // Copy the RGB values back to the bitmap
+            System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
+            // Unlock the bits.
+            bmp.UnlockBits(bmpData);
+            Console.WriteLine("first pixel's bytes are: " + bmp.GetPixel(0, 0).A + ", "
+                                                + bmp.GetPixel(0, 0).R + ", "
+                                                + bmp.GetPixel(0, 0).G + ", "
+                                                + bmp.GetPixel(0, 0).B);
+
             buttonGenerate.Enabled = true;
             return bmp;
         }
@@ -226,7 +254,7 @@ namespace StegoCrypto
         }
 
         // HSV to RGB by Chris Hulbert http://www.splinter.com.au/converting-hsv-to-rgb-colour-using-c/
-        private Color HsvToRgb(double h, double S, double V)
+        private void HsvToRgb(double h, double S, double V, out int r, out int g, out int b)
         {
             double H = h;
             while (H < 0) { H += 360; };
@@ -312,11 +340,9 @@ namespace StegoCrypto
                         break;
                 }
             }
-            int r = Clamp((int)(R * 255.0));
-            int g = Clamp((int)(G * 255.0));
-            int b = Clamp((int)(B * 255.0));
-
-            return Color.FromArgb(255, r, g, b);
+            r = Clamp((int)(R * 255.0));
+            g = Clamp((int)(G * 255.0));
+            b = Clamp((int)(B * 255.0));
         }
 
         /// <summary>
