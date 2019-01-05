@@ -153,7 +153,7 @@ namespace StegoCrypto
             double cRe, cIm;           //real and imaginary part of the constant c, determinate shape of the Julia Set
             double newRe, newIm, oldRe, oldIm;   //real and imaginary parts of new and old
             double zoom = zoomLevel, moveX = xOffset, moveY = yOffset; //you can change these to zoom and change position
-            int maxIterations = 512; //after how much iterations the function should stop
+            int maxIterations = 360; //after how much iterations the function should stop
 
             //pick some values for the constant c, this determines the shape of the Julia Set           
             cIm = ImaginaryC;
@@ -219,7 +219,7 @@ namespace StegoCrypto
             mainForm.OriginalImage = newFractal;
             mainForm.PicBoxOrig.Image = mainForm.OriginalImage;
             mainForm.PicBoxOrig.SizeMode = PictureBoxSizeMode.Zoom;
-            mainForm.EstimatedStorageCap.Text = ((((newFractal.Height * newFractal.Width) / 2) - 64)).ToString();
+            mainForm.EstimatedStorageCap.Text = (((newFractal.Height * newFractal.Width) / 2) - 64).ToString();
             this.Close();
         }
 
@@ -242,9 +242,9 @@ namespace StegoCrypto
             {
                 textBoxZoom.Text = "1";
             }
-            else if (zoomLevel > 512)
+            else if (zoomLevel > 300)
             {
-                textBoxZoom.Text = "512";
+                textBoxZoom.Text = "300";
             }
         }
 
@@ -335,9 +335,9 @@ namespace StegoCrypto
                         break;
                 }
             }
-            r = Clamp((int)(R * 255.0));
-            g = Clamp((int)(G * 255.0));
-            b = Clamp((int)(B * 255.0));
+             r = (int)R * 10;
+             g = (int)G * 10;
+             b = (int)B * 10;
         }
 
         /// <summary>
@@ -346,7 +346,7 @@ namespace StegoCrypto
         int Clamp(int i)
         {
             if (i < 0) return 0;
-            if (i > 255) return 255;
+            if (i > 255) return (255);
             return i;
         }
 
