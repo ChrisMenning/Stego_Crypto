@@ -42,13 +42,20 @@ namespace StegoCrypto
             progressBar1.Maximum = squareSize;
             this.zoomLevel = 1;
             this.AcceptButton = buttonAccept;
-            delegateRefresh = new RefreshBar(progressBar1.Refresh);
+            delegateRefresh = new RefreshBar(bar);
             mut = new Mutex();
         }
 
         private void buttonGenerate_Click(object sender, EventArgs e)
         {
             MakeJuliaSet();
+        }
+
+        private void bar()
+        {
+            progressBar1.Refresh();
+            progressBar1.Increment(1);
+
         }
 
         private async void MakeJuliaSet()
@@ -170,21 +177,36 @@ namespace StegoCrypto
             Console.WriteLine("Four threads started.");
 
             ThreadOne.Join(); Console.WriteLine("Thread One Joined.");
+            progressBar1.Increment(bmp.Height / 4);
+            progressBar1.Refresh();
+            this.Refresh();
             //System.Runtime.InteropServices.Marshal.Copy(argbValues, 0, ptr, bytes);
             ThreadTwo.Join(); Console.WriteLine("Thread Two Joined.");
+            progressBar1.Increment(bmp.Height / 4);
+            progressBar1.Refresh();
+            this.Refresh();
+
             //System.Runtime.InteropServices.Marshal.Copy(argbValues, squareSize / 4, ptr, bytes);
             ThreadThree.Join(); Console.WriteLine("Thread Three Joined.");
+            progressBar1.Increment(bmp.Height / 4);
+            progressBar1.Refresh();
+            this.Refresh();
+
             //System.Runtime.InteropServices.Marshal.Copy(argbValues, squareSize / 2, ptr, bytes);
             ThreadFour.Join(); Console.WriteLine("Thread Four Joined.");
+            progressBar1.Increment(bmp.Height / 4);
+            progressBar1.Refresh();
+            this.Refresh();
+
             //System.Runtime.InteropServices.Marshal.Copy(argbValues, Convert.ToInt32(squareSize * 0.75), ptr, bytes);
 
-            progressBar1.Value = 0;
-           
+
             // Copy the RGB values back to the bitmap
             System.Runtime.InteropServices.Marshal.Copy(argbValues, 0, ptr, bytes);
 
             // Unlock the bits.
             bmp.UnlockBits(bmpData);
+            progressBar1.Value = 0;
 
             buttonGenerate.Enabled = true;
             return bmp;
@@ -226,7 +248,7 @@ namespace StegoCrypto
             //pick some values for the constant c, this determines the shape of the Julia Set           
             cIm = ImaginaryC;
             cRe = RealC;
-            int counter = startIndex;
+            int counter = startIndex * squareSize * 4;
             //loop through every pixel
             for (int y = startIndex; y < stopIndex; y++)
             {
@@ -262,10 +284,6 @@ namespace StegoCrypto
                     argbValues[counter + 0] = (byte)b;
                     counter += 4;
                 }
-                
-                //this.Invoke(delegateRefresh);
-                //this.progressBar1.Increment(1);
-                //Console.WriteLine("Completed row: " + y);
             }
             Console.WriteLine("ThreadComplete from " + startIndex + " to " + stopIndex);
         }
