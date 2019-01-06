@@ -22,7 +22,6 @@ namespace StegoCrypto
         private UserPreferences userPrefs;
         private PictureBox picBoxOrig;
         private Label estimatedStorageCap;
-
         int headerLength;
         private int estimatedBytes;
 

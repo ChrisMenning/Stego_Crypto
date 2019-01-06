@@ -199,11 +199,6 @@ namespace StegoCrypto
             }
             progressBar1.Value = 0;
 
-            for (int i = 0; i < 16; i++)
-            {
-                Console.WriteLine("Color byte: " + argbValues[i]);
-            }
-
             // Copy the RGB values back to the bitmap
             System.Runtime.InteropServices.Marshal.Copy(argbValues, 0, ptr, bytes);
 
