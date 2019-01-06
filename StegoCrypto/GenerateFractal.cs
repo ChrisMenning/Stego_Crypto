@@ -14,6 +14,7 @@ namespace StegoCrypto
     public partial class GenerateFractal : Form
     {
         public delegate void RefreshBar();
+        public delegate void StringArgReturningVoidDelegate(int value);
         public RefreshBar delegateRefresh;
         Thread th = Thread.CurrentThread;
 
@@ -142,7 +143,6 @@ namespace StegoCrypto
             Console.WriteLine("C: " + RealC + " ImC: " + ImaginaryC);
         }
 
-        // This method adapted from https://lodev.org/cgtutor/juliamandelbrot.html
         private async Task<Bitmap> JuliaSet()
         {
             progressBar1.Maximum = (squareSize * squareSize) / 2;
@@ -177,30 +177,23 @@ namespace StegoCrypto
             Console.WriteLine("Four threads started.");
 
             ThreadOne.Join(); Console.WriteLine("Thread One Joined.");
-            progressBar1.Increment(bmp.Height / 4);
-            progressBar1.Refresh();
+            IncrementBar(squareSize / 4);
             this.Refresh();
-            //System.Runtime.InteropServices.Marshal.Copy(argbValues, 0, ptr, bytes);
             ThreadTwo.Join(); Console.WriteLine("Thread Two Joined.");
-            progressBar1.Increment(bmp.Height / 4);
-            progressBar1.Refresh();
+            IncrementBar(squareSize / 4);
+
             this.Refresh();
 
-            //System.Runtime.InteropServices.Marshal.Copy(argbValues, squareSize / 4, ptr, bytes);
             ThreadThree.Join(); Console.WriteLine("Thread Three Joined.");
-            progressBar1.Increment(bmp.Height / 4);
-            progressBar1.Refresh();
+            IncrementBar(squareSize / 4);
+
             this.Refresh();
 
-            //System.Runtime.InteropServices.Marshal.Copy(argbValues, squareSize / 2, ptr, bytes);
             ThreadFour.Join(); Console.WriteLine("Thread Four Joined.");
-            progressBar1.Increment(bmp.Height / 4);
-            progressBar1.Refresh();
+            IncrementBar(squareSize / 4);
+
             this.Refresh();
-
-            //System.Runtime.InteropServices.Marshal.Copy(argbValues, Convert.ToInt32(squareSize * 0.75), ptr, bytes);
-
-
+            
             // Copy the RGB values back to the bitmap
             System.Runtime.InteropServices.Marshal.Copy(argbValues, 0, ptr, bytes);
 
@@ -236,6 +229,7 @@ namespace StegoCrypto
             return t;
         }
 
+        // This method adapted from https://lodev.org/cgtutor/juliamandelbrot.html
         private void JuliaQuarter(int startIndex, int stopIndex)
         {
             Console.WriteLine("Starting a Julia quarter at " + startIndex + " on Thread " + Thread.CurrentThread.ManagedThreadId);
@@ -283,11 +277,26 @@ namespace StegoCrypto
                     argbValues[counter + 1] = (byte)g;
                     argbValues[counter + 0] = (byte)b;
                     counter += 4;
-                }
+                }                
             }
             Console.WriteLine("ThreadComplete from " + startIndex + " to " + stopIndex);
         }
 
+        private void IncrementBar(int value)
+        {
+            // InvokeRequired required compares the thread ID of the
+            // calling thread to the thread ID of the creating thread.
+            // If these threads are different, it returns true.
+            if (this.progressBar1.InvokeRequired)
+            {
+                StringArgReturningVoidDelegate d = new StringArgReturningVoidDelegate(IncrementBar);
+                this.Invoke(d, new object[] { value });
+            }
+            else
+            {
+                progressBar1.Increment(value);
+            }
+        }
 
         private void buttonAccept_Click(object sender, EventArgs e)
         {
@@ -471,6 +480,8 @@ namespace StegoCrypto
         {
 
         }
+
+
     }
-    
+
 }
