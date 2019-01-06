@@ -15,6 +15,7 @@ namespace StegoCrypto
     {
         public delegate void RefreshBar();
         public RefreshBar delegateRefresh;
+        Thread th = Thread.CurrentThread;
 
         private FormMain mainForm;
         private int squareSize;
@@ -30,6 +31,9 @@ namespace StegoCrypto
         public double RealC { get { return realC; } set { realC = value; } } 
         public double ImaginaryC { get { return imaginaryC; } set { imaginaryC = value; } }
 
+        private Mutex mut;
+
+
         public GenerateFractal(FormMain mainForm, int squareSize)
         {
             InitializeComponent();
@@ -39,6 +43,7 @@ namespace StegoCrypto
             this.zoomLevel = 1;
             this.AcceptButton = buttonAccept;
             delegateRefresh = new RefreshBar(progressBar1.Refresh);
+            mut = new Mutex();
         }
 
         private void buttonGenerate_Click(object sender, EventArgs e)
@@ -152,38 +157,29 @@ namespace StegoCrypto
             int bytes = Math.Abs(bmpData.Stride) * bmp.Height;
             argbValues = new byte[bytes];
 
-            // Set up and run four different async tasks for processing Julia Set in quarters.
-            ThreadStart t1Ref = new ThreadStart(FirstQuarter);
-            Thread ThreadOne = new Thread(t1Ref);
-            ThreadStart t2Ref = new ThreadStart(SecondQuarter);
-            Thread ThreadTwo= new Thread(t2Ref);
-            ThreadStart t3Ref = new ThreadStart(ThirdQuarter);
-            Thread ThreadThree = new Thread(t3Ref);
-            ThreadStart t4Ref = new ThreadStart(FourthQuarter);
-            Thread ThreadFour = new Thread(t4Ref);
+            Thread ThreadOne = FirstQuarter();
+            Thread ThreadTwo = SecondQuarter();
+            Thread ThreadThree = ThirdQuarter();
+            Thread ThreadFour = FourthQuarter();
 
+            Console.WriteLine("Starting four threads.");
             ThreadOne.Start();
             ThreadTwo.Start();
             ThreadThree.Start();
             ThreadFour.Start();
+            Console.WriteLine("Four threads started.");
 
-            ThreadOne.Join();
-            ThreadTwo.Join();
-            ThreadThree.Join();
-            ThreadFour.Join();
-
-            //Task<bool> JuliaQuarterOne = JuliaQuarter(0, squareSize /4);
-            //Task<bool> JuliaQuarterTwo = JuliaQuarter(squareSize / 4, squareSize / 2);
-            //Task<bool> JuliaQuarterThree = JuliaQuarter(squareSize /2, squareSize * (3/4));
-            //Task<bool> JuliaQuarterFour = JuliaQuarter(squareSize * (3 / 4), squareSize);
-
-            //bool t = await JuliaQuarterOne;
-            // bool t = await JuliaQuarterTwo;
-            // t = await JuliaQuarterThree;
-            // t = await JuliaQuarterFour;
+            ThreadOne.Join(); Console.WriteLine("Thread One Joined.");
+            //System.Runtime.InteropServices.Marshal.Copy(argbValues, 0, ptr, bytes);
+            ThreadTwo.Join(); Console.WriteLine("Thread Two Joined.");
+            //System.Runtime.InteropServices.Marshal.Copy(argbValues, squareSize / 4, ptr, bytes);
+            ThreadThree.Join(); Console.WriteLine("Thread Three Joined.");
+            //System.Runtime.InteropServices.Marshal.Copy(argbValues, squareSize / 2, ptr, bytes);
+            ThreadFour.Join(); Console.WriteLine("Thread Four Joined.");
+            //System.Runtime.InteropServices.Marshal.Copy(argbValues, Convert.ToInt32(squareSize * 0.75), ptr, bytes);
 
             progressBar1.Value = 0;
-
+           
             // Copy the RGB values back to the bitmap
             System.Runtime.InteropServices.Marshal.Copy(argbValues, 0, ptr, bytes);
 
@@ -194,29 +190,33 @@ namespace StegoCrypto
             return bmp;
         }
 
-        private void FirstQuarter()
+        private Thread FirstQuarter()
         {
-            JuliaQuarter(0, squareSize / 4);
+            var t = new Thread(() => JuliaQuarter(0, squareSize / 4));
+            return t;
         }
 
-        private void SecondQuarter()
+        private Thread SecondQuarter()
         {
-            JuliaQuarter(squareSize / 4, squareSize / 2);
+            var t = new Thread(() =>JuliaQuarter(squareSize / 4, squareSize / 2));
+            return t;
         }
 
-        private void ThirdQuarter()
+        private Thread ThirdQuarter()
         {
-            JuliaQuarter(squareSize / 2, Convert.ToInt32(squareSize * 0.75));
+            var t = new Thread( () => JuliaQuarter(squareSize / 2, Convert.ToInt32(squareSize * 0.75)));
+            return t;
         }
 
-        private void FourthQuarter()
+        private Thread FourthQuarter()
         {
-            JuliaQuarter(Convert.ToInt32(squareSize * 0.75), squareSize);
+            var t = new Thread(() => JuliaQuarter(Convert.ToInt32(squareSize * 0.75), squareSize));
+            return t;
         }
 
         private void JuliaQuarter(int startIndex, int stopIndex)
         {
-            Console.WriteLine("Starting a Julia quarter");
+            Console.WriteLine("Starting a Julia quarter at " + startIndex + " on Thread " + Thread.CurrentThread.ManagedThreadId);
             //each iteration, it calculates: new = old*old + c, where c is a constant and old starts at current pixel
             double cRe, cIm;           //real and imaginary part of the constant c, determinate shape of the Julia Set
             double newRe, newIm, oldRe, oldIm;   //real and imaginary parts of new and old
@@ -252,6 +252,7 @@ namespace StegoCrypto
 
                     double val = i % maxIterations;
                     int r, g, b;
+
                     HsvToRgb(val, 1, val, out r, out g, out b);
 
                     // Note: For some reason, the byte order needs to be reversed here.
@@ -259,12 +260,12 @@ namespace StegoCrypto
                     argbValues[counter + 2] = (byte)r;
                     argbValues[counter + 1] = (byte)g;
                     argbValues[counter + 0] = (byte)b;
-
                     counter += 4;
                 }
                 
-                this.Invoke(delegateRefresh);
-                progressBar1.Increment(y);
+                //this.Invoke(delegateRefresh);
+                //this.progressBar1.Increment(1);
+                //Console.WriteLine("Completed row: " + y);
             }
             Console.WriteLine("ThreadComplete from " + startIndex + " to " + stopIndex);
         }
