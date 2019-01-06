@@ -185,6 +185,7 @@ namespace StegoCrypto
                     double val = i % maxIterations;
                     int r, g, b;
                     HsvToRgb(val, 1, val, out r, out g, out b);
+                    
                     // Note: For some reason, the byte order needs to be reversed here.
                     argbValues[counter + 3] = 255;
                     argbValues[counter + 2] = (byte)r;
