@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -23,6 +24,8 @@ namespace StegoCrypto
         private double zoomLevel;
         private double xOffset;
         private double yOffset;
+
+        byte[] argbValues;
 
         public double RealC { get { return realC; } set { realC = value; } } 
         public double ImaginaryC { get { return imaginaryC; } set { imaginaryC = value; } }
@@ -147,8 +150,73 @@ namespace StegoCrypto
 
             // Declare an array to hold the bytes of the bitmap.
             int bytes = Math.Abs(bmpData.Stride) * bmp.Height;
-            byte[] argbValues = new byte[bytes];
+            argbValues = new byte[bytes];
 
+            // Set up and run four different async tasks for processing Julia Set in quarters.
+            ThreadStart t1Ref = new ThreadStart(FirstQuarter);
+            Thread ThreadOne = new Thread(t1Ref);
+            ThreadStart t2Ref = new ThreadStart(SecondQuarter);
+            Thread ThreadTwo= new Thread(t2Ref);
+            ThreadStart t3Ref = new ThreadStart(ThirdQuarter);
+            Thread ThreadThree = new Thread(t3Ref);
+            ThreadStart t4Ref = new ThreadStart(FourthQuarter);
+            Thread ThreadFour = new Thread(t4Ref);
+
+            ThreadOne.Start();
+            ThreadTwo.Start();
+            ThreadThree.Start();
+            ThreadFour.Start();
+
+            ThreadOne.Join();
+            ThreadTwo.Join();
+            ThreadThree.Join();
+            ThreadFour.Join();
+
+            //Task<bool> JuliaQuarterOne = JuliaQuarter(0, squareSize /4);
+            //Task<bool> JuliaQuarterTwo = JuliaQuarter(squareSize / 4, squareSize / 2);
+            //Task<bool> JuliaQuarterThree = JuliaQuarter(squareSize /2, squareSize * (3/4));
+            //Task<bool> JuliaQuarterFour = JuliaQuarter(squareSize * (3 / 4), squareSize);
+
+            //bool t = await JuliaQuarterOne;
+            // bool t = await JuliaQuarterTwo;
+            // t = await JuliaQuarterThree;
+            // t = await JuliaQuarterFour;
+
+            progressBar1.Value = 0;
+
+            // Copy the RGB values back to the bitmap
+            System.Runtime.InteropServices.Marshal.Copy(argbValues, 0, ptr, bytes);
+
+            // Unlock the bits.
+            bmp.UnlockBits(bmpData);
+
+            buttonGenerate.Enabled = true;
+            return bmp;
+        }
+
+        private void FirstQuarter()
+        {
+            JuliaQuarter(0, squareSize / 4);
+        }
+
+        private void SecondQuarter()
+        {
+            JuliaQuarter(squareSize / 4, squareSize / 2);
+        }
+
+        private void ThirdQuarter()
+        {
+            JuliaQuarter(squareSize / 2, Convert.ToInt32(squareSize * 0.75));
+        }
+
+        private void FourthQuarter()
+        {
+            JuliaQuarter(Convert.ToInt32(squareSize * 0.75), squareSize);
+        }
+
+        private void JuliaQuarter(int startIndex, int stopIndex)
+        {
+            Console.WriteLine("Starting a Julia quarter");
             //each iteration, it calculates: new = old*old + c, where c is a constant and old starts at current pixel
             double cRe, cIm;           //real and imaginary part of the constant c, determinate shape of the Julia Set
             double newRe, newIm, oldRe, oldIm;   //real and imaginary parts of new and old
@@ -158,9 +226,9 @@ namespace StegoCrypto
             //pick some values for the constant c, this determines the shape of the Julia Set           
             cIm = ImaginaryC;
             cRe = RealC;
-            int counter = 0;
+            int counter = startIndex;
             //loop through every pixel
-            for (int y = 0; y < squareSize; y++)
+            for (int y = startIndex; y < stopIndex; y++)
             {
                 for (int x = 0; x < squareSize; x++)
                 {
@@ -185,7 +253,7 @@ namespace StegoCrypto
                     double val = i % maxIterations;
                     int r, g, b;
                     HsvToRgb(val, 1, val, out r, out g, out b);
-                    
+
                     // Note: For some reason, the byte order needs to be reversed here.
                     argbValues[counter + 3] = 255;
                     argbValues[counter + 2] = (byte)r;
@@ -194,21 +262,13 @@ namespace StegoCrypto
 
                     counter += 4;
                 }
-
+                
                 this.Invoke(delegateRefresh);
                 progressBar1.Increment(y);
             }
-            progressBar1.Value = 0;
-
-            // Copy the RGB values back to the bitmap
-            System.Runtime.InteropServices.Marshal.Copy(argbValues, 0, ptr, bytes);
-
-            // Unlock the bits.
-            bmp.UnlockBits(bmpData);
-
-            buttonGenerate.Enabled = true;
-            return bmp;
+            Console.WriteLine("ThreadComplete from " + startIndex + " to " + stopIndex);
         }
+
 
         private void buttonAccept_Click(object sender, EventArgs e)
         {
