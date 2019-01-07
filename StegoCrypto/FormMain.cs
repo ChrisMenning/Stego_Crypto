@@ -14,7 +14,7 @@ namespace StegoCrypto
         // The private fields
         private byte[] encryptionKey;
         private FileInformation fi;
-        private Image originalImage;
+        private Bitmap originalImage;
         private AESencrypter aes;
         private byte[] decodedBytes;
         private Bitmap encImg;
@@ -63,7 +63,7 @@ namespace StegoCrypto
             }
         }
 
-        public Image OriginalImage
+        public Bitmap OriginalImage
         {
             get
             {
@@ -138,7 +138,7 @@ namespace StegoCrypto
 
             if (openFileDialogSourceFile.ShowDialog() == DialogResult.OK)
             {
-                originalImage = Image.FromFile(openFileDialogSourceFile.FileName);
+                originalImage = (Bitmap)Image.FromFile(openFileDialogSourceFile.FileName);
                 pictureBoxOriginalImage.Image = originalImage;
                 pictureBoxOriginalImage.SizeMode = PictureBoxSizeMode.Zoom;
 
@@ -203,7 +203,7 @@ namespace StegoCrypto
         private async void HideFile()
         {
             aes = new AESencrypter(fi.InfoHeader, fi.FileContents, this);
-            BitmapEncoder bmEnc = new BitmapEncoder(new Bitmap(originalImage));
+            BitmapEncoder bmEnc = new BitmapEncoder(originalImage);
             byte[] bytes = aes.EncryptBytes();
             // MessageBox.Show("Attempting to stuff " + bytes.Length + " bytes into " + (originalImage.Width * originalImage.Height) / 2 + " bytes of space.");
             if (bytes.Length > (originalImage.Width * originalImage.Height) / 2)
@@ -225,11 +225,10 @@ namespace StegoCrypto
         {
             if (openFileDialogSourceFile.ShowDialog() == DialogResult.OK)
             {
-                Image encodedImage = Image.FromFile(openFileDialogSourceFile.FileName);
-                pictureBoxEncodedImage.Image = encodedImage;
+                encImg = (Bitmap)Image.FromFile(openFileDialogSourceFile.FileName);
+                pictureBoxEncodedImage.Image = encImg;
                 pictureBoxEncodedImage.SizeMode = PictureBoxSizeMode.Zoom;
 
-                encImg = (Bitmap)encodedImage;
 
                 fp = new FormPassword(this);
                 fp.ShowDialog();
