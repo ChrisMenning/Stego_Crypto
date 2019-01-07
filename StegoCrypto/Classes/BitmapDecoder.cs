@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StegoCrypto
@@ -12,10 +14,38 @@ namespace StegoCrypto
     {
         private bool[] binaryFromImage;
         private byte[] rgbValues;
+        BackgroundWorker bgWorker = new BackgroundWorker();
+        PleaseWait pwForm;
 
         // Constructor
         public BitmapDecoder()
         {
+            InitializeBackgroundWorker();
+        }
+
+        private void InitializeBackgroundWorker()
+        {
+            bgWorker.DoWork +=
+                new DoWorkEventHandler(bgWorker_DoWork);
+            bgWorker.RunWorkerCompleted +=
+                new RunWorkerCompletedEventHandler(
+            bgWorker_RunWorkerCompleted);
+            bgWorker.ProgressChanged +=
+                new ProgressChangedEventHandler(
+            bgWorker_ProgressChanged);
+
+            bgWorker.WorkerReportsProgress = true;
+        }
+
+        private void bgWorker_DoWork(object sender, DoWorkEventArgs e)
+        { }
+
+        private void bgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        { }
+        private void bgWorker_ProgressChanged(object sender,
+            ProgressChangedEventArgs e)
+        {
+            pwForm.progress.Increment(e.ProgressPercentage);
         }
 
         // Bytes from Image
@@ -41,7 +71,7 @@ namespace StegoCrypto
             binaryFromImage = new bool[encoded.Height * encoded.Width * 4];
             byte[] byteArray;
 
-            PleaseWait pwForm = new PleaseWait();
+            pwForm = new PleaseWait();
             pwForm.progress.Maximum = encoded.Height;
             pwForm.Show();
             pwForm.Refresh();
@@ -49,7 +79,9 @@ namespace StegoCrypto
             int h = encoded.Height;
 
             Console.WriteLine("Looping through all pixels...");
-
+        //    var t = new Thread(() => BeginWorkerAndProgress());
+        //    t.Start();
+        //    t.Join();
 
             for (int i = 0; i < (rgbValues.Length - 4); i +=4)
             {
@@ -58,24 +90,6 @@ namespace StegoCrypto
                 binaryFromImage[i + 2] = ToBool(rgbValues[i + 1] % 2);
                 binaryFromImage[i + 3] = ToBool(rgbValues[i] % 2);
             }
-
-
-            // Loop through each pixel of the encoded image.
-          //  for (int row = 0; row < h; row++)
-          //  {
-          //      for (int column = 0; column < encoded.Width; column++)
-          //      {
-          //          // Pull the last bit out of each color channel and concatenate them onto the ones and zeros.
-          //          Color pixelColor = encoded.GetPixel(column, row);
-          //          GetLastBitOfEachColorChannel(pixelColor);
-          //
-          //          testCounter++;
-          //      }
-          //      pwForm.progress.Value = row;
-          //      pwForm.Refresh();
-          //  }
-            //Console.WriteLine("Checked " + testCounter + " pixels, which should be able to store " + testCounter * 4 + " bits, or " + testCounter / 2 + " bytes.");
-            //Console.WriteLine("Finished looping through pixels. Found " + binaryFromImage.Count + " bits");
 
             // Convert string of 1s and 0s to byte[].
             BitArray ba = new BitArray(binaryFromImage.ToArray());
@@ -86,15 +100,6 @@ namespace StegoCrypto
             encoded.UnlockBits(bmpData);
             return byteArray;
         }
-
-    //    private void GetLastBitOfEachColorChannel(Color color)
-    //    {
-    //        Color pixelColor = color;
-    //        this.binaryFromImage.Add(ToBool(pixelColor.A % 2));
-    //        this.binaryFromImage.Add(ToBool(pixelColor.R % 2));
-    //        this.binaryFromImage.Add(ToBool(pixelColor.G % 2));
-    //        this.binaryFromImage.Add(ToBool(pixelColor.B % 2));
-    //    }
 
         public bool ToBool(int value)
         {
