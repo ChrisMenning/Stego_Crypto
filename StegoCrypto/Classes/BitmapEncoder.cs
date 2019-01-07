@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -14,17 +15,49 @@ namespace StegoCrypto
         // the private fields.
         private readonly Bitmap theBitmap;
         private BitArray OnesAndZeros;
+        BackgroundWorker bgWorker = new BackgroundWorker();
+        PleaseWait pwForm;
 
         // The constructor
         public BitmapEncoder(Bitmap rawBitmap)
         {
             this.theBitmap = rawBitmap;
+
+            InitializeBackgroundWorker();
+        }
+
+        private void InitializeBackgroundWorker()
+        {
+            bgWorker.DoWork +=
+                new DoWorkEventHandler(bgWorker_DoWork);
+            bgWorker.RunWorkerCompleted +=
+                new RunWorkerCompletedEventHandler(
+            bgWorker_RunWorkerCompleted);
+            bgWorker.ProgressChanged +=
+                new ProgressChangedEventHandler(
+            bgWorker_ProgressChanged);
+        }
+
+        private void bgWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+
+        }
+
+        private void bgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+
+        }
+
+        private void bgWorker_ProgressChanged(object sender,
+            ProgressChangedEventArgs e)
+        {
+
         }
 
         // The main method that returns an encoded bitmap.
         public Bitmap EncodedBitmap(byte[] file, byte[] IV)
         {
-            PleaseWait pwForm = new PleaseWait();
+            pwForm = new PleaseWait();
 
             // Lock the bitmap's bits.  
             Rectangle rect = new Rectangle(0, 0, this.theBitmap.Width, this.theBitmap.Height);
