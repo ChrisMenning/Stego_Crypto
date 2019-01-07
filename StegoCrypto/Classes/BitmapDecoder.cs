@@ -72,16 +72,13 @@ namespace StegoCrypto
             byte[] byteArray;
 
             pwForm = new PleaseWait();
-            pwForm.progress.Maximum = encoded.Height;
+            pwForm.progress.Maximum = rgbValues.Length;
             pwForm.Show();
             pwForm.Refresh();
 
             int h = encoded.Height;
 
-            Console.WriteLine("Looping through all pixels...");
-        //    var t = new Thread(() => BeginWorkerAndProgress());
-        //    t.Start();
-        //    t.Join();
+            Console.WriteLine("Looping through bytes...");
 
             for (int i = 0; i < (rgbValues.Length - 4); i +=4)
             {
@@ -89,7 +86,13 @@ namespace StegoCrypto
                 binaryFromImage[i + 1] = ToBool(rgbValues[i + 2] % 2);
                 binaryFromImage[i + 2] = ToBool(rgbValues[i + 1] % 2);
                 binaryFromImage[i + 3] = ToBool(rgbValues[i] % 2);
+
+                if (i % (rgbValues.Length / 4) == 0)
+                {
+                    pwForm.progress.Value = (i);
+                }
             }
+            pwForm.progress.Value = rgbValues.Length;
 
             // Convert string of 1s and 0s to byte[].
             BitArray ba = new BitArray(binaryFromImage.ToArray());
@@ -99,6 +102,11 @@ namespace StegoCrypto
             // Unlock the bits.
             encoded.UnlockBits(bmpData);
             return byteArray;
+        }
+
+        private void BeginWorkerAndProgress()
+        {
+            throw new NotImplementedException();
         }
 
         public bool ToBool(int value)
