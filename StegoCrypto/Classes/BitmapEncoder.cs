@@ -69,36 +69,7 @@ namespace StegoCrypto
                     counter += 4;
                 }
             }
-
-            // Loop through every row and every column of pixels in the original image.
-            for (int row = 0; row < h; row++)
-            {
-                // Only set a new pixel value until the message length runs out. 
-                // There's no sense in setting the pixel value to its original value again.
-                if (counter < OnesAndZeros.Length)
-                {
-                    for (int column = 0; column < w; column++)
-                    {
-                        {
-                            if (counter + 3 < OnesAndZeros.Length)
-                            {
-                                rgbValues[counter] = (byte)((rgbValues[counter] - (rgbValues[counter] % 2)) + ToInt(OnesAndZeros[counter + 3]));
-                                rgbValues[counter + 1] = (byte)((rgbValues[counter + 1] - (rgbValues[counter + 1] % 2)) + ToInt(OnesAndZeros[counter + 2]));
-                                rgbValues[counter + 2] = (byte)((rgbValues[counter + 2] - (rgbValues[counter + 2] % 2)) + ToInt(OnesAndZeros[counter + 1]));
-                                rgbValues[counter + 3] = (byte)((rgbValues[counter + 3] - (rgbValues[counter + 3] % 2)) + ToInt(OnesAndZeros[counter]));
-
-                                counter += 4;
-                            }
-                        }
-                    }
-                    pwForm.progress.Invoke(pwForm.myDelegate);
-                    pwForm.progress.Value = row;
-                }
-                else
-                {
-                    pwForm.progress.Value = h;
-                }
-            }
+            pwForm.progress.Value = pwForm.progress.Maximum;
 
             pwForm.Close();
 
