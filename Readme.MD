@@ -4,3 +4,5 @@ project only supported Cipher Block Chaining (CBC), StegoCrypto also supports Ci
 Codebook (ECB). Furthermore, the settings menu allows the user to manually set the salt and iterations used by the password 
 manager for deriving an encryption key. Additionally, the new fractal maker leaves the Mandelbrot set behind and instead
 uses the Julia Set, with more customization than in prior versions.
+
+Fractal Generator now spreads work across 4 threads, for faster fractal generation.
