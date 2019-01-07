@@ -55,6 +55,21 @@ namespace StegoCrypto
             pwForm.Show();
             pwForm.Refresh();
 
+            //OverwriteWithNewBytes(0, h);
+
+            for (int i = 0; i < rgbValues.Length; i++)
+            {
+                if (counter + 3 < OnesAndZeros.Length)
+                {
+                    rgbValues[counter] = (byte)((rgbValues[counter] - (rgbValues[counter] % 2)) + ToInt(OnesAndZeros[counter + 3]));
+                    rgbValues[counter + 1] = (byte)((rgbValues[counter + 1] - (rgbValues[counter + 1] % 2)) + ToInt(OnesAndZeros[counter + 2]));
+                    rgbValues[counter + 2] = (byte)((rgbValues[counter + 2] - (rgbValues[counter + 2] % 2)) + ToInt(OnesAndZeros[counter + 1]));
+                    rgbValues[counter + 3] = (byte)((rgbValues[counter + 3] - (rgbValues[counter + 3] % 2)) + ToInt(OnesAndZeros[counter]));
+
+                    counter += 4;
+                }
+            }
+
             // Loop through every row and every column of pixels in the original image.
             for (int row = 0; row < h; row++)
             {
@@ -96,6 +111,11 @@ namespace StegoCrypto
             // Unlock the bits.
             this.theBitmap.UnlockBits(bmpData);
             return this.theBitmap;
+        }
+
+        private void OverwriteWithNewBytes(int startIndex, int stop)
+        {
+            throw new NotImplementedException();
         }
 
         // Prepend IV onto File as BitArray
