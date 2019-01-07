@@ -337,6 +337,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.Honeydew;
             this.ClientSize = new System.Drawing.Size(464, 634);
             this.Controls.Add(this.textBoxCipherModeDetails);
             this.Controls.Add(this.label8);

@@ -126,6 +126,7 @@ namespace StegoCrypto
                 fp = new FormPassword(this);
                 fp.Show();
                 buttonGenerateFractal.Enabled = true;
+                radioButtonHideFile.Checked = true;
             }
         }
 
@@ -235,6 +236,7 @@ namespace StegoCrypto
 
                 buttonRetrieveFile.Enabled = true;
                 retrieveFileFromImageToolStripMenuItem.Enabled = true;
+                radioButtonRetrieveFile.Checked = true;
             }
         }
 

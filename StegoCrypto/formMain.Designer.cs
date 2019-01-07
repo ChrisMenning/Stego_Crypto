@@ -37,6 +37,10 @@
             this.generateFractalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.imageToDecodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.hideFileInImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.retrieveFileFromImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.clearAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -65,10 +69,6 @@
             this.buttonOpenImage = new System.Windows.Forms.Button();
             this.openFileDialogSourceFile = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.hideFileInImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.retrieveFileFromImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.menuStrip1.SuspendLayout();
             this.groupBoxAppMode.SuspendLayout();
             this.groupBoxHide.SuspendLayout();
@@ -94,7 +94,7 @@
             // 
             // menuStrip1
             // 
-            this.menuStrip1.BackColor = System.Drawing.SystemColors.MenuBar;
+            this.menuStrip1.BackColor = System.Drawing.Color.LightBlue;
             this.menuStrip1.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -137,7 +137,7 @@
             // fileToEncryptToolStripMenuItem
             // 
             this.fileToEncryptToolStripMenuItem.Name = "fileToEncryptToolStripMenuItem";
-            this.fileToEncryptToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.fileToEncryptToolStripMenuItem.Size = new System.Drawing.Size(203, 26);
             this.fileToEncryptToolStripMenuItem.Text = "File to &Encrypt";
             this.fileToEncryptToolStripMenuItem.ToolTipText = "The source file that you want to hide.";
             this.fileToEncryptToolStripMenuItem.Click += new System.EventHandler(this.fileToEncryptToolStripMenuItem_Click);
@@ -146,7 +146,7 @@
             // 
             this.imageToEncodeToolStripMenuItem.Enabled = false;
             this.imageToEncodeToolStripMenuItem.Name = "imageToEncodeToolStripMenuItem";
-            this.imageToEncodeToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.imageToEncodeToolStripMenuItem.Size = new System.Drawing.Size(203, 26);
             this.imageToEncodeToolStripMenuItem.Text = "&Image to Encode";
             this.imageToEncodeToolStripMenuItem.ToolTipText = "Open an image for hiding the file inside.";
             this.imageToEncodeToolStripMenuItem.Click += new System.EventHandler(this.imageToEncodeToolStripMenuItem_Click);
@@ -155,7 +155,7 @@
             // 
             this.generateFractalToolStripMenuItem.Enabled = false;
             this.generateFractalToolStripMenuItem.Name = "generateFractalToolStripMenuItem";
-            this.generateFractalToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.generateFractalToolStripMenuItem.Size = new System.Drawing.Size(203, 26);
             this.generateFractalToolStripMenuItem.Text = "Generate &Fractal";
             this.generateFractalToolStripMenuItem.ToolTipText = "Generate a fractal for hiding the file inside.";
             this.generateFractalToolStripMenuItem.Click += new System.EventHandler(this.generateFractalToolStripMenuItem_Click);
@@ -163,14 +163,40 @@
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(213, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(200, 6);
             // 
             // imageToDecodeToolStripMenuItem
             // 
             this.imageToDecodeToolStripMenuItem.Name = "imageToDecodeToolStripMenuItem";
-            this.imageToDecodeToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.imageToDecodeToolStripMenuItem.Size = new System.Drawing.Size(203, 26);
             this.imageToDecodeToolStripMenuItem.Text = "Image to &Decode";
             this.imageToDecodeToolStripMenuItem.Click += new System.EventHandler(this.imageToDecodeToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(254, 6);
+            // 
+            // hideFileInImageToolStripMenuItem
+            // 
+            this.hideFileInImageToolStripMenuItem.Enabled = false;
+            this.hideFileInImageToolStripMenuItem.Name = "hideFileInImageToolStripMenuItem";
+            this.hideFileInImageToolStripMenuItem.Size = new System.Drawing.Size(257, 26);
+            this.hideFileInImageToolStripMenuItem.Text = "&Hide File in Image";
+            this.hideFileInImageToolStripMenuItem.Click += new System.EventHandler(this.hideFileInImageToolStripMenuItem_Click);
+            // 
+            // retrieveFileFromImageToolStripMenuItem
+            // 
+            this.retrieveFileFromImageToolStripMenuItem.Enabled = false;
+            this.retrieveFileFromImageToolStripMenuItem.Name = "retrieveFileFromImageToolStripMenuItem";
+            this.retrieveFileFromImageToolStripMenuItem.Size = new System.Drawing.Size(257, 26);
+            this.retrieveFileFromImageToolStripMenuItem.Text = "&Retrieve File from Image";
+            this.retrieveFileFromImageToolStripMenuItem.Click += new System.EventHandler(this.retrieveFileFromImageToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(254, 6);
             // 
             // clearAllToolStripMenuItem
             // 
@@ -464,46 +490,22 @@
             // 
             this.openFileDialogSourceFile.FileName = "openFileDialog1";
             // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(254, 6);
-            // 
-            // hideFileInImageToolStripMenuItem
-            // 
-            this.hideFileInImageToolStripMenuItem.Enabled = false;
-            this.hideFileInImageToolStripMenuItem.Name = "hideFileInImageToolStripMenuItem";
-            this.hideFileInImageToolStripMenuItem.Size = new System.Drawing.Size(257, 26);
-            this.hideFileInImageToolStripMenuItem.Text = "&Hide File in Image";
-            this.hideFileInImageToolStripMenuItem.Click += new System.EventHandler(this.hideFileInImageToolStripMenuItem_Click);
-            // 
-            // retrieveFileFromImageToolStripMenuItem
-            // 
-            this.retrieveFileFromImageToolStripMenuItem.Enabled = false;
-            this.retrieveFileFromImageToolStripMenuItem.Name = "retrieveFileFromImageToolStripMenuItem";
-            this.retrieveFileFromImageToolStripMenuItem.Size = new System.Drawing.Size(257, 26);
-            this.retrieveFileFromImageToolStripMenuItem.Text = "&Retrieve File from Image";
-            this.retrieveFileFromImageToolStripMenuItem.Click += new System.EventHandler(this.retrieveFileFromImageToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(254, 6);
-            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.Window;
+            this.BackColor = System.Drawing.Color.Honeydew;
             this.ClientSize = new System.Drawing.Size(796, 495);
             this.Controls.Add(this.groupBoxShow);
             this.Controls.Add(this.groupBoxHide);
             this.Controls.Add(this.groupBoxAppMode);
             this.Controls.Add(this.menuStrip1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.HelpButton = true;
             this.MainMenuStrip = this.menuStrip1;
             this.MaximizeBox = false;
             this.Name = "FormMain";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "StegoCrypto";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();

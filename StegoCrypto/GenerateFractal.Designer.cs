@@ -277,7 +277,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.labelPercent.AutoSize = true;
             this.labelPercent.BackColor = System.Drawing.Color.Transparent;
-            this.labelPercent.Location = new System.Drawing.Point(324, 15);
+            this.labelPercent.Location = new System.Drawing.Point(22, 11);
             this.labelPercent.Name = "labelPercent";
             this.labelPercent.Size = new System.Drawing.Size(28, 17);
             this.labelPercent.TabIndex = 15;
@@ -287,6 +287,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.Honeydew;
             this.ClientSize = new System.Drawing.Size(708, 530);
             this.Controls.Add(this.labelPercent);
             this.Controls.Add(this.groupBox2);
