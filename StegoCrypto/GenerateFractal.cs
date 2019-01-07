@@ -13,9 +13,7 @@ namespace StegoCrypto
 {
     public partial class GenerateFractal : Form
     {
-        public delegate void RefreshBar();
         public delegate void StringArgReturningVoidDelegate(int value);
-        public RefreshBar delegateRefresh;
         Thread th = Thread.CurrentThread;
 
         private FormMain mainForm;
@@ -26,25 +24,21 @@ namespace StegoCrypto
         private double zoomLevel;
         private double xOffset;
         private double yOffset;
+        int amountDone;
 
         byte[] argbValues;
 
         public double RealC { get { return realC; } set { realC = value; } } 
         public double ImaginaryC { get { return imaginaryC; } set { imaginaryC = value; } }
 
-        private Mutex mut;
-
-
         public GenerateFractal(FormMain mainForm, int squareSize)
         {
             InitializeComponent();
             this.mainForm = mainForm;
             this.squareSize = squareSize;
-            progressBar1.Maximum = squareSize;
+            progressBar1.Maximum = (squareSize * squareSize) / 2;
             this.zoomLevel = 1;
             this.AcceptButton = buttonAccept;
-            delegateRefresh = new RefreshBar(bar);
-            mut = new Mutex();
         }
 
         private void buttonGenerate_Click(object sender, EventArgs e)
@@ -52,22 +46,15 @@ namespace StegoCrypto
             MakeJuliaSet();
         }
 
-        private void bar()
-        {
-            progressBar1.Refresh();
-            progressBar1.Increment(1);
-
-        }
-
         private async void MakeJuliaSet()
         {
             ValidateOffsets();
             ValidateC();
-            Task<Bitmap> js = JuliaSet();
-            newFractal = await js;
-            pictureBox1.Image = newFractal;
-            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
-            buttonAccept.Enabled = true;
+            buttonGenerate.Enabled = false;
+
+            backgroundWorker1.RunWorkerAsync();
+            
+            
         }
 
         private void ValidateOffsets()
@@ -143,13 +130,10 @@ namespace StegoCrypto
             Console.WriteLine("C: " + RealC + " ImC: " + ImaginaryC);
         }
 
-        private async Task<Bitmap> JuliaSet()
+        private Bitmap JuliaSet()
         {
-            progressBar1.Maximum = (squareSize * squareSize) / 2;
-            progressBar1.Show();
-
-            buttonGenerate.Enabled = false;
             Bitmap bmp = new Bitmap(squareSize, squareSize);
+            amountDone = 0;
 
             // Lock the bitmap's bits.  
             Rectangle rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
@@ -177,31 +161,17 @@ namespace StegoCrypto
             Console.WriteLine("Four threads started.");
 
             ThreadOne.Join(); Console.WriteLine("Thread One Joined.");
-            IncrementBar(squareSize / 4);
-            this.Refresh();
             ThreadTwo.Join(); Console.WriteLine("Thread Two Joined.");
-            IncrementBar(squareSize / 4);
-
-            this.Refresh();
-
             ThreadThree.Join(); Console.WriteLine("Thread Three Joined.");
-            IncrementBar(squareSize / 4);
-
-            this.Refresh();
-
             ThreadFour.Join(); Console.WriteLine("Thread Four Joined.");
-            IncrementBar(squareSize / 4);
 
-            this.Refresh();
-            
             // Copy the RGB values back to the bitmap
             System.Runtime.InteropServices.Marshal.Copy(argbValues, 0, ptr, bytes);
 
             // Unlock the bits.
             bmp.UnlockBits(bmpData);
-            progressBar1.Value = 0;
+            //progressBar1.Value = progressBar1.Maximum;
 
-            buttonGenerate.Enabled = true;
             return bmp;
         }
 
@@ -277,25 +247,15 @@ namespace StegoCrypto
                     argbValues[counter + 1] = (byte)g;
                     argbValues[counter + 0] = (byte)b;
                     counter += 4;
-                }                
+                }
+                if (!backgroundWorker1.CancellationPending)
+                {
+                    amountDone++;
+                    double percentDone = ((double)amountDone / (double) squareSize) * 100;
+                    backgroundWorker1.ReportProgress((int)percentDone);
+                }
             }
             Console.WriteLine("ThreadComplete from " + startIndex + " to " + stopIndex);
-        }
-
-        private void IncrementBar(int value)
-        {
-            // InvokeRequired required compares the thread ID of the
-            // calling thread to the thread ID of the creating thread.
-            // If these threads are different, it returns true.
-            if (this.progressBar1.InvokeRequired)
-            {
-                StringArgReturningVoidDelegate d = new StringArgReturningVoidDelegate(IncrementBar);
-                this.Invoke(d, new object[] { value });
-            }
-            else
-            {
-                progressBar1.Increment(value);
-            }
         }
 
         private void buttonAccept_Click(object sender, EventArgs e)
@@ -424,16 +384,6 @@ namespace StegoCrypto
              b = (int)B * 10;
         }
 
-        /// <summary>
-        /// Clamp a value to 0-255
-        /// </summary>
-        int Clamp(int i)
-        {
-            if (i < 0) return 0;
-            if (i > 255) return (255);
-            return i;
-        }
-
         private void comboBoxPreset_SelectedIndexChanged(object sender, EventArgs e)
         {
             string selection = comboBoxPreset.SelectedItem.ToString();
@@ -481,7 +431,28 @@ namespace StegoCrypto
 
         }
 
+        private void progressWorker1_DoWork(object sender, DoWorkEventArgs e)
+        {
+            
+            newFractal = JuliaSet();
+            
+        }
 
+        private void progressWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            progressBar1.Increment(amountDone);
+            labelPercent.Text = e.ProgressPercentage + "%";
+        }
+
+        private void progressWorker1_RunCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            pictureBox1.Image = newFractal;
+            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            buttonAccept.Enabled = true;
+            buttonGenerate.Enabled = true;
+            progressBar1.Value = 0;
+
+        }
     }
 
 }
