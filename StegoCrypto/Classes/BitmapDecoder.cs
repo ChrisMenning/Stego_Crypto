@@ -10,7 +10,8 @@ namespace StegoCrypto
 {
     public class BitmapDecoder
     {
-        private List<bool> binaryFromImage;
+        private bool[] binaryFromImage;
+        private byte[] rgbValues;
 
         // Constructor
         public BitmapDecoder()
@@ -20,49 +21,80 @@ namespace StegoCrypto
         // Bytes from Image
         public byte[] BytesFromImage(Bitmap encoded)
         {
-            binaryFromImage = new List<bool>();
-            byte[] bytes;
+            // Lock the bitmap's bits.  
+            Rectangle rect = new Rectangle(0, 0, encoded.Width, encoded.Height);
+            System.Drawing.Imaging.BitmapData bmpData =
+                encoded.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite,
+                encoded.PixelFormat);
+
+            // Get the address of the first line.
+            IntPtr ptr = bmpData.Scan0;
+
+            // Declare an array to hold the bytes of the bitmap.
+            int numOfbytes = Math.Abs(bmpData.Stride) * encoded.Height;
+            rgbValues = new byte[numOfbytes];
+
+            // Copy the RGB values into the array.
+            System.Runtime.InteropServices.Marshal.Copy(ptr, rgbValues, 0, numOfbytes);
+
+            // Create a place to store the bytes.
+            binaryFromImage = new bool[encoded.Height * encoded.Width * 4];
+            byte[] byteArray;
 
             PleaseWait pwForm = new PleaseWait();
             pwForm.progress.Maximum = encoded.Height;
             pwForm.Show();
             pwForm.Refresh();
 
-            Console.WriteLine("Looping through all pixels...");
-            int testCounter = 0;
-            // Loop through each pixel of the encoded image.
-            for (int row = 0; row < encoded.Height; row++)
-            {
-                for (int column = 0; column < encoded.Width; column++)
-                {
-                    // Pull the last bit out of each color channel and concatenate them onto the ones and zeros.
-                    Color pixelColor = encoded.GetPixel(column, row);
-                    GetLastBitOfEachColorChannel(pixelColor);
+            int h = encoded.Height;
 
-                    testCounter++;
-                }
-                pwForm.progress.Value = row;
-                pwForm.Refresh();
+            Console.WriteLine("Looping through all pixels...");
+
+
+            for (int i = 0; i < (rgbValues.Length - 4); i +=4)
+            {
+                binaryFromImage[i] = ToBool(rgbValues[i + 3] % 2);
+                binaryFromImage[i + 1] = ToBool(rgbValues[i + 2] % 2);
+                binaryFromImage[i + 2] = ToBool(rgbValues[i + 1] % 2);
+                binaryFromImage[i + 3] = ToBool(rgbValues[i] % 2);
             }
-            Console.WriteLine("Checked " + testCounter + " pixels, which should be able to store " + testCounter * 4 + " bits, or " + testCounter / 2 + " bytes.");
-            Console.WriteLine("Finished looping through pixels. Found " + binaryFromImage.Count + " bits");
+
+
+            // Loop through each pixel of the encoded image.
+          //  for (int row = 0; row < h; row++)
+          //  {
+          //      for (int column = 0; column < encoded.Width; column++)
+          //      {
+          //          // Pull the last bit out of each color channel and concatenate them onto the ones and zeros.
+          //          Color pixelColor = encoded.GetPixel(column, row);
+          //          GetLastBitOfEachColorChannel(pixelColor);
+          //
+          //          testCounter++;
+          //      }
+          //      pwForm.progress.Value = row;
+          //      pwForm.Refresh();
+          //  }
+            //Console.WriteLine("Checked " + testCounter + " pixels, which should be able to store " + testCounter * 4 + " bits, or " + testCounter / 2 + " bytes.");
+            //Console.WriteLine("Finished looping through pixels. Found " + binaryFromImage.Count + " bits");
 
             // Convert string of 1s and 0s to byte[].
             BitArray ba = new BitArray(binaryFromImage.ToArray());
-            bytes = ToByteArray(ba);
+            byteArray = ToByteArray(ba);
 
             pwForm.Close();
-            return bytes;
+            // Unlock the bits.
+            encoded.UnlockBits(bmpData);
+            return byteArray;
         }
 
-        private void GetLastBitOfEachColorChannel(Color color)
-        {
-            Color pixelColor = color;
-            this.binaryFromImage.Add(ToBool(pixelColor.A % 2));
-            this.binaryFromImage.Add(ToBool(pixelColor.R % 2));
-            this.binaryFromImage.Add(ToBool(pixelColor.G % 2));
-            this.binaryFromImage.Add(ToBool(pixelColor.B % 2));
-        }
+    //    private void GetLastBitOfEachColorChannel(Color color)
+    //    {
+    //        Color pixelColor = color;
+    //        this.binaryFromImage.Add(ToBool(pixelColor.A % 2));
+    //        this.binaryFromImage.Add(ToBool(pixelColor.R % 2));
+    //        this.binaryFromImage.Add(ToBool(pixelColor.G % 2));
+    //        this.binaryFromImage.Add(ToBool(pixelColor.B % 2));
+    //    }
 
         public bool ToBool(int value)
         {
