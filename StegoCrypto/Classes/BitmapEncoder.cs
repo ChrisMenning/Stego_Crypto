@@ -85,8 +85,6 @@ namespace StegoCrypto
         // The main method that returns an encoded bitmap.
         public Bitmap EncodedBitmap(byte[] file, byte[] IV)
         {
-            
-
             // Lock the bitmap's bits.  
             Rectangle rect = new Rectangle(0, 0, this.theBitmap.Width, this.theBitmap.Height);
             System.Drawing.Imaging.BitmapData bmpData =
