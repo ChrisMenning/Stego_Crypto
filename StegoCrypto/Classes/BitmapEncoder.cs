@@ -13,13 +13,7 @@ namespace StegoCrypto
     {
         // the private fields.
         private readonly Bitmap theBitmap;
-        private Color pixelColor;
-        private Color sanitizedColor;
         private BitArray OnesAndZeros;
-        private int newA;
-        private int newR;
-        private int newG;
-        private int newB;
 
         // The constructor
         public BitmapEncoder(Bitmap rawBitmap)
