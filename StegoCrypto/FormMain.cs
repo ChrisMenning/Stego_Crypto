@@ -126,8 +126,7 @@ namespace StegoCrypto
                 fp = new FormPassword(this);
                 fp.Show();
                 buttonGenerateFractal.Enabled = true;
-                tabControl.SelectTab(0);
-                //radioButtonHideFile.Checked = true;
+                radioButtonHideFile.Checked = true;
             }
         }
 
@@ -237,7 +236,7 @@ namespace StegoCrypto
 
                 buttonRetrieveFile.Enabled = true;
                 retrieveFileFromImageToolStripMenuItem.Enabled = true;
-                tabControl.SelectTab(1);
+                radioButtonRetrieveFile.Checked = true;
             }
         }
 
@@ -339,7 +338,19 @@ namespace StegoCrypto
             }
         }
 
-        
+        private void radioButtonHideFile_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButtonHideFile.Checked)
+            {
+                groupBoxHide.Enabled = true;
+                groupBoxShow.Enabled = false;
+            }
+            else
+            {
+                groupBoxHide.Enabled = false;
+                groupBoxShow.Enabled = true;
+            }
+        }
 
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -349,14 +360,14 @@ namespace StegoCrypto
 
         private void fileToEncryptToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            tabControl.SelectTab(0);
+            radioButtonHideFile.Checked = true;
             this.Refresh();
             OpenFileToHide(); 
         }
 
         private void imageToEncodeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            tabControl.SelectTab(0);
+            radioButtonHideFile.Checked = true;
             this.Refresh();
             SelectImageForHiding();
         }
