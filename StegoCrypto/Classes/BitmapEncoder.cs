@@ -21,7 +21,7 @@ namespace StegoCrypto
         private int newG;
         private int newB;
 
-        // The constructor
+        // The constructor.
         public BitmapEncoder(Bitmap rawBitmap)
         {
             this.theBitmap = rawBitmap;
