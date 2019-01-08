@@ -9,6 +9,7 @@ namespace StegoCrypto
 {
     public static class WorkerExtension
     {
+        // By Toni Patrina https://social.msdn.microsoft.com/Forums/windowsapps/en-US/a9330b2a-9552-4722-a238-3a6d24f0c3a0/quotawaitquot-for-backgroundworker?forum=wpdevelop
         public static Task<object> RunWorkerTaskAsync(this BackgroundWorker backgroundWorker)
         {
             var tcs = new TaskCompletionSource<object>();

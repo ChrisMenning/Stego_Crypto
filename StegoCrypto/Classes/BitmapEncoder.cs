@@ -89,10 +89,6 @@ namespace StegoCrypto
             // Copy the RGB values into the array.
             System.Runtime.InteropServices.Marshal.Copy(ptr, rgbValues, 0, bytes);
 
-            // Declare a counter.
-            int h = this.theBitmap.Height;
-            int w = this.theBitmap.Width;
-
             // Prepend IV onto file and convert them both to a BitArray.
             OnesAndZeros = GetOnesAndZeros(IV, file);
 
@@ -101,12 +97,10 @@ namespace StegoCrypto
             pwForm.Show();
             pwForm.Refresh();
 
+            // Do work, and even though it's a background worker, wait until it's complete.
             var result = await bgWorker.RunWorkerTaskAsync();
 
             pwForm.Close();
-
-            if (OnesAndZeros.Length / 8 > (w * h / 2))
-                Console.WriteLine("******************************* \n MESSAGE TRUNCATED WHILE WRITING TO BITMAP!!!");
 
             // Copy the RGB values back to the bitmap
             System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
