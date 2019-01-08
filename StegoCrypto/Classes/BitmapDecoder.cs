@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
-
-using System.Text;
 using System.Threading.Tasks;
 
 namespace StegoCrypto
@@ -31,6 +28,9 @@ namespace StegoCrypto
 
         protected void bgWorker_DoWork(object sender, DoWorkEventArgs e)
         {
+            // Starting at 0, loop through every 4th byte of RGB values, and in groups of 4, get the least significant bit (LSB) 
+            // and assign it to the binaryfromImage array.
+
             for (int i = 0; i < argbValues.Length - 4; i += 4)
             {
                 binaryFromImage[i + 3] = ToBool(argbValues[i] % 2);

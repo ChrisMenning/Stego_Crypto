@@ -3,9 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace StegoCrypto
@@ -37,11 +34,13 @@ namespace StegoCrypto
             Console.WriteLine("BGworker stared.");
             int length = argbValues.Length;
 
-            // Starting at 0, loop through every 4th byte of RGB values and
+            // Starting at 0, loop through every 4th byte of ARGB values, and in groups of 4, set the least significant bit (LSB) 
+            // to 0 and then change the LSB to the bit from the OnesAndZeros bitarray that was made from the input file.
             for (int i = 0; i < length - 4; i += 4)
             {
                 if (i + 3 < OnesAndZeros.Length)
                 {
+                    // Note: This used to be a more readable set of GetPixel and SetPixel commands, but this way is much faster.
                     argbValues[i] = (byte)((argbValues[i] - (argbValues[i] % 2)) + ToInt(OnesAndZeros[i + 3]));
                     argbValues[i + 1] = (byte)((argbValues[i + 1] - (argbValues[i + 1] % 2)) + ToInt(OnesAndZeros[i + 2]));
                     argbValues[i + 2] = (byte)((argbValues[i + 2] - (argbValues[i + 2] % 2)) + ToInt(OnesAndZeros[i + 1]));
@@ -107,11 +106,6 @@ namespace StegoCrypto
             // Unlock the bits.
             this.theBitmap.UnlockBits(bmpData);
             return this.theBitmap;
-        }
-
-        private void OverwriteWithNewBytes(int startIndex, int stop)
-        {
-            throw new NotImplementedException();
         }
 
         // Prepend IV onto File as BitArray

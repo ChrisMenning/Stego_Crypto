@@ -99,6 +99,9 @@ namespace StegoCrypto
 
                 bytes = fileContents.ToArray();
 
+                var str = System.Text.Encoding.Default.GetString(bytes);
+                System.IO.File.WriteAllText("Bar.txt", str);
+
                 return bytes;
             }
             catch
