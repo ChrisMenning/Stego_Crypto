@@ -45,8 +45,6 @@ namespace StegoCrypto
             buttonGenerate.Enabled = false;
 
             backgroundWorker1.RunWorkerAsync();
-            
-            
         }
 
         private void ValidateOffsets()
