@@ -11,7 +11,7 @@ namespace StegoCrypto
 {
     public partial class FormMain : Form
     {
-        // The private fields
+        // The private fields.
         private byte[] encryptionKey;
         private FileInformation fi;
         private Bitmap originalImage;
