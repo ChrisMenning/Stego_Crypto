@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -41,7 +42,7 @@ namespace StegoCryptoUnitTesting
 
             for (int i = 0; i < file.Length; i++)
             {
-                bothTogether[i] = file[i];
+                bothTogether[i + IV.Length] = file[i];
             }
 
             BitmapDecoder bmpD = new BitmapDecoder();
@@ -63,6 +64,49 @@ namespace StegoCryptoUnitTesting
                 // ASSERT
                 Assert.AreEqual(onlyRelevantBytes, bothTogether);
             });
+        }
+
+        [TestMethod]
+        public void TestEncryption()
+        {
+            // ARRANGE
+            // Create a new mainform which also creates a new UserPreferences object, where encryption settings are stored.
+            FormMain mainForm = new FormMain();
+            PasswordHandler pwh = new PasswordHandler("password", mainForm);
+            FileInformation fi = new FileInformation();
+            AESencrypter aesEnc = new AESencrypter(fi.GenerateFileInfoHeader(), fi.FileContents, mainForm);
+            // ACT
+            byte[] encryptedFile = aesEnc.EncryptBytes();
+            // ASSERT
+            Assert.AreNotEqual(fi.FileContents, encryptedFile);
+        }
+
+        [TestMethod]
+        public void TestEncryptionAndDecryption()
+        {
+            Trace.Write("test");
+            // ARRANGE
+            FormMain mainForm = new FormMain();
+            PasswordHandler pwh = new PasswordHandler("password", mainForm);
+            FileInformation fi = new FileInformation();
+            byte[] fileHeader = fi.InfoHeader;
+            Trace.WriteLine("Raw file plus header is " + (fileHeader.Length + fi.FileContents.Length) + " bytes long.");
+
+            AESencrypter aesEnc = new AESencrypter(fileHeader, fi.FileContents, mainForm);
+            AESdecrypter aesDec = new AESdecrypter(mainForm);
+            // ACT
+            byte[] encryptedFile = aesEnc.EncryptBytes();
+            Trace.WriteLine("Encrypted file is " + encryptedFile.Length + " bytes long.");
+            byte[] decryptedFile = aesDec.DecryptedBytes(encryptedFile, mainForm.EncryptionKey, aesEnc.InitializationVector);
+            HeaderParser hp = new HeaderParser();
+            byte[] parsedDecrypted = hp.fileContentsWithoutHeader(decryptedFile);
+
+            // ASSERT
+            for (int i = 0; i < fi.FileContents.Length; i++)
+            {
+                Assert.AreEqual(fi.FileContents[i], parsedDecrypted[i]);
+            }
+           
         }
     }
 }

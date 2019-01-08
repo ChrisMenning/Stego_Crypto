@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace StegoCrypto
 {
-    class UserPreferences
+    public class UserPreferences
     {
         // The private fields
         private byte[] salt;

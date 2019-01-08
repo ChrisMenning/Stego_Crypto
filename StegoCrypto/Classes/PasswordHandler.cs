@@ -58,8 +58,6 @@ namespace StegoCrypto
             {
                 Console.WriteLine("Key bye:" + b.ToString());
             }
-
-
         }
 
         /// <summary>

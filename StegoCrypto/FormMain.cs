@@ -51,7 +51,7 @@ namespace StegoCrypto
             }
         }
 
-        internal UserPreferences UserPrefs
+        public UserPreferences UserPrefs
         {
             get
             {
