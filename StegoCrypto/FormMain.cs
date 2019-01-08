@@ -103,6 +103,7 @@ namespace StegoCrypto
             }
         }
 
+        // The methods that do the work.
         private void OpenFileToHide()
         {
             openFileDialogSourceFile.Filter = "All files (*.*)|*.*";
@@ -223,7 +224,6 @@ namespace StegoCrypto
                 pictureBoxEncodedImage.Image = encImg;
                 pictureBoxEncodedImage.SizeMode = PictureBoxSizeMode.Zoom;
 
-
                 fp = new FormPassword(this);
                 fp.ShowDialog();
 
@@ -231,37 +231,6 @@ namespace StegoCrypto
                 retrieveFileFromImageToolStripMenuItem.Enabled = true;
                 tabControl.SelectTab(1);
             }
-        }
-
-        // The buttons
-        private void btnOpenFile_Click(object sender, EventArgs e)
-        {
-            OpenFileToHide();
-        }
-
-        private void buttonSelectRawImage_Click(object sender, EventArgs e)
-        {
-            SelectImageForHiding();
-        }
-
-        private void buttonHideFile_Click(object sender, EventArgs e)
-        {
-            HideFile();
-        }
-
-        private void buttonOpenImage_Click(object sender, EventArgs e)
-        {
-            OpenImageToDecode();
-        }
-
-        private void buttonGenerateFractal_Click(object sender, EventArgs e)
-        {
-            CallFractalMaker();
-        }
-
-        private void buttonRetrieveFile_Click(object sender, EventArgs e)
-        {
-            RetrieveFile();
         }
 
         private async void RetrieveFile()
@@ -331,8 +300,61 @@ namespace StegoCrypto
             }
         }
 
-        
+        private void ClearEverything()
+        {
+            encryptionKey = new byte[0];
+            fi = null;
+            originalImage = null;
+            decodedBytes = null;
+            encImg = null;
+            picBoxOrig.Image = null;
+            pictureBoxEncodedImage.Image = null;
+            EstimatedStorageCap.Text = "";
+            labelFileInfo.Text = "";
+            labelFileInfo2.Text = "";
 
+            buttonSelectRawImage.Enabled = false;
+            buttonGenerateFractal.Enabled = false;
+            buttonHideFile.Enabled = false;
+            buttonRetrieveFile.Enabled = false;
+            hideFileInImageToolStripMenuItem.Enabled = false;
+            retrieveFileFromImageToolStripMenuItem.Enabled = false;
+            imageToEncodeToolStripMenuItem.Enabled = false;
+            generateFractalToolStripMenuItem.Enabled = false;
+        }
+
+        // The buttons
+        private void btnOpenFile_Click(object sender, EventArgs e)
+        {
+            OpenFileToHide();
+        }
+
+        private void buttonSelectRawImage_Click(object sender, EventArgs e)
+        {
+            SelectImageForHiding();
+        }
+
+        private void buttonHideFile_Click(object sender, EventArgs e)
+        {
+            HideFile();
+        }
+
+        private void buttonOpenImage_Click(object sender, EventArgs e)
+        {
+            OpenImageToDecode();
+        }
+
+        private void buttonGenerateFractal_Click(object sender, EventArgs e)
+        {
+            CallFractalMaker();
+        }
+
+        private void buttonRetrieveFile_Click(object sender, EventArgs e)
+        {
+            RetrieveFile();
+        }
+
+        // The toolstrips
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Settings settings = new Settings(this);
@@ -368,31 +390,6 @@ namespace StegoCrypto
         {
             ClearEverything();
         }
-
-        private void ClearEverything()
-        {
-            encryptionKey = new byte[0];
-            fi = null;
-            originalImage = null;
-            decodedBytes = null;
-            encImg = null;
-            picBoxOrig.Image = null;
-            pictureBoxEncodedImage.Image = null;
-            EstimatedStorageCap.Text = "";
-            labelFileInfo.Text = "";
-            labelFileInfo2.Text = "";
-
-            buttonSelectRawImage.Enabled = false;
-            buttonGenerateFractal.Enabled = false;
-            buttonHideFile.Enabled = false;
-            buttonRetrieveFile.Enabled = false;
-            hideFileInImageToolStripMenuItem.Enabled = false;
-            retrieveFileFromImageToolStripMenuItem.Enabled = false;
-            imageToEncodeToolStripMenuItem.Enabled = false;
-            generateFractalToolStripMenuItem.Enabled = false;
-        }
-
-
 
         private void hideFileInImageToolStripMenuItem_Click(object sender, EventArgs e)
         {
