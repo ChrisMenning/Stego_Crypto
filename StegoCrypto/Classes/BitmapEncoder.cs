@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -13,18 +14,64 @@ namespace StegoCrypto
     {
         // the private fields.
         private readonly Bitmap theBitmap;
+        byte[] rgbValues;
         private BitArray OnesAndZeros;
+        BackgroundWorker bgWorker;
+        PleaseWait pwForm;
 
         // The constructor.
         public BitmapEncoder(Bitmap rawBitmap)
         {
             this.theBitmap = rawBitmap;
+
+            bgWorker = new BackgroundWorker();
+            bgWorker.DoWork += new DoWorkEventHandler(bgWorker_DoWork);
+            bgWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bgWorker_RunWorkerCompleted);
+            bgWorker.ProgressChanged += new ProgressChangedEventHandler(bgWorker_ProgressChanged);
+            bgWorker.WorkerReportsProgress = true;
+            bgWorker.WorkerSupportsCancellation = true;
+        }
+
+        protected void bgWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            Console.WriteLine("BGworker stared.");
+            int counter = 0;
+            int amountDone = 0;
+            for (int i = 0; i < rgbValues.Length; i++)
+            {
+                if (counter + 3 < OnesAndZeros.Length)
+                {
+                    rgbValues[counter] = (byte)((rgbValues[counter] - (rgbValues[counter] % 2)) + ToInt(OnesAndZeros[counter + 3]));
+                    rgbValues[counter + 1] = (byte)((rgbValues[counter + 1] - (rgbValues[counter + 1] % 2)) + ToInt(OnesAndZeros[counter + 2]));
+                    rgbValues[counter + 2] = (byte)((rgbValues[counter + 2] - (rgbValues[counter + 2] % 2)) + ToInt(OnesAndZeros[counter + 1]));
+                    rgbValues[counter + 3] = (byte)((rgbValues[counter + 3] - (rgbValues[counter + 3] % 2)) + ToInt(OnesAndZeros[counter]));
+
+                    if ((i % rgbValues.Length) / 10 == 0)
+                    {
+                        Console.WriteLine("amount done: " + amountDone);
+                        amountDone++;
+                        bgWorker.ReportProgress(amountDone * 10);
+                    }
+
+                    counter += 4;
+                }
+            }
+            Console.WriteLine("BGWorker Completed.");
+        }
+
+        protected void bgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+        }
+
+        protected void bgWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            pwForm.progress.Value = e.ProgressPercentage;
         }
 
         // The main method that returns an encoded bitmap.
-        public Bitmap EncodedBitmap(byte[] file, byte[] IV)
+        public async Task<Bitmap> EncodedBitmap(byte[] file, byte[] IV)
         {
-            PleaseWait pwForm = new PleaseWait();
+            pwForm = new PleaseWait();
 
             // Lock the bitmap's bits.  
             Rectangle rect = new Rectangle(0, 0, this.theBitmap.Width, this.theBitmap.Height);
@@ -37,13 +84,12 @@ namespace StegoCrypto
 
             // Declare an array to hold the bytes of the bitmap.
             int bytes = Math.Abs(bmpData.Stride) * this.theBitmap.Height;
-            byte[] rgbValues = new byte[bytes];
+            rgbValues = new byte[bytes];
 
             // Copy the RGB values into the array.
             System.Runtime.InteropServices.Marshal.Copy(ptr, rgbValues, 0, bytes);
 
             // Declare a counter.
-            int counter = 0;
             int h = this.theBitmap.Height;
             int w = this.theBitmap.Width;
 
@@ -51,25 +97,11 @@ namespace StegoCrypto
             OnesAndZeros = GetOnesAndZeros(IV, file);
 
             // Update the progress bar.
-            pwForm.progress.Maximum = h;
+            pwForm.progress.Maximum =  100;
             pwForm.Show();
             pwForm.Refresh();
 
-            //OverwriteWithNewBytes(0, h);
-
-            for (int i = 0; i < rgbValues.Length; i++)
-            {
-                if (counter + 3 < OnesAndZeros.Length)
-                {
-                    rgbValues[counter] = (byte)((rgbValues[counter] - (rgbValues[counter] % 2)) + ToInt(OnesAndZeros[counter + 3]));
-                    rgbValues[counter + 1] = (byte)((rgbValues[counter + 1] - (rgbValues[counter + 1] % 2)) + ToInt(OnesAndZeros[counter + 2]));
-                    rgbValues[counter + 2] = (byte)((rgbValues[counter + 2] - (rgbValues[counter + 2] % 2)) + ToInt(OnesAndZeros[counter + 1]));
-                    rgbValues[counter + 3] = (byte)((rgbValues[counter + 3] - (rgbValues[counter + 3] % 2)) + ToInt(OnesAndZeros[counter]));
-
-                    counter += 4;
-                }
-            }
-            pwForm.progress.Value = pwForm.progress.Maximum;
+            var result = await bgWorker.RunWorkerTaskAsync();
 
             pwForm.Close();
 
