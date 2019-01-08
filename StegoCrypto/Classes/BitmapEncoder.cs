@@ -14,7 +14,7 @@ namespace StegoCrypto
     {
         // the private fields.
         private readonly Bitmap theBitmap;
-        byte[] rgbValues;
+        byte[] argbValues;
         private BitArray OnesAndZeros;
         BackgroundWorker bgWorker;
         PleaseWait pwForm;
@@ -35,22 +35,22 @@ namespace StegoCrypto
         protected void bgWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             Console.WriteLine("BGworker stared.");
-            int counter = 0;
-            int length = rgbValues.Length;
-            for (int i = 0; i < rgbValues.Length - 4; i += 4)
+            int length = argbValues.Length;
+
+            // Starting at 0, loop through every 4th byte of RGB values and
+            for (int i = 0; i < length - 4; i += 4)
             {
                 if (i + 3 < OnesAndZeros.Length)
                 {
-                    rgbValues[i] = (byte)((rgbValues[i] - (rgbValues[i] % 2)) + ToInt(OnesAndZeros[i + 3]));
-                    rgbValues[i + 1] = (byte)((rgbValues[i + 1] - (rgbValues[i + 1] % 2)) + ToInt(OnesAndZeros[i + 2]));
-                    rgbValues[i + 2] = (byte)((rgbValues[i + 2] - (rgbValues[i + 2] % 2)) + ToInt(OnesAndZeros[i + 1]));
-                    rgbValues[i + 3] = (byte)((rgbValues[i + 3] - (rgbValues[i + 3] % 2)) + ToInt(OnesAndZeros[i]));
+                    argbValues[i] = (byte)((argbValues[i] - (argbValues[i] % 2)) + ToInt(OnesAndZeros[i + 3]));
+                    argbValues[i + 1] = (byte)((argbValues[i + 1] - (argbValues[i + 1] % 2)) + ToInt(OnesAndZeros[i + 2]));
+                    argbValues[i + 2] = (byte)((argbValues[i + 2] - (argbValues[i + 2] % 2)) + ToInt(OnesAndZeros[i + 1]));
+                    argbValues[i + 3] = (byte)((argbValues[i + 3] - (argbValues[i + 3] % 2)) + ToInt(OnesAndZeros[i]));
 
                     if (i % 1000 == 0)
                     {
                         bgWorker.ReportProgress(i);
                     }
-                    counter += 4;
                 }
             }
             Console.WriteLine("BGWorker Completed.");
@@ -87,14 +87,14 @@ namespace StegoCrypto
 
             // Declare an array to hold the bytes of the bitmap.
             int numOfBytes = Math.Abs(bmpData.Stride) * this.theBitmap.Height;
-            rgbValues = new byte[numOfBytes];
+            argbValues = new byte[numOfBytes];
 
             // Update the progress bar.
             pwForm.progress.Maximum = numOfBytes;
             pwForm.progress.Value = 100;
 
             // Copy the RGB values into the array.
-            System.Runtime.InteropServices.Marshal.Copy(ptr, rgbValues, 0, numOfBytes);
+            System.Runtime.InteropServices.Marshal.Copy(ptr, argbValues, 0, numOfBytes);
 
             // Do work, and even though it's a background worker, wait until it's complete.
             var result = await bgWorker.RunWorkerTaskAsync();
@@ -102,7 +102,7 @@ namespace StegoCrypto
             pwForm.Close();
 
             // Copy the RGB values back to the bitmap
-            System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, numOfBytes);
+            System.Runtime.InteropServices.Marshal.Copy(argbValues, 0, ptr, numOfBytes);
 
             // Unlock the bits.
             this.theBitmap.UnlockBits(bmpData);
