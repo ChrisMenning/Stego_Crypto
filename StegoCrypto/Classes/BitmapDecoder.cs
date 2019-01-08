@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 
@@ -13,23 +14,54 @@ namespace StegoCrypto
     {
         private bool[] binaryFromImage;
         private int height; 
-        private int width;
         private byte[] argbValues;
+        BackgroundWorker bgWorker;
+        PleaseWait pwForm;
 
         // Constructor
         public BitmapDecoder()
         {
+            bgWorker = new BackgroundWorker();
+            bgWorker.DoWork += new DoWorkEventHandler(bgWorker_DoWork);
+            bgWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bgWorker_RunWorkerCompleted);
+            bgWorker.ProgressChanged += new ProgressChangedEventHandler(bgWorker_ProgressChanged);
+            bgWorker.WorkerReportsProgress = true;
+            bgWorker.WorkerSupportsCancellation = true;
+        }
+
+        protected void bgWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            for (int i = 0; i < argbValues.Length - 4; i += 4)
+            {
+                binaryFromImage[i + 3] = ToBool(argbValues[i] % 2);
+                binaryFromImage[i + 2] = ToBool(argbValues[i + 1] % 2);
+                binaryFromImage[i + 1] = ToBool(argbValues[i + 2] % 2);
+                binaryFromImage[i] = ToBool(argbValues[i + 3] % 2);
+
+                if (i % 1000 == 0)
+                {
+                    bgWorker.ReportProgress(i);
+                }
+            }
+        }
+
+        protected void bgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+        }
+
+        protected void bgWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            pwForm.progress.Value = e.ProgressPercentage;
         }
 
         // Bytes from Image
-        public byte[] BytesFromImage(Bitmap encoded)
+        public async Task<byte[]> BytesFromImage(Bitmap encoded)
         {
             binaryFromImage = new bool[(encoded.Width * encoded.Height) * 4];
             byte[] bytesDecodedFromImage;
 
-            // Cache the bitmaps height and width.
+            // Cache the bitmap's height.
             height = encoded.Height;
-            width = encoded.Width;
 
             // Lock the bitmap's bits.  
             Rectangle rect = new Rectangle(0, 0, encoded.Width, encoded.Height);
@@ -47,20 +79,14 @@ namespace StegoCrypto
             // Copy the RGB values into the array.
             System.Runtime.InteropServices.Marshal.Copy(ptr, argbValues, 0, numOfBytes);
 
-            PleaseWait pwForm = new PleaseWait();
-            pwForm.progress.Maximum = 10;
+            pwForm = new PleaseWait();
+            pwForm.progress.Maximum = numOfBytes;
             pwForm.Show();
             pwForm.Refresh();
 
-            // Loop through each pixel of the encoded image.
-            int step = Convert.ToInt32(argbValues.Length * 0.4);
-            for (int i = 0; i < argbValues.Length - 4; i+=4)
-            {
-                binaryFromImage[i + 3] = ToBool(argbValues[i] % 2);
-                binaryFromImage[i + 2] = ToBool(argbValues[i + 1] % 2);
-                binaryFromImage[i + 1] = ToBool(argbValues[i + 2] % 2);
-                binaryFromImage[i] = ToBool(argbValues[i + 3] % 2);
-            }
+            // Do work, and even though it's a background worker, wait until it's complete.
+            var result = await bgWorker.RunWorkerTaskAsync();
+
             pwForm.progress.Value = pwForm.progress.Maximum - 10;
 
             // Convert string of 1s and 0s to byte[].

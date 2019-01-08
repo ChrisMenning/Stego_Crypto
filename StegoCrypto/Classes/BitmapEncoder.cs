@@ -36,23 +36,20 @@ namespace StegoCrypto
         {
             Console.WriteLine("BGworker stared.");
             int counter = 0;
-            int amountDone = 0;
-            for (int i = 0; i < rgbValues.Length; i++)
+            int length = rgbValues.Length;
+            for (int i = 0; i < rgbValues.Length - 4; i += 4)
             {
-                if (counter + 3 < OnesAndZeros.Length)
+                if (i + 3 < OnesAndZeros.Length)
                 {
-                    rgbValues[counter] = (byte)((rgbValues[counter] - (rgbValues[counter] % 2)) + ToInt(OnesAndZeros[counter + 3]));
-                    rgbValues[counter + 1] = (byte)((rgbValues[counter + 1] - (rgbValues[counter + 1] % 2)) + ToInt(OnesAndZeros[counter + 2]));
-                    rgbValues[counter + 2] = (byte)((rgbValues[counter + 2] - (rgbValues[counter + 2] % 2)) + ToInt(OnesAndZeros[counter + 1]));
-                    rgbValues[counter + 3] = (byte)((rgbValues[counter + 3] - (rgbValues[counter + 3] % 2)) + ToInt(OnesAndZeros[counter]));
+                    rgbValues[i] = (byte)((rgbValues[i] - (rgbValues[i] % 2)) + ToInt(OnesAndZeros[i + 3]));
+                    rgbValues[i + 1] = (byte)((rgbValues[i + 1] - (rgbValues[i + 1] % 2)) + ToInt(OnesAndZeros[i + 2]));
+                    rgbValues[i + 2] = (byte)((rgbValues[i + 2] - (rgbValues[i + 2] % 2)) + ToInt(OnesAndZeros[i + 1]));
+                    rgbValues[i + 3] = (byte)((rgbValues[i + 3] - (rgbValues[i + 3] % 2)) + ToInt(OnesAndZeros[i]));
 
-                    if ((i % rgbValues.Length) / 10 == 0)
+                    if (i % 1000 == 0)
                     {
-                        Console.WriteLine("amount done: " + amountDone);
-                        amountDone++;
-                        bgWorker.ReportProgress(amountDone * 10);
+                        bgWorker.ReportProgress(i);
                     }
-
                     counter += 4;
                 }
             }
@@ -83,17 +80,17 @@ namespace StegoCrypto
             IntPtr ptr = bmpData.Scan0;
 
             // Declare an array to hold the bytes of the bitmap.
-            int bytes = Math.Abs(bmpData.Stride) * this.theBitmap.Height;
-            rgbValues = new byte[bytes];
+            int numOfBytes = Math.Abs(bmpData.Stride) * this.theBitmap.Height;
+            rgbValues = new byte[numOfBytes];
 
             // Copy the RGB values into the array.
-            System.Runtime.InteropServices.Marshal.Copy(ptr, rgbValues, 0, bytes);
+            System.Runtime.InteropServices.Marshal.Copy(ptr, rgbValues, 0, numOfBytes);
 
             // Prepend IV onto file and convert them both to a BitArray.
             OnesAndZeros = GetOnesAndZeros(IV, file);
 
             // Update the progress bar.
-            pwForm.progress.Maximum =  100;
+            pwForm.progress.Maximum =  numOfBytes;
             pwForm.Show();
             pwForm.Refresh();
 
@@ -103,7 +100,7 @@ namespace StegoCrypto
             pwForm.Close();
 
             // Copy the RGB values back to the bitmap
-            System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
+            System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, numOfBytes);
 
             // Unlock the bits.
             this.theBitmap.UnlockBits(bmpData);
