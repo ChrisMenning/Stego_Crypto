@@ -63,19 +63,6 @@ namespace StegoCrypto
                 binaryFromImage[i] = ToBool(argbValues[i + 3] % 2);
             }
 
-         //   for (int row = 0; row < encoded.Height; row++)
-         //   {
-         //       for (int column = 0; column < encoded.Width; column++)
-         //       {
-         //           // Pull the last bit out of each color channel and concatenate them onto the ones and zeros.
-         //           Color pixelColor = encoded.GetPixel(column, row);
-         //           GetLastBitOfEachColorChannel(pixelColor);
-         //
-         //           testCounter++;
-         //       }
-         //       pwForm.progress.Value = row;
-         //       pwForm.Refresh();
-         //   }
             Console.WriteLine("Checked " + testCounter + " pixels, which should be able to store " + testCounter * 4 + " bits, or " + testCounter / 2 + " bytes.");
           //  Console.WriteLine("Finished looping through pixels. Found " + binaryFromImage.Count + " bits");
 
@@ -89,15 +76,6 @@ namespace StegoCrypto
             pwForm.Close();
             return bytesDecodedFromImage;
         }
-
-      //  private void GetLastBitOfEachColorChannel(Color color)
-      //  {
-      //      Color pixelColor = color;
-      //      this.binaryFromImage.Add(ToBool(pixelColor.A % 2));
-      //      this.binaryFromImage.Add(ToBool(pixelColor.R % 2));
-      //      this.binaryFromImage.Add(ToBool(pixelColor.G % 2));
-      //      this.binaryFromImage.Add(ToBool(pixelColor.B % 2));
-      //  }
 
         public bool ToBool(int value)
         {
