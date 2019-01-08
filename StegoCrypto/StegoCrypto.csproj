@@ -54,6 +54,7 @@
     <Compile Include="Classes\HeaderParser.cs" />
     <Compile Include="Classes\PasswordHandler.cs" />
     <Compile Include="Classes\UserPreferencesModel.cs" />
+    <Compile Include="Classes\WorkerExtension.cs" />
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
