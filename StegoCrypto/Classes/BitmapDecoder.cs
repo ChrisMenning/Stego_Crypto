@@ -47,29 +47,32 @@ namespace StegoCrypto
             System.Runtime.InteropServices.Marshal.Copy(ptr, argbValues, 0, numOfBytes);
 
             PleaseWait pwForm = new PleaseWait();
-            pwForm.progress.Maximum = encoded.Height;
+            pwForm.progress.Maximum = 10;
             pwForm.Show();
             pwForm.Refresh();
 
-            Console.WriteLine("Looping through all pixels...");
-            int testCounter = 0;
-            // Loop through each pixel of the encoded image.
+            //Console.WriteLine("Looping through all pixels...");
 
+            // Loop through each pixel of the encoded image.
+            int step = Convert.ToInt32(argbValues.Length * 0.4);
             for (int i = 0; i < argbValues.Length - 4; i+=4)
             {
                 binaryFromImage[i + 3] = ToBool(argbValues[i] % 2);
                 binaryFromImage[i + 2] = ToBool(argbValues[i + 1] % 2);
                 binaryFromImage[i + 1] = ToBool(argbValues[i + 2] % 2);
                 binaryFromImage[i] = ToBool(argbValues[i + 3] % 2);
-            }
 
-            Console.WriteLine("Checked " + testCounter + " pixels, which should be able to store " + testCounter * 4 + " bits, or " + testCounter / 2 + " bytes.");
-          //  Console.WriteLine("Finished looping through pixels. Found " + binaryFromImage.Count + " bits");
+                if (i % (argbValues.Length / 4) == 0)
+                {
+                    pwForm.progress.Value = (i);
+                }
+            }
+            pwForm.progress.Value = pwForm.progress.Maximum - 10;
 
             // Convert string of 1s and 0s to byte[].
             BitArray ba = new BitArray(binaryFromImage.ToArray());
             bytesDecodedFromImage = ToByteArray(ba);
-
+            pwForm.progress.Value = pwForm.progress.Maximum;
             // Unlock the bits.
             encoded.UnlockBits(bmpData);
 

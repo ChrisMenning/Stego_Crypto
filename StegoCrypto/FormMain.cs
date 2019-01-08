@@ -127,7 +127,6 @@ namespace StegoCrypto
                 fp.Show();
                 buttonGenerateFractal.Enabled = true;
                 tabControl.SelectTab(0);
-                //radioButtonHideFile.Checked = true;
             }
         }
 
@@ -154,11 +153,8 @@ namespace StegoCrypto
                 if (estimatedBytes > storageCapacity)
                 {
                     labelStorageCapacity.ForeColor = Color.DarkRed;
-                    // Ensure that fractal's encodable bytes are divisible by 128.
                     int pixelsNeeded = estimatedBytes * 2;
-                    //int pixelsNeededToNearest128 = roundUp(pixelsNeeded, 128);
                     double SquareSize = Math.Sqrt(pixelsNeeded) + 1;
-                    //int SquareToNearest128 = roundUp((int)SquareSize, 128);
 
                     ImageTooSmall its = new ImageTooSmall(this, (int)SquareSize);
                     its.ShowDialog();
@@ -190,11 +186,8 @@ namespace StegoCrypto
         {
             Console.WriteLine("Need to hide " + estimatedBytes + " estimated bytes");
 
-            // Ensure that fractal's encodable bytes are divisible by 128.
             int pixelsNeeded = estimatedBytes * 2;
-            //int pixelsNeededToNearest128 = roundUp(pixelsNeeded, 128);
-            int SquareSize = (int)Math.Sqrt(pixelsNeeded) + 16;
-            //int SquareToNearest128 = roundUp((int)SquareSize, 128);
+            int SquareSize = (int)Math.Sqrt(pixelsNeeded) + 16; // Extra 16 for the Initialization Vector
 
             GenerateFractal gf = new GenerateFractal(this, SquareSize);
             gf.ShowDialog();
@@ -207,7 +200,6 @@ namespace StegoCrypto
             aes = new AESencrypter(fi.InfoHeader, fi.FileContents, this);
             BitmapEncoder bmEnc = new BitmapEncoder(originalImage);
             byte[] bytes = aes.EncryptBytes();
-            // MessageBox.Show("Attempting to stuff " + bytes.Length + " bytes into " + (originalImage.Width * originalImage.Height) / 2 + " bytes of space.");
             if (bytes.Length > (originalImage.Width * originalImage.Height) / 2)
             {
                 MessageBox.Show("WARNING: It looks like the file is too large to fit in the image.");
