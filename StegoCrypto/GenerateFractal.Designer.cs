@@ -178,6 +178,9 @@
             "4",
             "5",
             "6",
+            "7",
+            "8",
+            "9",
             "Custom"});
             this.comboBoxPreset.Location = new System.Drawing.Point(102, 34);
             this.comboBoxPreset.Name = "comboBoxPreset";

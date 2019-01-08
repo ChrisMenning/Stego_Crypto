@@ -394,24 +394,43 @@ namespace StegoCrypto
                     textBoxCim.Text = "0.27015";
                     break;
                 case "2":
-                    textBoxC.Text = "-0.8";
-                    textBoxCim.Text = "0.156";
+                    textBoxC.Text = "-0.70176";
+                    textBoxCim.Text = "0.265";
+                    
                     break;
                 case "3":
-                    textBoxC.Text = "-0.7885";
-                    textBoxCim.Text = "0.1385";
+                    textBoxC.Text = "-0.391";
+                    textBoxCim.Text = "-0.59";
+                    
+                    
                     break;
                 case "4":
                     textBoxC.Text = "-0.70176";
-                    textBoxCim.Text = "0.265";
+                    textBoxCim.Text = "-0.3842";
                     break;
                 case "5":
-                    textBoxC.Text = "0.285";
-                    textBoxCim.Text = "0.0132";
+                    textBoxC.Text = "-0.835";
+                    textBoxCim.Text = "0.2321";
+                    
                     break;
                 case "6":
-                    textBoxC.Text = "-0.391";
-                    textBoxCim.Text = "-0.59";
+                    textBoxC.Text = "-0.8";
+                    textBoxCim.Text = "0.156";
+                    break;
+                case "7":
+                    textBoxC.Text = "-0.7885";
+                    textBoxCim.Text = "0.1385";
+
+
+                    break;
+                case "8":
+                    textBoxC.Text = "0.285";
+                    textBoxCim.Text = "0.01";
+                    
+                    break;
+                case "9":
+                    textBoxC.Text = "0.285";
+                    textBoxCim.Text = "0.0132";
                     break;
                 case "Custom":
                     break;
