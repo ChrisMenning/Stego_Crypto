@@ -208,7 +208,6 @@ namespace StegoCrypto
             Bitmap bmp = await bmEnc.EncodedBitmap(bytes, aes.InitializationVector);
 
             openFileDialogSourceFile.Filter = "PNG files (*.png | *.png;";
-
             saveFileDialog.FileName = "image.png";
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
