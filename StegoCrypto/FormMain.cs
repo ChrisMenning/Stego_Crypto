@@ -120,7 +120,7 @@ namespace StegoCrypto
                 labelFileInfo.Text = fi.FileName + "\n" + fi.FileName.Length + " characters in file name. \n" + fi.FileContents.Length + " bytes in file. ";
 
                 // Calculate header size.
-                int headerLength = (16 + 4 + 4 + (fi.FileName.Length * 8));
+                headerLength = (16 + 4 + 4 + (fi.FileName.Length * 8));
 
                 estimatedBytes = (((fi.FileContents.Length) + headerLength));
                 labelEstEncSize.Text = estimatedBytes.ToString();

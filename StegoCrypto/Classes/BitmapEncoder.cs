@@ -16,11 +16,22 @@ namespace StegoCrypto
         BackgroundWorker bgWorker;
         PleaseWait pwForm;
 
-        // The constructor.
+        // The default constructor (for unit testing, mostly)
+        public BitmapEncoder()
+        {
+            this.theBitmap = Properties.Resources.galaxy;
+            InitializeBGworker();
+        }
+
+        // The constructor that accepts a bitmap parameter.
         public BitmapEncoder(Bitmap rawBitmap)
         {
             this.theBitmap = rawBitmap;
+            InitializeBGworker();
+        }
 
+        private void InitializeBGworker()
+        {
             bgWorker = new BackgroundWorker();
             bgWorker.DoWork += new DoWorkEventHandler(bgWorker_DoWork);
             bgWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bgWorker_RunWorkerCompleted);
