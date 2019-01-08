@@ -35,6 +35,7 @@ namespace StegoCrypto
             this.StartPosition = FormStartPosition.CenterScreen;
             this.PicBoxOrig = pictureBoxOriginalImage;
             this.estimatedStorageCap = labelStorageCapacity;
+            tabControl.Selecting += new TabControlCancelEventHandler(tabControl_Selecting);
         }
 
         // The Properties
@@ -366,6 +367,11 @@ namespace StegoCrypto
 
         private void clearAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            ClearEverything();
+        }
+
+        private void ClearEverything()
+        {
             encryptionKey = new byte[0];
             fi = null;
             originalImage = null;
@@ -387,6 +393,8 @@ namespace StegoCrypto
             generateFractalToolStripMenuItem.Enabled = false;
         }
 
+
+
         private void hideFileInImageToolStripMenuItem_Click(object sender, EventArgs e)
         {
             HideFile();
@@ -400,6 +408,13 @@ namespace StegoCrypto
         private void imageToDecodeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenImageToDecode();
+        }
+
+        void tabControl_Selecting(object sender, TabControlCancelEventArgs e)
+        {
+            TabPage current = (sender as TabControl).SelectedTab;
+
+            ClearEverything();
         }
     }
 }
