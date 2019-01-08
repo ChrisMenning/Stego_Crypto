@@ -8,9 +8,6 @@ namespace StegoCrypto
 {
     public partial class GenerateFractal : Form
     {
-        public delegate void StringArgReturningVoidDelegate(int value);
-        Thread th = Thread.CurrentThread;
-
         private FormMain mainForm;
         private int squareSize;
         private Bitmap newFractal;
