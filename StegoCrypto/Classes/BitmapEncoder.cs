@@ -70,6 +70,12 @@ namespace StegoCrypto
         {
             pwForm = new PleaseWait();
 
+            pwForm.Show();
+            pwForm.Refresh();
+
+            // Prepend IV onto file and convert them both to a BitArray.
+            OnesAndZeros = GetOnesAndZeros(IV, file);
+
             // Lock the bitmap's bits.  
             Rectangle rect = new Rectangle(0, 0, this.theBitmap.Width, this.theBitmap.Height);
             System.Drawing.Imaging.BitmapData bmpData =
@@ -83,16 +89,12 @@ namespace StegoCrypto
             int numOfBytes = Math.Abs(bmpData.Stride) * this.theBitmap.Height;
             rgbValues = new byte[numOfBytes];
 
+            // Update the progress bar.
+            pwForm.progress.Maximum = numOfBytes;
+            pwForm.progress.Value = 100;
+
             // Copy the RGB values into the array.
             System.Runtime.InteropServices.Marshal.Copy(ptr, rgbValues, 0, numOfBytes);
-
-            // Prepend IV onto file and convert them both to a BitArray.
-            OnesAndZeros = GetOnesAndZeros(IV, file);
-
-            // Update the progress bar.
-            pwForm.progress.Maximum =  numOfBytes;
-            pwForm.Show();
-            pwForm.Refresh();
 
             // Do work, and even though it's a background worker, wait until it's complete.
             var result = await bgWorker.RunWorkerTaskAsync();
