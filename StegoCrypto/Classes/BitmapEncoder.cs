@@ -11,7 +11,7 @@ namespace StegoCrypto
 {
     public class BitmapEncoder
     {
-        // the private fields.
+        // the private fields
         private readonly Bitmap theBitmap;
         private BitArray OnesAndZeros;
 

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StegoCrypto
@@ -38,7 +40,7 @@ namespace StegoCrypto
 
             // Get the address of the first line.
             IntPtr ptr = bmpData.Scan0;
-
+          
             // Declare an array to hold the bytes of the bitmap.
             int numOfBytes = Math.Abs(bmpData.Stride) * height;
             argbValues = new byte[numOfBytes];
@@ -78,6 +80,7 @@ namespace StegoCrypto
 
             pwForm.Close();
             return bytesDecodedFromImage;
+
         }
 
         public bool ToBool(int value)
