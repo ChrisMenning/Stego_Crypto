@@ -28,9 +28,10 @@ namespace StegoCrypto
             InitializeComponent();
             this.mainForm = mainForm;
             this.squareSize = squareSize;
+            this.AcceptButton = buttonAccept;
+
             progressBar1.Maximum = (squareSize * squareSize) / 2;
             this.zoomLevel = 1;
-            this.AcceptButton = buttonAccept;
         }
 
         private void buttonGenerate_Click(object sender, EventArgs e)
@@ -45,8 +46,6 @@ namespace StegoCrypto
             buttonGenerate.Enabled = false;
 
             backgroundWorker1.RunWorkerAsync();
-            
-            
         }
 
         private void ValidateOffsets()
@@ -162,8 +161,6 @@ namespace StegoCrypto
 
             // Unlock the bits.
             bmp.UnlockBits(bmpData);
-            //progressBar1.Value = progressBar1.Maximum;
-
             return bmp;
         }
 
@@ -247,7 +244,7 @@ namespace StegoCrypto
                     backgroundWorker1.ReportProgress((int)percentDone);
                 }
             }
-            Console.WriteLine("ThreadComplete from " + startIndex + " to " + stopIndex);
+            Console.WriteLine("Thread Complete from " + startIndex + " to " + stopIndex);
         }
 
         private void buttonAccept_Click(object sender, EventArgs e)
@@ -388,13 +385,10 @@ namespace StegoCrypto
                 case "2":
                     textBoxC.Text = "-0.70176";
                     textBoxCim.Text = "0.265";
-                    
                     break;
                 case "3":
                     textBoxC.Text = "-0.391";
                     textBoxCim.Text = "-0.59";
-                    
-                    
                     break;
                 case "4":
                     textBoxC.Text = "-0.70176";
@@ -403,7 +397,6 @@ namespace StegoCrypto
                 case "5":
                     textBoxC.Text = "-0.835";
                     textBoxCim.Text = "0.2321";
-                    
                     break;
                 case "6":
                     textBoxC.Text = "-0.8";
@@ -412,13 +405,10 @@ namespace StegoCrypto
                 case "7":
                     textBoxC.Text = "-0.7885";
                     textBoxCim.Text = "0.1385";
-
-
                     break;
                 case "8":
                     textBoxC.Text = "0.285";
                     textBoxCim.Text = "0.01";
-                    
                     break;
                 case "9":
                     textBoxC.Text = "0.285";
@@ -444,9 +434,7 @@ namespace StegoCrypto
 
         private void progressWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
-            
             newFractal = JuliaSet();
-            
         }
 
         private void progressWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -462,8 +450,6 @@ namespace StegoCrypto
             buttonAccept.Enabled = true;
             buttonGenerate.Enabled = true;
             progressBar1.Value = 0;
-
         }
     }
-
 }
