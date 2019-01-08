@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+
 using System.Text;
 using System.Threading.Tasks;
 
@@ -51,8 +52,6 @@ namespace StegoCrypto
             pwForm.Show();
             pwForm.Refresh();
 
-            //Console.WriteLine("Looping through all pixels...");
-
             // Loop through each pixel of the encoded image.
             int step = Convert.ToInt32(argbValues.Length * 0.4);
             for (int i = 0; i < argbValues.Length - 4; i+=4)
@@ -61,11 +60,6 @@ namespace StegoCrypto
                 binaryFromImage[i + 2] = ToBool(argbValues[i + 1] % 2);
                 binaryFromImage[i + 1] = ToBool(argbValues[i + 2] % 2);
                 binaryFromImage[i] = ToBool(argbValues[i + 3] % 2);
-
-                if (i % (argbValues.Length / 4) == 0)
-                {
-                    pwForm.progress.Value = (i);
-                }
             }
             pwForm.progress.Value = pwForm.progress.Maximum - 10;
 
