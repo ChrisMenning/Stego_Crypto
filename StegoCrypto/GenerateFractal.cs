@@ -60,34 +60,6 @@ namespace StegoCrypto
             progressBar1.Value = 0;
         }
 
-        // First of four threads for rendering a section of the fractal.
-        private Thread firstQuarter()
-        {
-            var t = new Thread(() => JuliaSetSection(0, squareSize / 4));
-            return t;
-        }
-
-        // Second of four threads for rendering a section of the fractal.
-        private Thread secondQuarter()
-        {
-            var t = new Thread(() => JuliaSetSection(squareSize / 4, squareSize / 2));
-            return t;
-        }
-
-        // Third of four threads for rendering a section of the fractal.
-        private Thread thirdQuarter()
-        {
-            var t = new Thread(() => JuliaSetSection(squareSize / 2, Convert.ToInt32(squareSize * 0.75)));
-            return t;
-        }
-
-        // Fourth of four threads for rendering a section of the fractal.
-        private Thread fourthQuarter()
-        {
-            var t = new Thread(() => JuliaSetSection(Convert.ToInt32(squareSize * 0.75), squareSize));
-            return t;
-        }
-
         // Validate the input values and give the background worker the go-ahead to begin the work.
         private void MakeJuliaSet()
         {
@@ -117,24 +89,20 @@ namespace StegoCrypto
             int bytes = Math.Abs(bmpData.Stride) * bmp.Height;
             argbValues = new byte[bytes];
 
-            // Divide the workload of drawing the Julia Set across four threads, each drawing 1/4 of the image.
-            //    Thread ThreadOne = firstQuarter();
-            //    Thread ThreadTwo = secondQuarter();
-            //    Thread ThreadThree = thirdQuarter();
-            //    Thread ThreadFour = fourthQuarter();
-            //
-            //    Console.WriteLine("Starting four threads.");
-            //    ThreadOne.Start();
-            //    ThreadTwo.Start();
-            //    ThreadThree.Start();
-            //    ThreadFour.Start();
-            //    Console.WriteLine("Four threads started.");
-            //
-            //    ThreadOne.Join(); Console.WriteLine("Thread One Joined.");
-            //    ThreadTwo.Join(); Console.WriteLine("Thread Two Joined.");
-            //    ThreadThree.Join(); Console.WriteLine("Thread Three Joined.");
-            //    ThreadFour.Join(); Console.WriteLine("Thread Four Joined.");
+            // Distribute the workload across multiple cores
+            OneThreadForEachCore();
 
+            // Copy the ARGB values back to the bitmap
+            System.Runtime.InteropServices.Marshal.Copy(argbValues, 0, ptr, bytes);
+
+            // Unlock the bits and return the image.
+            bmp.UnlockBits(bmpData);
+            return bmp;
+        }
+
+        // This method distributes the workload of rendering the fractal across all logical processors.
+        private void OneThreadForEachCore()
+        {
             // Create as many threads as there are logical processors.
             threads = new Thread[Environment.ProcessorCount];
             int lastEndIndex = 0;
@@ -142,7 +110,7 @@ namespace StegoCrypto
             {
                 int startIndex = 0;
                 int endIndex = 0;
-                    
+
                 if (i == 0)
                 {
                     startIndex = 0;
@@ -151,31 +119,25 @@ namespace StegoCrypto
                 {
                     startIndex = lastEndIndex;
                 }
-                     
+
                 endIndex = Convert.ToInt32(squareSize * ((double)(i + 1) / (double)threads.Length));
                 Console.WriteLine("Creating thread for section: " + startIndex + " to " + endIndex);
-             
+
                 threads[i] = new Thread(() => JuliaSetSection(startIndex, endIndex));
                 lastEndIndex = endIndex;
             }
             Console.WriteLine("Created " + threads.Length + " threads.");
-             
+
             foreach (Thread t in threads)
             {
                 t.Start();
             }
-             
+
             foreach (Thread t in threads)
             {
                 t.Join();
                 Console.WriteLine("Thread " + t.ManagedThreadId + " joined.");
             }
-            // Copy the ARGB values back to the bitmap
-            System.Runtime.InteropServices.Marshal.Copy(argbValues, 0, ptr, bytes);
-
-            // Unlock the bits and return the image.
-            bmp.UnlockBits(bmpData);
-            return bmp;
         }
 
         // This method adapted from https://lodev.org/cgtutor/juliamandelbrot.html
