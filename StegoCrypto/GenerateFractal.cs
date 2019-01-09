@@ -94,7 +94,7 @@ namespace StegoCrypto
             ValidateC();
             buttonGenerate.Enabled = false;
 
-            backgroundWorker1.RunWorkerAsync();
+            bgWorker.RunWorkerAsync();
         }
 
         // Returns the finished fractal Bitmap when called. Background worker calls this.
@@ -189,11 +189,11 @@ namespace StegoCrypto
                     argbValues[counter + 0] = (byte)b;
                     counter += 4;
                 }
-                if (!backgroundWorker1.CancellationPending)
+                if (!bgWorker.CancellationPending)
                 {
                     amountDone++;
                     double percentDone = ((double)amountDone / (double)squareSize) * 100;
-                    backgroundWorker1.ReportProgress((int)percentDone);
+                    bgWorker.ReportProgress((int)percentDone);
                 }
             }
             Console.WriteLine("Thread Complete from " + startIndex + " to " + stopIndex);
