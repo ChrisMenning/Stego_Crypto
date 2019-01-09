@@ -36,7 +36,6 @@ namespace StegoCrypto
             this.PicBoxOrig = pictureBoxOriginalImage;
             this.estimatedStorageCap = labelStorageCapacity;
             tabControl.Selecting += new TabControlCancelEventHandler(tabControl_Selecting);
-            Console.WriteLine("There are " + Environment.ProcessorCount + " logical processors.");
         }
 
         // The Properties

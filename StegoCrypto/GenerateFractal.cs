@@ -19,6 +19,7 @@ namespace StegoCrypto
         private double yOffset;
         private int amountDone;
         private byte[] argbValues;
+        Thread[] threads;
 
         // Public Properties
         public double RealC { get { return realC; } set { realC = value; } } 
@@ -117,23 +118,58 @@ namespace StegoCrypto
             argbValues = new byte[bytes];
 
             // Divide the workload of drawing the Julia Set across four threads, each drawing 1/4 of the image.
-            Thread ThreadOne = firstQuarter();
-            Thread ThreadTwo = secondQuarter();
-            Thread ThreadThree = thirdQuarter();
-            Thread ThreadFour = fourthQuarter();
+            //    Thread ThreadOne = firstQuarter();
+            //    Thread ThreadTwo = secondQuarter();
+            //    Thread ThreadThree = thirdQuarter();
+            //    Thread ThreadFour = fourthQuarter();
+            //
+            //    Console.WriteLine("Starting four threads.");
+            //    ThreadOne.Start();
+            //    ThreadTwo.Start();
+            //    ThreadThree.Start();
+            //    ThreadFour.Start();
+            //    Console.WriteLine("Four threads started.");
+            //
+            //    ThreadOne.Join(); Console.WriteLine("Thread One Joined.");
+            //    ThreadTwo.Join(); Console.WriteLine("Thread Two Joined.");
+            //    ThreadThree.Join(); Console.WriteLine("Thread Three Joined.");
+            //    ThreadFour.Join(); Console.WriteLine("Thread Four Joined.");
 
-            Console.WriteLine("Starting four threads.");
-            ThreadOne.Start();
-            ThreadTwo.Start();
-            ThreadThree.Start();
-            ThreadFour.Start();
-            Console.WriteLine("Four threads started.");
-
-            ThreadOne.Join(); Console.WriteLine("Thread One Joined.");
-            ThreadTwo.Join(); Console.WriteLine("Thread Two Joined.");
-            ThreadThree.Join(); Console.WriteLine("Thread Three Joined.");
-            ThreadFour.Join(); Console.WriteLine("Thread Four Joined.");
-
+            // Create as many threads as there are logical processors.
+            threads = new Thread[Environment.ProcessorCount];
+            int lastEndIndex = 0;
+            for (int i = 0; i < threads.Length; i++)
+            {
+                int startIndex = 0;
+                int endIndex = 0;
+                    
+                if (i == 0)
+                {
+                    startIndex = 0;
+                }
+                else
+                {
+                    startIndex = lastEndIndex;
+                }
+                     
+                endIndex = Convert.ToInt32(squareSize * ((double)(i + 1) / (double)threads.Length));
+                Console.WriteLine("Creating thread for section: " + startIndex + " to " + endIndex);
+             
+                threads[i] = new Thread(() => JuliaSetSection(startIndex, endIndex));
+                lastEndIndex = endIndex;
+            }
+            Console.WriteLine("Created " + threads.Length + " threads.");
+             
+            foreach (Thread t in threads)
+            {
+                t.Start();
+            }
+             
+            foreach (Thread t in threads)
+            {
+                t.Join();
+                Console.WriteLine("Thread " + t.ManagedThreadId + " joined.");
+            }
             // Copy the ARGB values back to the bitmap
             System.Runtime.InteropServices.Marshal.Copy(argbValues, 0, ptr, bytes);
 
