@@ -8,7 +8,7 @@ using StegoCrypto;
 namespace StegoCryptoUnitTesting
 {
     [TestClass]
-    public class UnitTest2
+    public class EncodingAndEncryptionTests
     {
         [TestMethod]
         public void TestBitmapEncoder()
@@ -34,7 +34,6 @@ namespace StegoCryptoUnitTesting
             byte[] IV = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
 
             byte[] bothTogether = new byte[file.Length + IV.Length];
-
             for (int i = 0; i < IV.Length; i++)
             {
                 bothTogether[i] = IV[i];
@@ -46,10 +45,11 @@ namespace StegoCryptoUnitTesting
             }
 
             BitmapDecoder bmpD = new BitmapDecoder();
-
-            // ACT
             Bitmap encBMP;
             byte[] bytesFromImage;
+
+            // ACT
+
             Task.Run(async () => {
                 encBMP = await bmpE.EncodedBitmap(file, IV);
                 bytesFromImage = await bmpD.BytesFromImage(encBMP);
@@ -84,19 +84,17 @@ namespace StegoCryptoUnitTesting
         [TestMethod]
         public void TestEncryptionAndDecryption()
         {
-            Trace.Write("test");
             // ARRANGE
             FormMain mainForm = new FormMain();
             PasswordHandler pwh = new PasswordHandler("password", mainForm);
             FileInformation fi = new FileInformation();
             byte[] fileHeader = fi.InfoHeader;
-            Trace.WriteLine("Raw file plus header is " + (fileHeader.Length + fi.FileContents.Length) + " bytes long.");
 
             AESencrypter aesEnc = new AESencrypter(fileHeader, fi.FileContents, mainForm);
             AESdecrypter aesDec = new AESdecrypter(mainForm);
+
             // ACT
             byte[] encryptedFile = aesEnc.EncryptBytes();
-            Trace.WriteLine("Encrypted file is " + encryptedFile.Length + " bytes long.");
             byte[] decryptedFile = aesDec.DecryptedBytes(encryptedFile, mainForm.EncryptionKey, aesEnc.InitializationVector);
             HeaderParser hp = new HeaderParser();
             byte[] parsedDecrypted = hp.fileContentsWithoutHeader(decryptedFile);
