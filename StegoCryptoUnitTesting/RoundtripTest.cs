@@ -28,8 +28,8 @@ namespace StegoCryptoUnitTesting
 
             // Bitmap Encoder and Decoder
             BitmapEncoder bmpEncoder = new BitmapEncoder();
-            BitmapDecoder bmpD = new BitmapDecoder();
-            Bitmap EncodedBitmap;
+            BitmapDecoder bmpDecoder = new BitmapDecoder();
+            Bitmap encodedBitmap;
             byte[] bytesFromImage;
 
             // Header Parser
@@ -43,10 +43,10 @@ namespace StegoCryptoUnitTesting
                 encryptedFile = aesEnc.EncryptBytes();
 
                 // Encode the encrypted file into the bitmap.
-                EncodedBitmap = await bmpEncoder.EncodedBitmap(encryptedFile, aesEnc.InitializationVector);
+                encodedBitmap = await bmpEncoder.EncodedBitmap(encryptedFile, aesEnc.InitializationVector);
 
                 // Retrieve the encrypted bytes back out of the bitmap.
-                bytesFromImage = await bmpD.BytesFromImage(EncodedBitmap);
+                bytesFromImage = await bmpDecoder.BytesFromImage(encodedBitmap);
 
                 // Decrypt the bytes pulled from the image.
                 decryptedFile = aesDec.DecryptedBytes(encryptedFile, mainForm.EncryptionKey, aesEnc.InitializationVector);

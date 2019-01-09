@@ -239,7 +239,6 @@
             this.textBoxYOffset.Size = new System.Drawing.Size(68, 22);
             this.textBoxYOffset.TabIndex = 12;
             this.textBoxYOffset.Text = "0";
-            this.textBoxYOffset.TextChanged += new System.EventHandler(this.textBoxYOffset_TextChanged);
             // 
             // textBoxXOffset
             // 
@@ -248,7 +247,6 @@
             this.textBoxXOffset.Size = new System.Drawing.Size(68, 22);
             this.textBoxXOffset.TabIndex = 11;
             this.textBoxXOffset.Text = "0";
-            this.textBoxXOffset.TextChanged += new System.EventHandler(this.textBoxXOffset_TextChanged);
             // 
             // groupBox2
             // 
@@ -270,9 +268,9 @@
             // 
             this.backgroundWorker1.WorkerReportsProgress = true;
             this.backgroundWorker1.WorkerSupportsCancellation = true;
-            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.progressWorker1_DoWork);
-            this.backgroundWorker1.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.progressWorker1_ProgressChanged);
-            this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.progressWorker1_RunCompleted);
+            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgWorker_DoWork);
+            this.backgroundWorker1.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bgWorker_ProgressChanged);
+            this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgWorker_RunCompleted);
             // 
             // labelPercent
             // 
