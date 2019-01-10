@@ -125,16 +125,18 @@ namespace StegoCrypto
         // Prepend IV onto File as BitArray
         private BitArray GetOnesAndZeros(byte[] IV, byte[] file)
         {
-            byte[] bothTogether = new byte[IV.Length + file.Length];
+            int ivLength = IV.Length;
+            int fileLength = file.Length;
+            byte[] bothTogether = new byte[ivLength + fileLength];
             
             for (int i = 0; i < IV.Length; i++)
             {
-                bothTogether[i] =(Reverse(bothTogether[i]));
+                bothTogether[i] =(Reverse(IV[i]));
             }
 
-            for (int i = 0; i < IV.Length; i++)
+            for (int i = ivLength; i < bothTogether.Length; i++)
             {
-                bothTogether[i] = (Reverse(bothTogether[i]));
+                bothTogether[i] = (Reverse(file[i - ivLength]));
             }
 
             OnesAndZeros = new BitArray(bothTogether);
