@@ -139,7 +139,7 @@ namespace StegoCrypto
         }
 
         // Prepend IV onto File as BitArray
-        private BitArray GetOnesAndZeros(byte[] IV, byte[] file)
+        public BitArray GetOnesAndZeros(byte[] IV, byte[] file)
         {
             int ivLength = IV.Length;
             int fileLength = file.Length;

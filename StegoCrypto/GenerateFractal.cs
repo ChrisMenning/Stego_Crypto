@@ -60,34 +60,6 @@ namespace StegoCrypto
             progressBar1.Value = 0;
         }
 
-        // First of four threads for rendering a section of the fractal.
-        private Thread firstQuarter()
-        {
-            var t = new Thread(() => JuliaSetSection(0, squareSize / 4));
-            return t;
-        }
-
-        // Second of four threads for rendering a section of the fractal.
-        private Thread secondQuarter()
-        {
-            var t = new Thread(() => JuliaSetSection(squareSize / 4, squareSize / 2));
-            return t;
-        }
-
-        // Third of four threads for rendering a section of the fractal.
-        private Thread thirdQuarter()
-        {
-            var t = new Thread(() => JuliaSetSection(squareSize / 2, Convert.ToInt32(squareSize * 0.75)));
-            return t;
-        }
-
-        // Fourth of four threads for rendering a section of the fractal.
-        private Thread fourthQuarter()
-        {
-            var t = new Thread(() => JuliaSetSection(Convert.ToInt32(squareSize * 0.75), squareSize));
-            return t;
-        }
-
         // Validate the input values and give the background worker the go-ahead to begin the work.
         private void MakeJuliaSet()
         {
