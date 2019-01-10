@@ -1,9 +1,8 @@
-﻿using System;
-using System.Diagnostics;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StegoCrypto;
+using System.Diagnostics;
 
 namespace StegoCryptoUnitTesting
 {
@@ -22,7 +21,7 @@ namespace StegoCryptoUnitTesting
             Task.Run(async () => { encBMP = await bmpE.EncodedBitmap(file, IV);
                 // ASSERT
                 Assert.AreNotEqual(bmpE, encBMP);
-            });
+            }).GetAwaiter().GetResult();
         }
 
         [TestMethod]
@@ -44,26 +43,32 @@ namespace StegoCryptoUnitTesting
                 bothTogether[i + IV.Length] = file[i];
             }
 
-            BitmapDecoder bmpD = new BitmapDecoder();
+            BitmapDecoder bmpD = new BitmapDecoder(false);
             Bitmap encBMP;
             byte[] bytesFromImage;
-
+            byte[] onlyRelevantBytes;
             // ACT
 
-            Task.Run(async () => {
+            Task.Run(async () =>
+            {
                 encBMP = await bmpE.EncodedBitmap(file, IV);
                 bytesFromImage = await bmpD.BytesFromImage(encBMP);
 
                 // Trim excess off end of bytesFromImage.
-                byte[] onlyRelevantBytes = new byte[bothTogether.Length];
+                onlyRelevantBytes = new byte[bothTogether.Length];
                 for (int i = 0; i < bothTogether.Length; i++)
                 {
                     onlyRelevantBytes[i] = bytesFromImage[i];
                 }
-
+                Trace.WriteLine("XXXXX Comparing " + onlyRelevantBytes.Length + "|" + bothTogether.Length);
                 // ASSERT
-                Assert.AreEqual(onlyRelevantBytes, bothTogether);
-            });
+                for (int i = 0; i < bothTogether.Length; i++)
+                {
+                    Assert.AreEqual(onlyRelevantBytes[i], bothTogether[i]);
+
+                }
+
+            }).GetAwaiter().GetResult();
         }
 
         [TestMethod]
