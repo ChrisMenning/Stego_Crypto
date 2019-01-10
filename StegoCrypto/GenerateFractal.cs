@@ -117,24 +117,6 @@ namespace StegoCrypto
             int bytes = Math.Abs(bmpData.Stride) * bmp.Height;
             argbValues = new byte[bytes];
 
-            // Divide the workload of drawing the Julia Set across four threads, each drawing 1/4 of the image.
-            //    Thread ThreadOne = firstQuarter();
-            //    Thread ThreadTwo = secondQuarter();
-            //    Thread ThreadThree = thirdQuarter();
-            //    Thread ThreadFour = fourthQuarter();
-            //
-            //    Console.WriteLine("Starting four threads.");
-            //    ThreadOne.Start();
-            //    ThreadTwo.Start();
-            //    ThreadThree.Start();
-            //    ThreadFour.Start();
-            //    Console.WriteLine("Four threads started.");
-            //
-            //    ThreadOne.Join(); Console.WriteLine("Thread One Joined.");
-            //    ThreadTwo.Join(); Console.WriteLine("Thread Two Joined.");
-            //    ThreadThree.Join(); Console.WriteLine("Thread Three Joined.");
-            //    ThreadFour.Join(); Console.WriteLine("Thread Four Joined.");
-
             // Create as many threads as there are logical processors.
             threads = new Thread[Environment.ProcessorCount];
             int lastEndIndex = 0;

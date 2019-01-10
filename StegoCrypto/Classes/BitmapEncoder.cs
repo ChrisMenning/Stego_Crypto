@@ -47,6 +47,9 @@ namespace StegoCrypto
 
             // Starting at 0, loop through every 4th byte of ARGB values, and in groups of 4, set the least significant bit (LSB) 
             // to 0 and then change the LSB to the bit from the OnesAndZeros bitarray that was made from the input file.
+
+            // Note: Having successfully implemented multi-threading on the process, it took 10 times longer. One thread
+            // for this process seems to be the fastest.
             for (int i = 0; i < length - 4; i += 4)
             {
                 if (i + 3 < OnesAndZeros.Length)
@@ -122,19 +125,19 @@ namespace StegoCrypto
         // Prepend IV onto File as BitArray
         private BitArray GetOnesAndZeros(byte[] IV, byte[] file)
         {
-            List<byte> bothTogether = new List<byte>();
+            byte[] bothTogether = new byte[IV.Length + file.Length];
             
-            foreach (byte b in IV)
+            for (int i = 0; i < IV.Length; i++)
             {
-                bothTogether.Add(Reverse(b));
+                bothTogether[i] =(Reverse(bothTogether[i]));
             }
 
-            foreach (byte b in file)
+            for (int i = 0; i < IV.Length; i++)
             {
-                bothTogether.Add(Reverse(b));
+                bothTogether[i] = (Reverse(bothTogether[i]));
             }
 
-            OnesAndZeros = new BitArray(bothTogether.ToArray());
+            OnesAndZeros = new BitArray(bothTogether);
             return OnesAndZeros;
         }
 
