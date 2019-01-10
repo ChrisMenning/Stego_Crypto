@@ -15,19 +15,23 @@ namespace StegoCrypto
         private BitArray OnesAndZeros;
         BackgroundWorker bgWorker;
         PleaseWait pwForm;
+        private bool useWaitForm;
 
         // The default constructor (for unit testing, mostly)
         public BitmapEncoder()
         {
             this.theBitmap = Properties.Resources.galaxy;
             InitializeBGworker();
+            useWaitForm = false;
         }
 
         // The constructor that accepts a bitmap parameter.
         public BitmapEncoder(Bitmap rawBitmap)
         {
+            pwForm = new PleaseWait();
             this.theBitmap = rawBitmap;
             InitializeBGworker();
+            useWaitForm = true;
         }
 
         private void InitializeBGworker()
@@ -71,20 +75,23 @@ namespace StegoCrypto
 
         protected void bgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            bgWorker.Dispose();
         }
 
         protected void bgWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            pwForm.progress.Value = e.ProgressPercentage;
+            if (useWaitForm == true)
+                pwForm.progress.Value = e.ProgressPercentage;
         }
 
         // The main method that returns an encoded bitmap.
         public async Task<Bitmap> EncodedBitmap(byte[] file, byte[] IV)
         {
-            pwForm = new PleaseWait();
-
-            pwForm.Show();
-            pwForm.Refresh();
+            if (useWaitForm == true)
+            {
+                pwForm.Show();
+                pwForm.Refresh();
+            }
 
             // Prepend IV onto file and convert them both to a BitArray.
             OnesAndZeros = GetOnesAndZeros(IV, file);
@@ -102,9 +109,12 @@ namespace StegoCrypto
             int numOfBytes = Math.Abs(bmpData.Stride) * this.theBitmap.Height;
             argbValues = new byte[numOfBytes];
 
-            // Update the progress bar.
-            pwForm.progress.Maximum = numOfBytes;
-            pwForm.progress.Value = 100;
+            if (useWaitForm == true)
+            {
+                // Update the progress bar.
+                pwForm.progress.Maximum = numOfBytes;
+                pwForm.progress.Value = 100;
+            }
 
             // Copy the RGB values into the array.
             System.Runtime.InteropServices.Marshal.Copy(ptr, argbValues, 0, numOfBytes);
@@ -112,13 +122,19 @@ namespace StegoCrypto
             // Do work, and even though it's a background worker, wait until it's complete.
             var result = await bgWorker.RunWorkerTaskAsync();
 
-            pwForm.Close();
-
             // Copy the RGB values back to the bitmap
             System.Runtime.InteropServices.Marshal.Copy(argbValues, 0, ptr, numOfBytes);
 
             // Unlock the bits.
             this.theBitmap.UnlockBits(bmpData);
+
+            if (useWaitForm == true)
+            {
+                pwForm.Close();
+                pwForm.Dispose();
+            }
+
+            // Finally, return the bitmap.
             return this.theBitmap;
         }
 

@@ -14,10 +14,23 @@ namespace StegoCrypto
         private byte[] argbValues;
         BackgroundWorker bgWorker;
         PleaseWait pwForm;
+        private bool useWaitForm;
 
         // Constructor
         public BitmapDecoder()
         {
+            useWaitForm = true;
+            bgWorker = new BackgroundWorker();
+            bgWorker.DoWork += new DoWorkEventHandler(bgWorker_DoWork);
+            bgWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bgWorker_RunWorkerCompleted);
+            bgWorker.ProgressChanged += new ProgressChangedEventHandler(bgWorker_ProgressChanged);
+            bgWorker.WorkerReportsProgress = true;
+            bgWorker.WorkerSupportsCancellation = true;
+        }
+
+        public BitmapDecoder(bool useWaitForm)
+        {
+            useWaitForm = false;
             bgWorker = new BackgroundWorker();
             bgWorker.DoWork += new DoWorkEventHandler(bgWorker_DoWork);
             bgWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bgWorker_RunWorkerCompleted);
@@ -47,11 +60,13 @@ namespace StegoCrypto
 
         protected void bgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            bgWorker.Dispose();
         }
 
         protected void bgWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            pwForm.progress.Value = e.ProgressPercentage;
+            if (useWaitForm)
+                pwForm.progress.Value = e.ProgressPercentage;
         }
 
         // Bytes from Image
@@ -79,24 +94,37 @@ namespace StegoCrypto
             // Copy the RGB values into the array.
             System.Runtime.InteropServices.Marshal.Copy(ptr, argbValues, 0, numOfBytes);
 
-            pwForm = new PleaseWait();
-            pwForm.progress.Maximum = numOfBytes;
-            pwForm.Show();
-            pwForm.Refresh();
+            if (useWaitForm == true)
+            {
+                pwForm = new PleaseWait();
+                pwForm.progress.Maximum = numOfBytes;
+                pwForm.Show();
+                pwForm.Refresh();
+            }
 
             // Do work, and even though it's a background worker, wait until it's complete.
             var result = await bgWorker.RunWorkerTaskAsync();
 
-            pwForm.progress.Value = pwForm.progress.Maximum - 10;
+            if (useWaitForm == true)
+                pwForm.progress.Value = pwForm.progress.Maximum - 10;
 
             // Convert string of 1s and 0s to byte[].
             BitArray ba = new BitArray(binaryFromImage.ToArray());
             bytesDecodedFromImage = ToByteArray(ba);
-            pwForm.progress.Value = pwForm.progress.Maximum;
+
+            if (useWaitForm == true)
+                pwForm.progress.Value = pwForm.progress.Maximum;
+
             // Unlock the bits.
             encoded.UnlockBits(bmpData);
 
-            pwForm.Close();
+            if (useWaitForm == true)
+            {
+                pwForm.Close();
+                pwForm.Dispose();
+            }
+
+            // Finally, return the bytes.
             return bytesDecodedFromImage;
         }
 
