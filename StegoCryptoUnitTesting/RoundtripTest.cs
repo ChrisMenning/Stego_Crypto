@@ -49,13 +49,15 @@ namespace StegoCryptoUnitTesting
                 bytesFromImage = await bmpDecoder.BytesFromImage(encodedBitmap);
 
                 // Decrypt the bytes pulled from the image.
-                decryptedFile = aesDec.DecryptedBytes(encryptedFile, mainForm.EncryptionKey, aesEnc.InitializationVector);
+                decryptedFile = aesDec.DecryptedBytes(bytesFromImage, mainForm.EncryptionKey, aesEnc.InitializationVector);
 
                 // Parse the header from the decrypted file.
                 parsedDecrypted = hp.fileContentsWithoutHeader(decryptedFile);
 
-            // ASSERT
-            // ======
+                //hp.fileContentsWithoutHeader(aesDec.DecryptedBytes(aesEnc.EncryptBytes(), mainForm.EncryptionKey, aesEnc.InitializationVector))
+
+                // ASSERT
+                // ======
                 for (int i = 0; i < fi.FileContents.Length; i++)
                 {
                     // Assert that the bytes that went in are the same as the bytes that came out.

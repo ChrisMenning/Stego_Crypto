@@ -135,7 +135,7 @@ namespace StegoCrypto
         // This method adapted from https://lodev.org/cgtutor/juliamandelbrot.html
         private void JuliaSetSection(int startIndex, int stopIndex)
         {
-            Console.WriteLine("Starting a Julia quarter at " + startIndex + " on Thread " + Thread.CurrentThread.ManagedThreadId);
+            Console.WriteLine("Starting a Julia section at " + startIndex + " on Thread " + Thread.CurrentThread.ManagedThreadId);
             //each iteration, it calculates: new = old*old + c, where c is a constant and old starts at current pixel
             double newReal, newIm, oldReal, oldIm;   //real and imaginary parts of new and old
             double zoom = zoomLevel, moveX = xOffset, moveY = yOffset; //you can change these to zoom and change position

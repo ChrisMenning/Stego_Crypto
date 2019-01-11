@@ -6,14 +6,16 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace StegoCrypto
-{ 
+{
+    // This object is for generating a file metadata header that will be used for parsing out the file after decryption.
     public class FileInformation
     {
-        // This object is for generating a file metadata header that will be used for parsing out the file after decryption.
+        // The private fields.
         private string fileName;
         private byte[] fileContents;
         private byte[] infoHeader;
 
+        // The public properties.
         public string FileName
         {
             get
@@ -59,7 +61,7 @@ namespace StegoCrypto
             return BitConverter.GetBytes(fileName.Length);
         }
 
-        // The fileContents Length as a byte array.
+        // The fileContents Length as a byte array. 
         public byte[] fileContentsLength()
         {
             return BitConverter.GetBytes(fileContents.Length); 

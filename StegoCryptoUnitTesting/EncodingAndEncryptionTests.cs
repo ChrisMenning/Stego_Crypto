@@ -82,6 +82,16 @@ namespace StegoCryptoUnitTesting
             byte[] bothTogether = new byte[IV.Length + file.Length];
             byte[] parsedBytes;
 
+            for (int i = 0; i < IV.Length; i++)
+            {
+                bothTogether[i] = IV[i];
+            }
+
+            for (int i = IV.Length; i < bothTogether.Length; i++)
+            {
+                bothTogether[i] = file[i - IV.Length];
+            }
+
             // ACT
             BitArray ba = bmpEnc.GetOnesAndZeros(IV, file);
             parsedBytes = new byte[ba.Count / 8];
@@ -98,17 +108,7 @@ namespace StegoCryptoUnitTesting
                     byteIndex++;
                 }
             }
-
-            for (int i = 0; i < IV.Length; i++)
-            {
-                bothTogether[i] = IV[i];
-            }
-
-            for (int i = IV.Length; i < bothTogether.Length; i++)
-            {
-                bothTogether[i] = file[i - IV.Length];
-            }
-
+           
             // ASSERT
             for (int i = 0; i < parsedBytes.Length; i++)
             {
