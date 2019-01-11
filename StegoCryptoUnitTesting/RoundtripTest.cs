@@ -54,10 +54,8 @@ namespace StegoCryptoUnitTesting
                 // Parse the header from the decrypted file.
                 parsedDecrypted = hp.fileContentsWithoutHeader(decryptedFile);
 
-                //hp.fileContentsWithoutHeader(aesDec.DecryptedBytes(aesEnc.EncryptBytes(), mainForm.EncryptionKey, aesEnc.InitializationVector))
-
-                // ASSERT
-                // ======
+            // ASSERT
+            // ======
                 for (int i = 0; i < fi.FileContents.Length; i++)
                 {
                     // Assert that the bytes that went in are the same as the bytes that came out.
