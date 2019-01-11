@@ -36,7 +36,6 @@ namespace StegoCrypto
             this.PicBoxOrig = pictureBoxOriginalImage;
             this.estimatedStorageCap = labelStorageCapacity;
             tabControl.Selecting += new TabControlCancelEventHandler(tabControl_Selecting);
-            Console.WriteLine("There are " + Environment.ProcessorCount + " logical processors.");
         }
 
         // The Properties
@@ -172,7 +171,7 @@ namespace StegoCrypto
             }
         }
 
-        int roundUp(int numToRound, int multiple)
+        private int RoundUp(int numToRound, int multiple)
         {
             if (multiple == 0)
                 return numToRound;
@@ -266,7 +265,7 @@ namespace StegoCrypto
             Console.WriteLine("Trimmed IV off of encryped bytes.");
 
             // Ensure that byte array is divisible by 128.
-            int bytesToNearest128 = roundUp(bytes.Length, 128);
+            int bytesToNearest128 = RoundUp(bytes.Length, 128);
             byte[] newBytes = new byte[bytesToNearest128];
             for (int i = 0; i < bytes.Length; i++)
             {

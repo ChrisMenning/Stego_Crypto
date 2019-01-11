@@ -15,19 +15,23 @@ namespace StegoCrypto
         private BitArray OnesAndZeros;
         BackgroundWorker bgWorker;
         PleaseWait pwForm;
+        private bool useWaitForm;
 
         // The default constructor (for unit testing, mostly)
         public BitmapEncoder()
         {
             this.theBitmap = Properties.Resources.galaxy;
             InitializeBGworker();
+            useWaitForm = false;
         }
 
         // The constructor that accepts a bitmap parameter.
         public BitmapEncoder(Bitmap rawBitmap)
         {
+            pwForm = new PleaseWait();
             this.theBitmap = rawBitmap;
             InitializeBGworker();
+            useWaitForm = true;
         }
 
         private void InitializeBGworker()
@@ -47,6 +51,9 @@ namespace StegoCrypto
 
             // Starting at 0, loop through every 4th byte of ARGB values, and in groups of 4, set the least significant bit (LSB) 
             // to 0 and then change the LSB to the bit from the OnesAndZeros bitarray that was made from the input file.
+
+            // Note: Having successfully implemented multi-threading on the process, it took 10 times longer. One thread
+            // for this process seems to be the fastest.
             for (int i = 0; i < length - 4; i += 4)
             {
                 if (i + 3 < OnesAndZeros.Length)
@@ -68,20 +75,23 @@ namespace StegoCrypto
 
         protected void bgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            bgWorker.Dispose();
         }
 
         protected void bgWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            pwForm.progress.Value = e.ProgressPercentage;
+            if (useWaitForm == true)
+                pwForm.progress.Value = e.ProgressPercentage;
         }
 
         // The main method that returns an encoded bitmap.
         public async Task<Bitmap> EncodedBitmap(byte[] file, byte[] IV)
         {
-            pwForm = new PleaseWait();
-
-            pwForm.Show();
-            pwForm.Refresh();
+            if (useWaitForm == true)
+            {
+                pwForm.Show();
+                pwForm.Refresh();
+            }
 
             // Prepend IV onto file and convert them both to a BitArray.
             OnesAndZeros = GetOnesAndZeros(IV, file);
@@ -99,9 +109,12 @@ namespace StegoCrypto
             int numOfBytes = Math.Abs(bmpData.Stride) * this.theBitmap.Height;
             argbValues = new byte[numOfBytes];
 
-            // Update the progress bar.
-            pwForm.progress.Maximum = numOfBytes;
-            pwForm.progress.Value = 100;
+            if (useWaitForm == true)
+            {
+                // Update the progress bar.
+                pwForm.progress.Maximum = numOfBytes;
+                pwForm.progress.Value = 100;
+            }
 
             // Copy the RGB values into the array.
             System.Runtime.InteropServices.Marshal.Copy(ptr, argbValues, 0, numOfBytes);
@@ -109,32 +122,40 @@ namespace StegoCrypto
             // Do work, and even though it's a background worker, wait until it's complete.
             var result = await bgWorker.RunWorkerTaskAsync();
 
-            pwForm.Close();
-
             // Copy the RGB values back to the bitmap
             System.Runtime.InteropServices.Marshal.Copy(argbValues, 0, ptr, numOfBytes);
 
             // Unlock the bits.
             this.theBitmap.UnlockBits(bmpData);
+
+            if (useWaitForm == true)
+            {
+                pwForm.Close();
+                pwForm.Dispose();
+            }
+
+            // Finally, return the bitmap.
             return this.theBitmap;
         }
 
         // Prepend IV onto File as BitArray
-        private BitArray GetOnesAndZeros(byte[] IV, byte[] file)
+        public BitArray GetOnesAndZeros(byte[] IV, byte[] file)
         {
-            List<byte> bothTogether = new List<byte>();
+            int ivLength = IV.Length;
+            int fileLength = file.Length;
+            byte[] bothTogether = new byte[ivLength + fileLength];
             
-            foreach (byte b in IV)
+            for (int i = 0; i < IV.Length; i++)
             {
-                bothTogether.Add(Reverse(b));
+                bothTogether[i] =(Reverse(IV[i]));
             }
 
-            foreach (byte b in file)
+            for (int i = ivLength; i < bothTogether.Length; i++)
             {
-                bothTogether.Add(Reverse(b));
+                bothTogether[i] = (Reverse(file[i - ivLength]));
             }
 
-            OnesAndZeros = new BitArray(bothTogether.ToArray());
+            OnesAndZeros = new BitArray(bothTogether);
             return OnesAndZeros;
         }
 

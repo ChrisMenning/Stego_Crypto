@@ -19,6 +19,13 @@ namespace StegoCrypto
         private double yOffset;
         private int amountDone;
         private byte[] argbValues;
+        Thread[] threads;
+
+        private double startingHue;
+        private double startingSaturation;
+        private double startingValue;
+
+        private bool useHighContrast;
 
         // Public Properties
         public double RealC { get { return realC; } set { realC = value; } } 
@@ -31,9 +38,11 @@ namespace StegoCrypto
             this.mainForm = mainForm;
             this.squareSize = squareSize;
             this.AcceptButton = buttonAccept;
+            GetStartColor();
 
             progressBar1.Maximum = (squareSize * squareSize) / 2;
             this.zoomLevel = 1;
+            useHighContrast = false;
         }
 
         // Background Worker's main work method.
@@ -57,34 +66,6 @@ namespace StegoCrypto
             buttonAccept.Enabled = true;
             buttonGenerate.Enabled = true;
             progressBar1.Value = 0;
-        }
-
-        // First of four threads for rendering a section of the fractal.
-        private Thread firstQuarter()
-        {
-            var t = new Thread(() => JuliaSetSection(0, squareSize / 4));
-            return t;
-        }
-
-        // Second of four threads for rendering a section of the fractal.
-        private Thread secondQuarter()
-        {
-            var t = new Thread(() => JuliaSetSection(squareSize / 4, squareSize / 2));
-            return t;
-        }
-
-        // Third of four threads for rendering a section of the fractal.
-        private Thread thirdQuarter()
-        {
-            var t = new Thread(() => JuliaSetSection(squareSize / 2, Convert.ToInt32(squareSize * 0.75)));
-            return t;
-        }
-
-        // Fourth of four threads for rendering a section of the fractal.
-        private Thread fourthQuarter()
-        {
-            var t = new Thread(() => JuliaSetSection(Convert.ToInt32(squareSize * 0.75), squareSize));
-            return t;
         }
 
         // Validate the input values and give the background worker the go-ahead to begin the work.
@@ -116,24 +97,41 @@ namespace StegoCrypto
             int bytes = Math.Abs(bmpData.Stride) * bmp.Height;
             argbValues = new byte[bytes];
 
-            // Divide the workload of drawing the Julia Set across four threads, each drawing 1/4 of the image.
-            Thread ThreadOne = firstQuarter();
-            Thread ThreadTwo = secondQuarter();
-            Thread ThreadThree = thirdQuarter();
-            Thread ThreadFour = fourthQuarter();
-
-            Console.WriteLine("Starting four threads.");
-            ThreadOne.Start();
-            ThreadTwo.Start();
-            ThreadThree.Start();
-            ThreadFour.Start();
-            Console.WriteLine("Four threads started.");
-
-            ThreadOne.Join(); Console.WriteLine("Thread One Joined.");
-            ThreadTwo.Join(); Console.WriteLine("Thread Two Joined.");
-            ThreadThree.Join(); Console.WriteLine("Thread Three Joined.");
-            ThreadFour.Join(); Console.WriteLine("Thread Four Joined.");
-
+            // Create as many threads as there are logical processors.
+            threads = new Thread[Environment.ProcessorCount];
+            int lastEndIndex = 0;
+            for (int i = 0; i < threads.Length; i++)
+            {
+                int startIndex = 0;
+                int endIndex = 0;
+                    
+                if (i == 0)
+                {
+                    startIndex = 0;
+                }
+                else
+                {
+                    startIndex = lastEndIndex;
+                }
+                     
+                endIndex = Convert.ToInt32(squareSize * ((double)(i + 1) / (double)threads.Length));
+                Console.WriteLine("Creating thread for section: " + startIndex + " to " + endIndex);
+             
+                threads[i] = new Thread(() => JuliaSetSection(startIndex, endIndex));
+                lastEndIndex = endIndex;
+            }
+            Console.WriteLine("Created " + threads.Length + " threads.");
+             
+            foreach (Thread t in threads)
+            {
+                t.Start();
+            }
+             
+            foreach (Thread t in threads)
+            {
+                t.Join();
+                Console.WriteLine("Thread " + t.ManagedThreadId + " joined.");
+            }
             // Copy the ARGB values back to the bitmap
             System.Runtime.InteropServices.Marshal.Copy(argbValues, 0, ptr, bytes);
 
@@ -145,7 +143,7 @@ namespace StegoCrypto
         // This method adapted from https://lodev.org/cgtutor/juliamandelbrot.html
         private void JuliaSetSection(int startIndex, int stopIndex)
         {
-            Console.WriteLine("Starting a Julia quarter at " + startIndex + " on Thread " + Thread.CurrentThread.ManagedThreadId);
+            Console.WriteLine("Starting a Julia section at " + startIndex + " on Thread " + Thread.CurrentThread.ManagedThreadId);
             //each iteration, it calculates: new = old*old + c, where c is a constant and old starts at current pixel
             double newReal, newIm, oldReal, oldIm;   //real and imaginary parts of new and old
             double zoom = zoomLevel, moveX = xOffset, moveY = yOffset; //you can change these to zoom and change position
@@ -177,10 +175,38 @@ namespace StegoCrypto
                         if ((newReal * newReal + newIm * newIm) > 4) break;
                     }
 
-                    double val = i % maxIterations;
-                    int r, g, b;
+                    double hue = i % maxIterations + startingHue;
+                    double val = startingValue;
 
-                    HsvToRgb(val, 1, val, out r, out g, out b);
+                    if (useHighContrast)
+                    {
+                        val = i % maxIterations;
+                    }
+                    else
+                    {
+                        if (i < maxIterations)
+                        {
+                            val = 255;
+                        }
+                        else
+                        {
+                            val = 0;
+                        }
+                    }
+                    int r;
+                    int g;
+                    int b;
+                    if (useHighContrast)
+                    {
+                        HsvToRgb(hue, startingSaturation, val, out r, out g, out b);
+                    }
+                    else
+                    {
+                        Color C = ColorFromHSV(hue, startingSaturation, val);
+                        r = C.R;
+                        g = C.G;
+                        b = C.B;
+                    }
 
                     // Note: For some reason, the byte order needs to be reversed here.
                     argbValues[counter + 3] = 255;
@@ -199,88 +225,128 @@ namespace StegoCrypto
             Console.WriteLine("Thread Complete from " + startIndex + " to " + stopIndex);
         }
 
-        // HSV to RGB by Chris Hulbert http://www.splinter.com.au/converting-hsv-to-rgb-colour-using-c/
-        private void HsvToRgb(double h, double S, double V, out int r, out int g, out int b)
+           // HSV to RGB by Chris Hulbert http://www.splinter.com.au/converting-hsv-to-rgb-colour-using-c/
+           private void HsvToRgb(double h, double S, double V, out int r, out int g, out int b)
+           {
+               double H = h;
+               while (H < 0) { H += 360; };
+               while (H >= 360) { H -= 360; };
+               double R, G, B;
+               if (V <= 0)
+               { R = G = B = 0; }
+               else if (S <= 0)
+               {
+                   R = G = B = V;
+               }
+               else
+               {
+                   double hf = H / 60.0;
+                   int i = (int)Math.Floor(hf);
+                   double f = hf - i;
+                   double pv = V * (1 - S);
+                   double qv = V * (1 - S * f);
+                   double tv = V * (1 - S * (1 - f));
+                   switch (i)
+                   {
+        
+                       // Red is the dominant color
+                       case 0:
+                           R = V;
+                           G = tv;
+                           B = pv;
+                           break;
+        
+                       // Green is the dominant color
+                       case 1:
+                           R = qv;
+                           G = V;
+                           B = pv;
+                           break;
+                       case 2:
+                           R = pv;
+                           G = V;
+                           B = tv;
+                           break;
+        
+                       // Blue is the dominant color
+                       case 3:
+                           R = pv;
+                           G = qv;
+                           B = V;
+                           break;
+                       case 4:
+                           R = tv;
+                           G = pv;
+                           B = V;
+                           break;
+        
+                       // Red is the dominant color
+                       case 5:
+                           R = V;
+                           G = pv;
+                           B = qv;
+                           break;
+        
+                       // Just in case we overshoot on our math by a little, we put these here. Since its a switch it won't slow us down at all to put these here.
+                       case 6:
+                           R = V;
+                           G = tv;
+                           B = pv;
+                           break;
+                       case -1:
+                           R = V;
+                           G = pv;
+                           B = qv;
+                           break;
+        
+                       default:
+                           R = G = B = V; // Just pretend its black/white
+                           break;
+                   }
+               }
+               r = (int)R * 10;
+               g = (int)G * 10;
+               b = (int)B * 10;
+           }
+
+        // https://stackoverflow.com/users/12971/greg
+        public static void ColorToHSV(Color color, out double hue, out double saturation, out double value)
         {
-            double H = h;
-            while (H < 0) { H += 360; };
-            while (H >= 360) { H -= 360; };
-            double R, G, B;
-            if (V <= 0)
-            { R = G = B = 0; }
-            else if (S <= 0)
-            {
-                R = G = B = V;
-            }
+            int max = Math.Max(color.R, Math.Max(color.G, color.B));
+            int min = Math.Min(color.R, Math.Min(color.G, color.B));
+
+            hue = color.GetHue();
+            saturation = (max == 0) ? 0 : 1d - (1d * min / max);
+            value = max / 255d;
+        }
+
+        // https://stackoverflow.com/users/12971/greg
+        public static Color ColorFromHSV(double h, double s, double val)
+        {
+            double hue = h;
+            double saturation = s;
+            double value = val;
+         
+            int hi = Convert.ToInt32(Math.Floor(hue / 60)) % 6;
+            double f = hue / 60 - Math.Floor(hue / 60);
+            
+            int v = Convert.ToInt32(value);
+            int p = Convert.ToInt32(value * (1 - saturation));
+            int q = Convert.ToInt32(value * (1 - f * saturation));
+            int t = Convert.ToInt32(value * (1 - (1 - f) * saturation));
+
+            if (hi == 0)
+                return Color.FromArgb(255, v, t, p);
+            else if (hi == 1)
+                return Color.FromArgb(255, q, v, p);
+            else if (hi == 2)
+                return Color.FromArgb(255, p, v, t);
+            else if (hi == 3)
+                return Color.FromArgb(255, p, q, v);
+            else if (hi == 4)
+                return Color.FromArgb(255, t, p, v);
             else
-            {
-                double hf = H / 60.0;
-                int i = (int)Math.Floor(hf);
-                double f = hf - i;
-                double pv = V * (1 - S);
-                double qv = V * (1 - S * f);
-                double tv = V * (1 - S * (1 - f));
-                switch (i)
-                {
-
-                    // Red is the dominant color
-                    case 0:
-                        R = V;
-                        G = tv;
-                        B = pv;
-                        break;
-
-                    // Green is the dominant color
-                    case 1:
-                        R = qv;
-                        G = V;
-                        B = pv;
-                        break;
-                    case 2:
-                        R = pv;
-                        G = V;
-                        B = tv;
-                        break;
-
-                    // Blue is the dominant color
-                    case 3:
-                        R = pv;
-                        G = qv;
-                        B = V;
-                        break;
-                    case 4:
-                        R = tv;
-                        G = pv;
-                        B = V;
-                        break;
-
-                    // Red is the dominant color
-                    case 5:
-                        R = V;
-                        G = pv;
-                        B = qv;
-                        break;
-
-                    // Just in case we overshoot on our math by a little, we put these here. Since its a switch it won't slow us down at all to put these here.
-                    case 6:
-                        R = V;
-                        G = tv;
-                        B = pv;
-                        break;
-                    case -1:
-                        R = V;
-                        G = pv;
-                        B = qv;
-                        break;
-
-                    default:
-                        R = G = B = V; // Just pretend its black/white
-                        break;
-                }
-            }
-            r = (int)R * 10;
-            g = (int)G * 10;
-            b = (int)B * 10;
+                return Color.FromArgb(255, v, p, q);
         }
 
         private void ValidateOffsets()
@@ -444,6 +510,32 @@ namespace StegoCrypto
                     textBoxCim.Text = "0.27015";
                     break;
             }
+        }
+
+        private void buttonChooseStartingColor_Click(object sender, EventArgs e)
+        {
+            colorDialog1.ShowDialog();
+            Color startColor = colorDialog1.Color;
+            ColorToHSV(startColor, out startingHue, out startingSaturation, out startingValue);
+            labelColor.BackColor = startColor;
+        }
+
+        private void GetStartColor()
+        {
+            Color startColor = labelColor.BackColor;
+            ColorToHSV(startColor, out startingHue, out startingSaturation, out startingValue);
+        }
+
+        private void radioButtonHighContrast_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButtonHighContrast.Checked)
+                useHighContrast = true;
+        }
+
+        private void radioButtonSmooth_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButtonSmooth.Checked)
+                useHighContrast = false;
         }
     }
 }

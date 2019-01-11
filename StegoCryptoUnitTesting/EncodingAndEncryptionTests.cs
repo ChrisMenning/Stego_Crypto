@@ -1,9 +1,9 @@
-﻿using System;
-using System.Diagnostics;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StegoCrypto;
+using System.Diagnostics;
+using System.Collections;
 
 namespace StegoCryptoUnitTesting
 {
@@ -22,7 +22,7 @@ namespace StegoCryptoUnitTesting
             Task.Run(async () => { encBMP = await bmpE.EncodedBitmap(file, IV);
                 // ASSERT
                 Assert.AreNotEqual(bmpE, encBMP);
-            });
+            }).GetAwaiter().GetResult();
         }
 
         [TestMethod]
@@ -44,26 +44,76 @@ namespace StegoCryptoUnitTesting
                 bothTogether[i + IV.Length] = file[i];
             }
 
-            BitmapDecoder bmpD = new BitmapDecoder();
+            BitmapDecoder bmpD = new BitmapDecoder(false);
             Bitmap encBMP;
             byte[] bytesFromImage;
-
+            byte[] onlyRelevantBytes;
             // ACT
 
-            Task.Run(async () => {
+            Task.Run(async () =>
+            {
                 encBMP = await bmpE.EncodedBitmap(file, IV);
                 bytesFromImage = await bmpD.BytesFromImage(encBMP);
 
                 // Trim excess off end of bytesFromImage.
-                byte[] onlyRelevantBytes = new byte[bothTogether.Length];
+                onlyRelevantBytes = new byte[bothTogether.Length];
                 for (int i = 0; i < bothTogether.Length; i++)
                 {
                     onlyRelevantBytes[i] = bytesFromImage[i];
                 }
-
+                Trace.WriteLine("XXXXX Comparing " + onlyRelevantBytes.Length + "|" + bothTogether.Length);
                 // ASSERT
-                Assert.AreEqual(onlyRelevantBytes, bothTogether);
-            });
+                for (int i = 0; i < bothTogether.Length; i++)
+                {
+                    Assert.AreEqual(onlyRelevantBytes[i], bothTogether[i]);
+
+                }
+
+            }).GetAwaiter().GetResult();
+        }
+
+        [TestMethod]
+        public void TestGetOnesAndZeros()
+        {
+            // ARRANGE
+            BitmapEncoder bmpEnc = new BitmapEncoder();
+            byte[] file = new byte[] { 10, 249, 12, 1, 180, 29, 2, 78, 45, 12, 12, 13, 69, 45, 78, 111 };
+            byte[] IV = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
+            byte[] bothTogether = new byte[IV.Length + file.Length];
+            byte[] parsedBytes;
+
+            for (int i = 0; i < IV.Length; i++)
+            {
+                bothTogether[i] = IV[i];
+            }
+
+            for (int i = IV.Length; i < bothTogether.Length; i++)
+            {
+                bothTogether[i] = file[i - IV.Length];
+            }
+
+            // ACT
+            BitArray ba = bmpEnc.GetOnesAndZeros(IV, file);
+            parsedBytes = new byte[ba.Count / 8];
+            int byteIndex = 0, bitIndex = 0;
+            for (int i = 0; i < ba.Count; i++)
+            {
+                if (ba[i])
+                    parsedBytes[byteIndex] |= (byte)(1 << (7 - bitIndex));
+
+                bitIndex++;
+                if (bitIndex == 8)
+                {
+                    bitIndex = 0;
+                    byteIndex++;
+                }
+            }
+           
+            // ASSERT
+            for (int i = 0; i < parsedBytes.Length; i++)
+            {
+                Assert.AreEqual(parsedBytes[i], bothTogether[i]);
+            }
         }
 
         [TestMethod]
