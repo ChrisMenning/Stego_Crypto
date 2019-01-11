@@ -21,6 +21,12 @@ namespace StegoCrypto
         private byte[] argbValues;
         Thread[] threads;
 
+        private double startingHue;
+        private double startingSaturation;
+        private double startingValue;
+
+        private bool useHighContrast;
+
         // Public Properties
         public double RealC { get { return realC; } set { realC = value; } } 
         public double ImaginaryC { get { return imaginaryC; } set { imaginaryC = value; } }
@@ -32,9 +38,11 @@ namespace StegoCrypto
             this.mainForm = mainForm;
             this.squareSize = squareSize;
             this.AcceptButton = buttonAccept;
+            GetStartColor();
 
             progressBar1.Maximum = (squareSize * squareSize) / 2;
             this.zoomLevel = 1;
+            useHighContrast = false;
         }
 
         // Background Worker's main work method.
@@ -167,10 +175,38 @@ namespace StegoCrypto
                         if ((newReal * newReal + newIm * newIm) > 4) break;
                     }
 
-                    double val = i % maxIterations;
-                    int r, g, b;
+                    double hue = i % maxIterations + startingHue;
+                    double val = startingValue;
 
-                    HsvToRgb(val, 1, val, out r, out g, out b);
+                    if (useHighContrast)
+                    {
+                        val = i % maxIterations;
+                    }
+                    else
+                    {
+                        if (i < maxIterations)
+                        {
+                            val = 255;
+                        }
+                        else
+                        {
+                            val = 0;
+                        }
+                    }
+                    int r;
+                    int g;
+                    int b;
+                    if (useHighContrast)
+                    {
+                        HsvToRgb(hue, startingSaturation, val, out r, out g, out b);
+                    }
+                    else
+                    {
+                        Color C = ColorFromHSV(hue, startingSaturation, val);
+                        r = C.R;
+                        g = C.G;
+                        b = C.B;
+                    }
 
                     // Note: For some reason, the byte order needs to be reversed here.
                     argbValues[counter + 3] = 255;
@@ -189,88 +225,128 @@ namespace StegoCrypto
             Console.WriteLine("Thread Complete from " + startIndex + " to " + stopIndex);
         }
 
-        // HSV to RGB by Chris Hulbert http://www.splinter.com.au/converting-hsv-to-rgb-colour-using-c/
-        private void HsvToRgb(double h, double S, double V, out int r, out int g, out int b)
+           // HSV to RGB by Chris Hulbert http://www.splinter.com.au/converting-hsv-to-rgb-colour-using-c/
+           private void HsvToRgb(double h, double S, double V, out int r, out int g, out int b)
+           {
+               double H = h;
+               while (H < 0) { H += 360; };
+               while (H >= 360) { H -= 360; };
+               double R, G, B;
+               if (V <= 0)
+               { R = G = B = 0; }
+               else if (S <= 0)
+               {
+                   R = G = B = V;
+               }
+               else
+               {
+                   double hf = H / 60.0;
+                   int i = (int)Math.Floor(hf);
+                   double f = hf - i;
+                   double pv = V * (1 - S);
+                   double qv = V * (1 - S * f);
+                   double tv = V * (1 - S * (1 - f));
+                   switch (i)
+                   {
+        
+                       // Red is the dominant color
+                       case 0:
+                           R = V;
+                           G = tv;
+                           B = pv;
+                           break;
+        
+                       // Green is the dominant color
+                       case 1:
+                           R = qv;
+                           G = V;
+                           B = pv;
+                           break;
+                       case 2:
+                           R = pv;
+                           G = V;
+                           B = tv;
+                           break;
+        
+                       // Blue is the dominant color
+                       case 3:
+                           R = pv;
+                           G = qv;
+                           B = V;
+                           break;
+                       case 4:
+                           R = tv;
+                           G = pv;
+                           B = V;
+                           break;
+        
+                       // Red is the dominant color
+                       case 5:
+                           R = V;
+                           G = pv;
+                           B = qv;
+                           break;
+        
+                       // Just in case we overshoot on our math by a little, we put these here. Since its a switch it won't slow us down at all to put these here.
+                       case 6:
+                           R = V;
+                           G = tv;
+                           B = pv;
+                           break;
+                       case -1:
+                           R = V;
+                           G = pv;
+                           B = qv;
+                           break;
+        
+                       default:
+                           R = G = B = V; // Just pretend its black/white
+                           break;
+                   }
+               }
+               r = (int)R * 10;
+               g = (int)G * 10;
+               b = (int)B * 10;
+           }
+
+        // https://stackoverflow.com/users/12971/greg
+        public static void ColorToHSV(Color color, out double hue, out double saturation, out double value)
         {
-            double H = h;
-            while (H < 0) { H += 360; };
-            while (H >= 360) { H -= 360; };
-            double R, G, B;
-            if (V <= 0)
-            { R = G = B = 0; }
-            else if (S <= 0)
-            {
-                R = G = B = V;
-            }
+            int max = Math.Max(color.R, Math.Max(color.G, color.B));
+            int min = Math.Min(color.R, Math.Min(color.G, color.B));
+
+            hue = color.GetHue();
+            saturation = (max == 0) ? 0 : 1d - (1d * min / max);
+            value = max / 255d;
+        }
+
+        // https://stackoverflow.com/users/12971/greg
+        public static Color ColorFromHSV(double h, double s, double val)
+        {
+            double hue = h;
+            double saturation = s;
+            double value = val;
+         
+            int hi = Convert.ToInt32(Math.Floor(hue / 60)) % 6;
+            double f = hue / 60 - Math.Floor(hue / 60);
+            
+            int v = Convert.ToInt32(value);
+            int p = Convert.ToInt32(value * (1 - saturation));
+            int q = Convert.ToInt32(value * (1 - f * saturation));
+            int t = Convert.ToInt32(value * (1 - (1 - f) * saturation));
+
+            if (hi == 0)
+                return Color.FromArgb(255, v, t, p);
+            else if (hi == 1)
+                return Color.FromArgb(255, q, v, p);
+            else if (hi == 2)
+                return Color.FromArgb(255, p, v, t);
+            else if (hi == 3)
+                return Color.FromArgb(255, p, q, v);
+            else if (hi == 4)
+                return Color.FromArgb(255, t, p, v);
             else
-            {
-                double hf = H / 60.0;
-                int i = (int)Math.Floor(hf);
-                double f = hf - i;
-                double pv = V * (1 - S);
-                double qv = V * (1 - S * f);
-                double tv = V * (1 - S * (1 - f));
-                switch (i)
-                {
-
-                    // Red is the dominant color
-                    case 0:
-                        R = V;
-                        G = tv;
-                        B = pv;
-                        break;
-
-                    // Green is the dominant color
-                    case 1:
-                        R = qv;
-                        G = V;
-                        B = pv;
-                        break;
-                    case 2:
-                        R = pv;
-                        G = V;
-                        B = tv;
-                        break;
-
-                    // Blue is the dominant color
-                    case 3:
-                        R = pv;
-                        G = qv;
-                        B = V;
-                        break;
-                    case 4:
-                        R = tv;
-                        G = pv;
-                        B = V;
-                        break;
-
-                    // Red is the dominant color
-                    case 5:
-                        R = V;
-                        G = pv;
-                        B = qv;
-                        break;
-
-                    // Just in case we overshoot on our math by a little, we put these here. Since its a switch it won't slow us down at all to put these here.
-                    case 6:
-                        R = V;
-                        G = tv;
-                        B = pv;
-                        break;
-                    case -1:
-                        R = V;
-                        G = pv;
-                        B = qv;
-                        break;
-
-                    default:
-                        R = G = B = V; // Just pretend its black/white
-                        break;
-                }
-            }
-            r = (int)R * 10;
-            g = (int)G * 10;
-            b = (int)B * 10;
+                return Color.FromArgb(255, v, p, q);
         }
 
         private void ValidateOffsets()
@@ -434,6 +510,32 @@ namespace StegoCrypto
                     textBoxCim.Text = "0.27015";
                     break;
             }
+        }
+
+        private void buttonChooseStartingColor_Click(object sender, EventArgs e)
+        {
+            colorDialog1.ShowDialog();
+            Color startColor = colorDialog1.Color;
+            ColorToHSV(startColor, out startingHue, out startingSaturation, out startingValue);
+            labelColor.BackColor = startColor;
+        }
+
+        private void GetStartColor()
+        {
+            Color startColor = labelColor.BackColor;
+            ColorToHSV(startColor, out startingHue, out startingSaturation, out startingValue);
+        }
+
+        private void radioButtonHighContrast_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButtonHighContrast.Checked)
+                useHighContrast = true;
+        }
+
+        private void radioButtonSmooth_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButtonSmooth.Checked)
+                useHighContrast = false;
         }
     }
 }

@@ -49,6 +49,11 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.bgWorker = new System.ComponentModel.BackgroundWorker();
             this.labelPercent = new System.Windows.Forms.Label();
+            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.buttonChooseStartingColor = new System.Windows.Forms.Button();
+            this.labelColor = new System.Windows.Forms.Label();
+            this.radioButtonHighContrast = new System.Windows.Forms.RadioButton();
+            this.radioButtonSmooth = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -57,7 +62,7 @@
             // buttonGenerate
             // 
             this.buttonGenerate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonGenerate.Location = new System.Drawing.Point(500, 309);
+            this.buttonGenerate.Location = new System.Drawing.Point(500, 408);
             this.buttonGenerate.Name = "buttonGenerate";
             this.buttonGenerate.Size = new System.Drawing.Size(185, 51);
             this.buttonGenerate.TabIndex = 0;
@@ -259,12 +264,12 @@
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Location = new System.Drawing.Point(500, 166);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(185, 137);
+            this.groupBox2.Size = new System.Drawing.Size(185, 122);
             this.groupBox2.TabIndex = 14;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Julia Set Settings";
             // 
-            // backgroundWorker1
+            // bgWorker
             // 
             this.bgWorker.WorkerReportsProgress = true;
             this.bgWorker.WorkerSupportsCancellation = true;
@@ -284,12 +289,63 @@
             this.labelPercent.TabIndex = 15;
             this.labelPercent.Text = "0%";
             // 
+            // buttonChooseStartingColor
+            // 
+            this.buttonChooseStartingColor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonChooseStartingColor.Location = new System.Drawing.Point(500, 349);
+            this.buttonChooseStartingColor.Name = "buttonChooseStartingColor";
+            this.buttonChooseStartingColor.Size = new System.Drawing.Size(90, 48);
+            this.buttonChooseStartingColor.TabIndex = 16;
+            this.buttonChooseStartingColor.Text = "Starting Color";
+            this.buttonChooseStartingColor.UseVisualStyleBackColor = true;
+            this.buttonChooseStartingColor.Click += new System.EventHandler(this.buttonChooseStartingColor_Click);
+            // 
+            // labelColor
+            // 
+            this.labelColor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelColor.BackColor = System.Drawing.Color.Red;
+            this.labelColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.labelColor.Location = new System.Drawing.Point(595, 349);
+            this.labelColor.Name = "labelColor";
+            this.labelColor.Size = new System.Drawing.Size(90, 48);
+            this.labelColor.TabIndex = 17;
+            // 
+            // radioButtonHighContrast
+            // 
+            this.radioButtonHighContrast.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.radioButtonHighContrast.AutoSize = true;
+            this.radioButtonHighContrast.Location = new System.Drawing.Point(509, 321);
+            this.radioButtonHighContrast.Name = "radioButtonHighContrast";
+            this.radioButtonHighContrast.Size = new System.Drawing.Size(115, 21);
+            this.radioButtonHighContrast.TabIndex = 18;
+            this.radioButtonHighContrast.Text = "High Contrast";
+            this.radioButtonHighContrast.UseVisualStyleBackColor = true;
+            this.radioButtonHighContrast.CheckedChanged += new System.EventHandler(this.radioButtonHighContrast_CheckedChanged);
+            // 
+            // radioButtonSmooth
+            // 
+            this.radioButtonSmooth.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.radioButtonSmooth.AutoSize = true;
+            this.radioButtonSmooth.Checked = true;
+            this.radioButtonSmooth.Location = new System.Drawing.Point(509, 294);
+            this.radioButtonSmooth.Name = "radioButtonSmooth";
+            this.radioButtonSmooth.Size = new System.Drawing.Size(136, 21);
+            this.radioButtonSmooth.TabIndex = 19;
+            this.radioButtonSmooth.TabStop = true;
+            this.radioButtonSmooth.Text = "Smooth Gradient";
+            this.radioButtonSmooth.UseVisualStyleBackColor = true;
+            this.radioButtonSmooth.CheckedChanged += new System.EventHandler(this.radioButtonSmooth_CheckedChanged);
+            // 
             // GenerateFractal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Honeydew;
             this.ClientSize = new System.Drawing.Size(708, 530);
+            this.Controls.Add(this.radioButtonSmooth);
+            this.Controls.Add(this.radioButtonHighContrast);
+            this.Controls.Add(this.labelColor);
+            this.Controls.Add(this.buttonChooseStartingColor);
             this.Controls.Add(this.labelPercent);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -333,5 +389,10 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.ComponentModel.BackgroundWorker bgWorker;
         private System.Windows.Forms.Label labelPercent;
+        private System.Windows.Forms.ColorDialog colorDialog1;
+        private System.Windows.Forms.Button buttonChooseStartingColor;
+        private System.Windows.Forms.Label labelColor;
+        private System.Windows.Forms.RadioButton radioButtonHighContrast;
+        private System.Windows.Forms.RadioButton radioButtonSmooth;
     }
 }
