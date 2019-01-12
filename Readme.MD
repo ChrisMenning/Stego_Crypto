@@ -9,3 +9,5 @@ Fractal Generator now spreads work across 4 threads, for faster fractal generati
 
 Juliaset adapted from https://lodev.org/cgtutor/juliamandelbrot.html
 HSV color conversion from  https://stackoverflow.com/users/12971/greg and Chris Hulbert http://www.splinter.com.au/converting-hsv-to-rgb-colour-using-c/
+
+Targeting x64 processors for greater memory capacity.
