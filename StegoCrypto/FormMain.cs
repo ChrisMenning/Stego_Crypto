@@ -202,11 +202,13 @@ namespace StegoCrypto
             aes = new AESencrypter(fi.InfoHeader, fi.FileContents, this);
             BitmapEncoder bmEnc = new BitmapEncoder(originalImage);
             byte[] bytes = aes.EncryptBytes();
+            byte[] IV = aes.InitializationVector;
+            GC.Collect();
             if (bytes.Length > (originalImage.Width * originalImage.Height) / 2)
             {
                 MessageBox.Show("WARNING: It looks like the file is too large to fit in the image.");
             }
-            Bitmap bmp = await bmEnc.EncodedBitmap(bytes, aes.InitializationVector);
+            Bitmap bmp = await bmEnc.EncodedBitmap(bytes, IV);
 
             openFileDialogSourceFile.Filter = "PNG files (*.png | *.png;";
             saveFileDialog.FileName = "image.png";
@@ -214,6 +216,8 @@ namespace StegoCrypto
             {
                 bmp.Save(saveFileDialog.FileName, System.Drawing.Imaging.ImageFormat.Png);
             }
+
+            GC.Collect();
         }
 
         private void OpenImageToDecode()
@@ -286,7 +290,8 @@ namespace StegoCrypto
             byte[] file = hp.fileContentsWithoutHeader(decryptedBytes);
             string fileName = hp.FileName;
             labelFileInfo2.Text = ("Original file name: " + fileName + "\n Bytes: " + file.Length);
-            this.Refresh();
+            //this.Refresh();
+            GC.Collect();
 
             Console.WriteLine("Saving " + fileName);
 

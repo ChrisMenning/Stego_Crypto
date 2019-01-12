@@ -70,8 +70,9 @@ namespace StegoCrypto
         }
 
         // Bytes from Image
-        public async Task<byte[]> BytesFromImage(Bitmap encoded)
+        public async Task<byte[]> BytesFromImage(Bitmap encodedBitmap)
         {
+            Bitmap encoded = encodedBitmap;
             binaryFromImage = new bool[(encoded.Width * encoded.Height) * 4];
             byte[] bytesDecodedFromImage;
 
@@ -87,9 +88,10 @@ namespace StegoCrypto
             // Get the address of the first line.
             IntPtr ptr = bmpData.Scan0;
 
+            GC.Collect();
             // Declare an array to hold the bytes of the bitmap.
             int numOfBytes = Math.Abs(bmpData.Stride) * height;
-            argbValues = new byte[numOfBytes];
+            argbValues = new byte[numOfBytes];            
 
             // Copy the RGB values into the array.
             System.Runtime.InteropServices.Marshal.Copy(ptr, argbValues, 0, numOfBytes);
@@ -116,7 +118,7 @@ namespace StegoCrypto
                 pwForm.progress.Value = pwForm.progress.Maximum;
 
             // Unlock the bits.
-            encoded.UnlockBits(bmpData);
+            //encoded.UnlockBits(bmpData);
 
             if (useWaitForm == true)
             {
