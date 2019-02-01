@@ -269,19 +269,19 @@ namespace StegoCrypto
             Console.WriteLine("Trimmed IV off of encryped bytes.");
 
             // Ensure that byte array is divisible by 128.
+            // NOTE: This is CRUCIAL. Failing to do so makes encryption fail on images with odd number of pixels.
             int bytesToNearest128 = RoundUp(bytes.Length, 128);
             byte[] newBytes = new byte[bytesToNearest128];
             for (int i = 0; i < bytes.Length; i++)
             {
                 newBytes[i] = bytes[i];
             }
+
             bytes = newBytes;
 
             // Decrypt
             Console.WriteLine("Decrypting.");
-
             AESdecrypter aesdec = new AESdecrypter(this);
-
             byte[] decryptedBytes = aesdec.DecryptedBytes(bytes, encryptionKey, IV);
             Console.WriteLine("Decrypted " + decryptedBytes.Count() + " from image.");
 
@@ -290,8 +290,9 @@ namespace StegoCrypto
             byte[] file = hp.fileContentsWithoutHeader(decryptedBytes);
             string fileName = hp.FileName;
             labelFileInfo2.Text = ("Original file name: " + fileName + "\n Bytes: " + file.Length);
-            //this.Refresh();
-            GC.Collect();
+
+            // Force garbage collection here.
+            GC.Collect(); 
 
             Console.WriteLine("Saving " + fileName);
 
